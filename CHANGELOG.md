@@ -1,3 +1,12 @@
+## [1.0.0-dev.2](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.1...v1.0.0-dev.2) (2026-11-01)
+
+### 🐛 Bug Fixes
+
+* exclude runtime libraries from Java-only app extensions ([415fff9](https://github.com/Mlkem/Morphe/commit/415fff9859303104c6192404a6449505d53eb084))
+* exclude runtime libraries from Java-only app extensions ([6055ec6](https://github.com/Mlkem/Morphe/commit/6055ec6904456dadf0579ccd5e6fb898cd5d2f85))
+* finish beta publishing without issue-management permissions ([2b57f82](https://github.com/Mlkem/Morphe/commit/2b57f820b61d7f05aabaf9f0861654845beb7e24))
+* keep release automation scoped to publishing ([d70596d](https://github.com/Mlkem/Morphe/commit/d70596d6180e2cd101ea4ce55a40020e6ad7834f))
+
 ## 1.0.0-dev.1 (2026-11-01)
 
 ### ✨ New Features
