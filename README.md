@@ -3,7 +3,8 @@
 # mlkemac patches
 
 A single Morphe source for Music League, Walmart Canada, Wongnai, Zoom Earth,
-PushPress, Open with and the XAPK merge-only utility.
+PushPress, Open with, an optional Morphe Manager APKMirror search fix, and the XAPK
+merge-only utility.
 
 **[Add source to Morphe](https://morphe.software/add-source?github=Mlkem/Morphe&name=mlkemac%20patches)** ·
 [Releases](https://github.com/Mlkem/Morphe/releases) ·
@@ -21,7 +22,7 @@ https://github.com/Mlkem/Morphe/tree/dev
 
 An explicit `dev` source enables prerelease updates from the start. Alternatively,
 use the Add source link above and enable **Pre-release patches**. Enable
-**Experimental app versions** for Walmart Canada, PushPress and Open with. Choose
+**Experimental app versions** for Walmart Canada, PushPress, Open with and the Manager patch. Choose
 the original app APK/APKM/XAPK, select patches, then patch and install. Keep your existing Morphe
 APK signing key so future patched apps can update in place.
 
@@ -39,12 +40,26 @@ available from Releases. Disable duplicate local sources for these apps.
 | Zoom Earth | `com.neave.zoomearth` 6.1 | LiteAPKS/9MOD popup removal | Requires the matching modified APK |
 | PushPress Members | `com.pushpress.memberportal` 3.42.0 | CrossFit-only selector | Experimental; phone testing pending |
 | Open with | `com.openwith.app` 1.2.1 (11) | Pro file-type handling | Opt-in beta; phone testing pending |
+| Morphe Manager | `app.morphe.manager` 2.4.0-dev.1–dev.3 | APKMirror search for collection apps | Opt-in; phone testing pending |
 | Merge XAPK only | Universal | Merge-only 1.0.0 | Opt-in; uses Morphe's merge/sign flow |
 
 The Music League Hermes patch, Walmart Remove Shop patch and universal merge utility
 are off by default, as is the Open with Pro test. See [Open with setup and
 validation](docs/apps/openwith.md). Walmart price history records prices you actually encounter;
 it does not provide past prices from a remote database. See [Walmart details](docs/apps/walmart-canada.md).
+
+### Finding the original APK
+
+The [APKMirror search patch](docs/apps/morphe-manager.md) applies to **Morphe
+Manager itself**. Updating this source alone cannot change the stock Manager's
+search. It opens the verified Walmart Canada 26.31 APKM page directly and uses a
+package/version search restricted to APKMirror for the collection's other apps,
+without a `nodpi` filter. See the setup instructions before replacing Manager.
+
+[Download the tested Walmart Canada 26.31 (26310017) APKM](https://www.apkmirror.com/apk/walmart/walmart-shopping-made-easy/walmart-grocery-shopping-26-31-release/walmart-grocery-shopping-26-31-android-apk-download/).
+APKMirror may not carry every supported app/version; use a matching original local
+file when needed. Zoom Earth's popup-removal patch requires its matching modified
+input and will not work on an ordinary stock APK.
 
 ## Release channels
 

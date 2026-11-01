@@ -25,3 +25,25 @@ CI additionally builds with the official Gradle plugin before publishing each be
 - The exact standalone MPP is retained under `prebuilt/openwith/` with its hash.
 - Phone testing remains pending. The release workflow runs the official Gradle
   build and Android UI regressions before publishing the next beta.
+
+## APKMirror search integration
+
+- The full collection builds with **27 patches**, seven named apps and the
+  universal merge utility. The Manager patch is opt-in and experimental.
+- **49** URL checks pass: all six collection packages, exact Walmart routing,
+  other/unspecified versions, UTF-8 and URL encoding, full version preservation,
+  and delegation for unrelated packages and coroutine re-entry.
+- The existing **99** Walmart JVM checks still pass.
+- The actual MPP applies to official Manager **2.4.0-dev.1, dev.2 and dev.3**.
+  Each output passes DEX structure parsing; all three resolver hooks pass checks
+  for parameter registers, return types, branch destinations and preservation of
+  the complete original resolver bodies. All 424 non-DEX resource entries match
+  the respective original APK. Input hashes and results are in
+  [manager-validation](apps/manager-validation/).
+- Reapplying to the patched dev.3 APK does not duplicate hooks or extension
+  methods. An unrelated app input is rejected by the package/version guard.
+- APKMirror's Walmart page matches package `ca.walmart.ecommerceapp`, version
+  26.31, build 26310017 and the four-architecture APKM in the existing app notes.
+  No APK or private signing key is included in this change.
+- These are desktop checks. Phone installation, browser handoff and preserving
+  Manager settings/signing keys through replacement remain untested.

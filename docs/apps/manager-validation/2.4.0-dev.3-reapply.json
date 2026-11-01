@@ -1,0 +1,12 @@
+{
+  "input": "manager-patched-unsigned.apk",
+  "input_sha256": "3afc4a6b929954bfe04e06f795caaad7ee58167888c6528e7cd22d90182e135d",
+  "patcher": "2.1.0",
+  "original_methods": 143899,
+  "output_methods": 143899,
+  "verified_entry_hooks": 3,
+  "original_resolver_bodies_preserved": true,
+  "unchanged_resource_entries": 424,
+  "all_dex_methods_structurally_valid": true,
+  "phone_tested": false
+}

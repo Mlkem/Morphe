@@ -45,6 +45,7 @@ jobs:
           ./gradlew :patches:buildAndroid :patches:generatePatchesList --no-daemon
           python3 scripts/verify_bundle.py
           python3 scripts/test_walmart_logic.py
+          python3 scripts/test_manager_urls.py
       - name: Android UI regressions
         run: ./gradlew -p tests/walmart/android test --no-daemon
       - name: Restore generated files before semantic release
