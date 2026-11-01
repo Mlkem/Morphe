@@ -88,7 +88,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "./gradlew :patches:generatePatchesList && python3 scripts/verify_bundle.py && python3 .github/scripts/generate_patches_readme.py Mlkem/Morphe dev patches-list.json README.md"
+        "prepareCmd": "./gradlew :patches:buildAndroid :patches:generatePatchesList --no-daemon && python3 scripts/verify_bundle.py && python3 .github/scripts/generate_patches_readme.py Mlkem/Morphe dev patches-list.json README.md"
       }
     ],
     [
