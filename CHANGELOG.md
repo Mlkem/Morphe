@@ -1,3 +1,9 @@
+## [1.0.0-dev.3](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.2...v1.0.0-dev.3) (2026-11-01)
+
+### 🐛 Bug Fixes
+
+* publish mlkemac patches name and icon ([bdfde1b](https://github.com/Mlkem/Morphe/commit/bdfde1bb4738c685750c0d95c9f181fedbd4f93a))
+
 ## [1.0.0-dev.2](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.1...v1.0.0-dev.2) (2026-11-01)
 
 ### 🐛 Bug Fixes

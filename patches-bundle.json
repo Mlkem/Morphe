@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-11-01T02:03:05",
-  "description": "## [1.0.0-dev.2](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.1...v1.0.0-dev.2) (2026-11-01)\n\n### 🐛 Bug Fixes\n\n* exclude runtime libraries from Java-only app extensions ([415fff9](https://github.com/Mlkem/Morphe/commit/415fff9859303104c6192404a6449505d53eb084))\n* exclude runtime libraries from Java-only app extensions ([6055ec6](https://github.com/Mlkem/Morphe/commit/6055ec6904456dadf0579ccd5e6fb898cd5d2f85))\n* finish beta publishing without issue-management permissions ([2b57f82](https://github.com/Mlkem/Morphe/commit/2b57f820b61d7f05aabaf9f0861654845beb7e24))\n* keep release automation scoped to publishing ([d70596d](https://github.com/Mlkem/Morphe/commit/d70596d6180e2cd101ea4ce55a40020e6ad7834f))",
-  "download_url": "https://github.com/Mlkem/Morphe/releases/download/v1.0.0-dev.2/patches-1.0.0-dev.2.mpp",
+  "created_at": "2026-11-01T02:28:27",
+  "description": "## [1.0.0-dev.3](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.2...v1.0.0-dev.3) (2026-11-01)\n\n### 🐛 Bug Fixes\n\n* publish mlkemac patches name and icon ([bdfde1b](https://github.com/Mlkem/Morphe/commit/bdfde1bb4738c685750c0d95c9f181fedbd4f93a))",
+  "download_url": "https://github.com/Mlkem/Morphe/releases/download/v1.0.0-dev.3/patches-1.0.0-dev.3.mpp",
   "signature_download_url": "",
-  "version": "1.0.0-dev.2"
+  "version": "1.0.0-dev.3"
 }
