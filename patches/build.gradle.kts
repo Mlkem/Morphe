@@ -1,5 +1,15 @@
 group = "ca.mlkem.patches"
 
+// The Morphe plugin sets target 11; mixed Java/Kotlin sources also need
+// the Java source level pinned instead of inheriting the runner's JDK 21.
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+tasks.withType<JavaCompile>().configureEach {
+    options.release.set(11)
+}
+
 patches {
     about {
         name = "Mlkem Patches"

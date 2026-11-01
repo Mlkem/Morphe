@@ -95,45 +95,24 @@ DEX inspection verifies the common list-row hook, both browse/card hooks, the ad
 
 Version 1.5 remains a **phone-untested beta**. Rebuild validation, DEX analysis and simulated Android tests do not establish that every Walmart screen, login or checkout flow works on your phone. Version 1.4 received a launch-crash report; the corrected argument and branch handling are retained, and 1.5 removes the toolbar menu hook entirely. Avoid uninstalling if you want to keep local history. Do not force another app version. If launch still fails after repatching the original bundle, a crash log from the device is needed to identify any additional cause (`adb logcat -b crash -d`, collected immediately after reproducing the crash).
 
-## Building
+## Building in the combined collection
 
-Dependencies used: Eclipse Temurin JDK 21.0.13+9; Morphe Desktop 1.20.0 all-in-one JAR; Gradle 9.8.0 distribution (its Kotlin compiler libraries, compiled with language/API level 2.2); Android API 35 android.jar; Google R8 8.13.17.
+See the root README and `BUILD-MPP.md` for building all patches. The standalone
+source archive's `build.py` is superseded here by `scripts/build_offline.py` and
+the standard Gradle build. These paths use the same imported Walmart source.
 
-Place `morphe.jar`, `r8.jar`, `android.jar` and the extracted JDK directory in a tools directory, then run:
-
-```sh
-python3 build.py --tools /path/to/tools --kotlin-libs /path/to/gradle-9.8.0/lib
-```
-
-The script compiles the extension, runs 99 pure logic checks, compiles the patches, produces Android DEX files and packages the `.mpp`. It does not require GitHub Packages credentials. `dependencies.json` records dependency and input hashes for this build.
-
-To apply all fourteen patches and validate unique fingerprints:
+Run the pure-JVM checks with `python3 scripts/test_walmart_logic.py` (set
+`ANDROID_JAR` if no Android SDK is configured). Run Android fixture tests with:
 
 ```sh
-java -Xmx3g -jar /path/to/tools/morphe.jar patch original-canada-26.31.apkm \
-  -p walmart-canada-26.31-v1.5.0-beta.1.mpp \
-  -e 'Remove Shop — Canada' --striplibs arm64-v8a --validate --unsigned \
-  -o patched-validation.apk -r patch-results.json
+./gradlew -p tests/walmart/android test --no-daemon
 ```
 
-To run the Android regression tests separately (JDK 21 and Gradle 9.8):
-
-```sh
-gradle -p tests/android test
-```
-
-This downloads Robolectric 4.16.1 and its Android API 35 runtime. In a network using a custom CA/proxy, supply the matching Java trust store and proxy configuration.
-
-To verify argument types and control flow in the actual patched DEX (use the ASM 9.10.1 JAR included in the Gradle distribution):
-
-```sh
-javac -cp /path/to/tools/morphe.jar:/path/to/gradle/lib/asm-9.10.1.jar \
-  -d build/test-classes tests/VerifyHookTypes.java
-java -Xmx3g -cp /path/to/tools/morphe.jar:/path/to/gradle/lib/asm-9.10.1.jar:build/test-classes \
-  VerifyHookTypes patched-validation.apk /path/to/tools/android.jar
-```
-
-This check must exit successfully for both the complete patch selection and the ads/history selection. Running it on the previous 1.4 validation APK fails as expected, including `menu arg1 ... (Boolean) expected Landroid/view/Menu;`.
+Set `ANDROID_JAR` to a local Android SDK `android.jar`, or use an Android SDK
+containing platform 36 via `ANDROID_HOME`. The test runtime uses Robolectric's
+Android API 35 implementation. Imported standalone validation records and
+original dependency hashes are in `docs/apps/walmart-validation/` and
+`docs/apps/walmart-dependencies.json`.
 
 ## Source and license
 

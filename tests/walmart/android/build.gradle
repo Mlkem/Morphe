@@ -1,11 +1,14 @@
 plugins { id 'java' }
 repositories { mavenCentral(); google() }
 sourceSets {
-    main.java.srcDirs = ['../../src/java']
+    main.java.srcDirs = ['../../../extensions/canada/src/main/java']
     test.java.srcDirs = ['src/test/java', '../fixtures']
 }
 dependencies {
-    compileOnly files('../../../tooling/android.jar')
+    def sdk = System.getenv('ANDROID_HOME') ?: System.getenv('ANDROID_SDK_ROOT')
+    def androidJar = System.getenv('ANDROID_JAR') ?: (sdk ? sdk + '/platforms/android-36/android.jar' : '')
+    if (!androidJar || !file(androidJar).isFile()) throw new GradleException('Set ANDROID_JAR to an Android SDK android.jar')
+    compileOnly files(androidJar)
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.robolectric:robolectric:4.16.1'
     testImplementation 'org.robolectric:android-all:15-robolectric-12650502'

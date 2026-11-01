@@ -185,6 +185,8 @@ local `gpr.user` / `gpr.key` properties. GitHub Actions supplies its scoped toke
 ```sh
 ./gradlew :patches:buildAndroid :patches:generatePatchesList --no-daemon
 python3 scripts/verify_bundle.py
+python3 scripts/test_walmart_logic.py
+./gradlew -p tests/walmart/android test --no-daemon
 ```
 
 Output: `patches/build/libs/patches-<version>.mpp`.
