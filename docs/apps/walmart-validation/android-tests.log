@@ -1,0 +1,99 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.8.0/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :compileJava
+> Task :processResources NO-SOURCE
+> Task :classes
+
+> Task :compileTestJava
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :processTestResources NO-SOURCE
+> Task :testClasses
+> Task :unpackAars
+
+> Task :test
+
+ToolsRegressionTest > historyDialogOpensAndTargetEditorDoesNotEraseHistory PASSED
+
+ToolsRegressionTest > controlsSwitchesActuallyPersistAndApply PASSED
+
+ToolsRegressionTest > backupRoundTripPreservesObservationsAndWatchSettings PASSED
+
+ToolsRegressionTest > floatingShortcutStopsNativeClick PASSED
+
+ToolsRegressionTest > recordingMasterAndSourceSwitchesAreIndependent PASSED
+
+ToolsRegressionTest > fractionalCentsAreRejectedWithoutChangingStoredPrices PASSED
+
+ToolsRegressionTest > scannerUsesNativeActivityAndPermissionFlow PASSED
+
+ToolsRegressionTest > sparkyNudgeDoesNotReturnWhenAdsAreEnabled PASSED
+
+ToolsRegressionTest > liveAdSwitchRestoresAndRehidesExistingContainer PASSED
+
+ToolsRegressionTest > sparkyEntryOpensToolsAndAllMainSectionsAreReachable PASSED
+
+ToolsRegressionTest > csvEscapesQuotesAndSpreadsheetFormulas PASSED
+
+ToolsRegressionTest > checklistExportKeepsUnlinkedItemsAndDeduplicatesIds PASSED
+
+ToolsRegressionTest > repeatedImportDoesNotDuplicateOrReplaceExistingPoint PASSED
+
+ToolsRegressionTest > priceDropFilterAndSummaryUsePreviousDifferentObservation PASSED
+
+ToolsRegressionTest > diagnosticsNeverIncludesSavedProductNames PASSED
+
+ToolsRegressionTest > historySearchMatchesStoreAndFavorites PASSED
+
+ToolsRegressionTest > uninstalledControlsAreNotPresentedAsWorking PASSED
+
+ToolsRegressionTest > targetsUseOnlyLatestSavedPrice PASSED
+
+ToolsRegressionTest > malformedImportWritesNothingEvenWhenFirstItemIsValid PASSED
+
+ToolsRegressionTest > constructorHiddenAdCapturesLayoutAssignedLater PASSED
+
+ToolsRegressionTest > calculatorCanBeUsedThroughItsUi PASSED
+
+ToolsRegressionTest > deletingHistoryRemovesTargetsAndFavorites PASSED
+
+ToolsRegressionTest > unitComparisonAndTaxCalculationAreExact PASSED
+
+UiRegressionTest > recycledMissingPriceClearsOldButtonActionAndPrice PASSED
+
+UiRegressionTest > hidesWholeSponsoredCardAndRestoresOrganicRecycle PASSED
+
+UiRegressionTest > hiddenNativePriceStillGetsHistoryAndClickableFooter PASSED
+
+UiRegressionTest > pausedListRecordingKeepsHistoryAccessibleWithoutSaving PASSED
+
+UiRegressionTest > hiddenSponsoredBrowseCardDoesNotCreatePriceHistory PASSED
+
+UiRegressionTest > repeatedBindAddsOnlyOneFooterAndSameDayObservation PASSED
+
+UiRegressionTest > dedicatedContainerStaysHiddenAfterNativeVisibilityReset PASSED
+
+UiRegressionTest > oldHistorySurvivesAndCollectionIsBounded PASSED
+
+UiRegressionTest > recycledBeforePostedBindRecordsOnlyCurrentProduct PASSED
+
+UiRegressionTest > visibleBrowseCardRecordsPriceAndUsesSeparateContext PASSED
+
+UiRegressionTest > priceChangeCreatesSecondObservation PASSED
+
+UiRegressionTest > browseRecordingSwitchPreventsNewObservations PASSED
+
+UiRegressionTest > patchToolsShowsInstalledSeparatelyFromRuntimeActivity PASSED
+
+[Incubating] Problems report is available at: file:///workspace/scratch/08be9654f066/walmart-canada-port/tests/android/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.8.0/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 30s
+4 actionable tasks: 4 executed
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.8.0/userguide/configuration_cache_enabling.html

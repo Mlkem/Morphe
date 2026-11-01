@@ -1,0 +1,16 @@
+warning: [options] source value 8 is obsolete and will be removed in a future release
+warning: [options] target value 8 is obsolete and will be removed in a future release
+warning: [options] To suppress warnings about obsolete options, use -Xlint:-options.
+Note: /workspace/scratch/08be9654f066/walmart-canada-port/src/java/app/canada/walmart/ListEnhancements.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: /workspace/scratch/08be9654f066/walmart-canada-port/src/java/app/canada/walmart/CanadaHooks.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+3 warnings
+54 navigation, stock, history, aisle-order and subtotal checks passed
+warning: [options] source value 8 is obsolete and will be removed in a future release
+warning: [options] target value 8 is obsolete and will be removed in a future release
+warning: [options] To suppress warnings about obsolete options, use -Xlint:-options.
+3 warnings
+21 aisle transformation and runtime-model subtotal checks passed
+24 ad classification, price extraction and exact-display checks passed
+/workspace/scratch/08be9654f066/walmart-canada-port/walmart-canada-26.31-v1.5.0-beta.1.mpp
