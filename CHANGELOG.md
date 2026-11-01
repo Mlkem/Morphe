@@ -1,3 +1,9 @@
+## [1.0.0-dev.4](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.3...v1.0.0-dev.4) (2026-11-01)
+
+### ✨ New Features
+
+* add optional Open with Pro file-type handling patch ([29d2ea7](https://github.com/Mlkem/Morphe/commit/29d2ea7716951d1666e4a0bf7565d8a2cfafcb68))
+
 ## [1.0.0-dev.3](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.2...v1.0.0-dev.3) (2026-11-01)
 
 ### 🐛 Bug Fixes

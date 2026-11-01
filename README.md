@@ -63,7 +63,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.3](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.3)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;25 patches total
+> **[v1.0.0-dev.4](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.4)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;26 patches total
 <details>
 <summary>📦 Walmart Canada&nbsp;&nbsp;•&nbsp;&nbsp;14 patches</summary>
 <br>
@@ -131,6 +131,24 @@ provide privacy.
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
 | [Disable Wongnai Google ads](#disable-wongnai-google-ads) | Stops the identified Google banner, native and interstitial ad loaders in Wongnai 12.11.0, and uses its existing photo-ad fallback. |  |
+
+</details>
+
+<details>
+<summary>📦 Open with&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
+
+**Package name:** `com.openwith.app`
+
+**🎯 Supported versions:**
+
+| 🧪&nbsp;1.2.1 |
+| :---: |
+| Version code 11; phone testing pending |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Enable Pro file-type handling](#enable-pro-file-type-handling) | Open with 1.2.1 (11) local test: enables the shared Pro flag used by file-type settings and routing, and removes the two Play installation licence startup calls for a re-signed build. Phone testing pending. |  |
 
 </details>
 
