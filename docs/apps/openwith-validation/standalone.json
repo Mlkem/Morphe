@@ -1,0 +1,14 @@
+{
+  "morphe_patcher": "2.1.0",
+  "app": "com.openwith.app",
+  "version": "1.2.1 (11)",
+  "all_methods_equal_to_independent_patch": true,
+  "methods_compared": 21052,
+  "unchanged_non_dex_entries": 126,
+  "phone_tested": false,
+  "mpp_loader_passed": true,
+  "patch_execution_passed": true,
+  "reapply_idempotence_passed": true,
+  "signature_verified": true,
+  "signature_warnings": []
+}

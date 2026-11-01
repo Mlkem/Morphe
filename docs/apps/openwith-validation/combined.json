@@ -1,0 +1,14 @@
+{
+  "morphe_patcher": "2.1.0",
+  "app": "com.openwith.app",
+  "version": "1.2.1 (11)",
+  "all_methods_equal_to_independent_patch": true,
+  "methods_compared": 21052,
+  "unchanged_non_dex_entries": 126,
+  "phone_tested": false,
+  "bundle": "combined mlkemac patches verification build",
+  "collection_patch_count": 26,
+  "collection_app_count": 6,
+  "existing_walmart_jvm_checks_passed": 99,
+  "android_patch_dex_compiler": "R8 8.10.21"
+}

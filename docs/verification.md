@@ -12,3 +12,16 @@
 - No physical-phone installation/import or full-app UI test was performed. Robolectric uses fixtures, not the complete Walmart app.
 
 CI additionally builds with the official Gradle plugin before publishing each beta.
+
+## Open with integration — 2026-11-02
+
+- The full collection compiles against Morphe Patcher 2.1.0 and discovers
+  **26 patches**, covering six named apps and the universal merge utility.
+- The new Open with patch stays opt-in and its 1.2.1 target stays experimental.
+- The existing **99** pure-JVM Walmart checks pass with the combined sources.
+- The Open with patch loads from the combined MPP, applies to the supplied app,
+  and produces the same instructions as the independently validated standalone
+  patch. All 20,318 output method implementations pass structural parsing.
+- The exact standalone MPP is retained under `prebuilt/openwith/` with its hash.
+- Phone testing remains pending. The release workflow runs the official Gradle
+  build and Android UI regressions before publishing the next beta.

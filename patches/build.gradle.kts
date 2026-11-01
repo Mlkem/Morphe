@@ -13,7 +13,7 @@ tasks.withType<JavaCompile>().configureEach {
 patches {
     about {
         name = "mlkemac patches"
-        description = "Community patches for Music League, Walmart Canada, Wongnai, Zoom Earth, PushPress, and XAPK merging."
+        description = "Community patches for Music League, Walmart Canada, Wongnai, Zoom Earth, PushPress, Open with, and XAPK merging."
         source = "https://github.com/Mlkem/Morphe"
         author = "mlkemac"
         contact = "https://github.com/Mlkem/Morphe/issues"
