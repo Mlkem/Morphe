@@ -27,6 +27,7 @@ for p in bundles:
         assert any(f.endswith('.class') for f in files)
         for name in ['extensions/canada.mpe','extensions/pushpress-crossfit-only.mpe']:
             assert z.read(name).startswith(b'dex\n'), name
+            assert b'Lkotlin/' not in z.read(name), f'Unexpected Kotlin runtime in Java extension: {name}'
         assert not any(f.startswith(('kotlin/','app/morphe/patcher/')) for f in files)
         assert not any(f.endswith(('.key','.keystore','.jks','.apk','.xapk')) for f in files)
         manifest=z.read('META-INF/MANIFEST.MF').decode()
