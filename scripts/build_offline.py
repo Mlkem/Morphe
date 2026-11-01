@@ -38,7 +38,7 @@ testcp=os.pathsep.join(map(str,[test,b/'canada-classes',t/'android.jar']))
 run(jdk/'javac','--release','8','-cp',testcp,'-d',test,*root.glob('tests/walmart/fixtures/**/*.java'),root/'tests/walmart/FeatureTest.java',root/'tests/walmart/AdHistoryTest.java')
 run(java,'-cp',testcp,'FeatureTest')
 run(java,'-cp',testcp,'AdHistoryTest')
-manifest='\r\n'.join(['Manifest-Version: 1.0','Name: Mlkem Patches','Description: Public community patches maintained by Mlkem','Version: '+a.version,'Timestamp: '+str(int(time.time()*1000)),'Author: Mlkem','License: GPLv3','Patcher-Version: 2.1.0','',''])
+manifest='\r\n'.join(['Manifest-Version: 1.0','Name: mlkemac patches','Description: Public community patches maintained by mlkemac','Version: '+a.version,'Timestamp: '+str(int(time.time()*1000)),'Author: mlkemac','License: GPLv3','Patcher-Version: 2.1.0','',''])
 libs=root/'patches/build/libs';libs.mkdir(parents=True,exist_ok=True)
 target=libs/('patches-'+a.version+'.mpp')
 with zipfile.ZipFile(target,'w',zipfile.ZIP_DEFLATED) as z:
