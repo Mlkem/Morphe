@@ -1,9 +1,11 @@
-# Mlkem Morphe Patches
+<img src="patches-bundle.png" alt="mlkemac patches icon" width="128" height="128">
+
+# mlkemac patches
 
 A single Morphe source for Music League, Walmart Canada, Wongnai, Zoom Earth,
 PushPress and the XAPK merge-only utility.
 
-**[Add source to Morphe](https://morphe.software/add-source?github=Mlkem/Morphe&name=Mlkem%20Morphe%20Patches)** ·
+**[Add source to Morphe](https://morphe.software/add-source?github=Mlkem/Morphe&name=mlkemac%20patches)** ·
 [Releases](https://github.com/Mlkem/Morphe/releases) ·
 [Builds](https://github.com/Mlkem/Morphe/actions) ·
 [Report a problem](https://github.com/Mlkem/Morphe/issues)

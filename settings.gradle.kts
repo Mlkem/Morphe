@@ -1,4 +1,4 @@
-rootProject.name = "mlkem-patches"
+rootProject.name = "mlkemac-patches"
 
 pluginManagement {
     repositories {
