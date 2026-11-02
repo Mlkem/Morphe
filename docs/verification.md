@@ -188,3 +188,18 @@ it does not force Flutter semantics during startup.
   or signing key is published.
   [Input/setup](apps/zoom-earth-liteapks.md),
   [machine record](apps/zoom-earth-liteapks-validation.json).
+
+## Zoom Earth dev.11 phone failure — 2026-11-02
+
+- The user reported “Still doesn't work” after the working-input release.
+  The symptom is not yet known: patching/install failure, Play Store redirect,
+  crash and blank screen have not been distinguished. Patch selections and the
+  Manager-generated APK remain unavailable.
+- The published dev.11 MPP was applied with Patcher 2.2.0-dev.2 and its complete
+  app-entry output matched the validated candidate. That checks the published
+  patch bundle, not the Manager's actual output or the device runtime.
+- Follow-up source inspection found no dependency on the removed promotional
+  calls in their class initialization. This does not establish a root cause.
+  No new code change or release is justified by the failure report alone.
+- Next evidence: completed Morphe patch log and the generated APK, if building
+  succeeded. Phone compatibility and stable approval remain unresolved.

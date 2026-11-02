@@ -37,7 +37,7 @@ available from Releases. Disable duplicate local sources for these apps.
 | Music League | `com.musicleague.app` 1.4.9 | Recovered patch sources | Combined bundle awaits phone testing |
 | Walmart Canada | `ca.walmart.ecommerceapp` 26.31 | 1.5.0-beta.1; 14 patches | Beta; Patch tools replaces Sparky |
 | Wongnai | `com.wongnai.android` 12.11.0 | Ad fix 1.0.0 | Phone testing pending |
-| Zoom Earth | `com.neave.zoomearth` 6.3.3 (52); legacy 6.1 | Local Pro, no ads, 100 favourites, quiet prompts; cleanup for the supplied working LiteAPKs APK | LiteAPKs base launches per user; new patches await phone retest. Original Play archive still blocked |
+| Zoom Earth | `com.neave.zoomearth` 6.3.3 (52); legacy 6.1 | Local Pro, no ads, 100 favourites, quiet prompts; cleanup for the supplied working LiteAPKs APK | LiteAPKs base launches per user; dev.11 reported unsuccessful. Exact failure under investigation; original Play archive still blocked |
 | PushPress Members | `com.pushpress.memberportal` 3.42.0 | CrossFit-only selector | Experimental; phone testing pending |
 | Open with | `com.openwith.app` 1.2.1 (11) | Pro file-type handling | Opt-in beta; phone testing pending |
 | GPS Emulator | `com.rosteam.gpsemulator` 3.36 (336) | Fresh Pro patch; 1,000 favourites | Opt-in beta; phone testing pending |

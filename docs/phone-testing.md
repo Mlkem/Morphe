@@ -31,7 +31,10 @@ The user subsequently supplied a **LiteAPKs 6.3.3 APK that launches**. It remove
 the native protection library and uses restored lifecycle methods. The new
 LiteAPKs cleanup patch preserves that startup code and removes only two injected
 promotional calls; the four feature patches now accept this input. The supplied
-base's successful launch is not a passing phone test of our new output. Follow
+base's successful launch is not a passing phone test of our new output.
+The dev.11 retest was reported unsuccessful (“Still doesn't work”); the exact
+symptom and selected patches are unconfirmed. Obtain the completed Morphe patch
+log and generated APK before another implementation change. Follow
 the [working-input steps](apps/zoom-earth-liteapks.md); do not apply the
 original-only startup attempt or legacy 6.1 nag patch to this APK.
 
