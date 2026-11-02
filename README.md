@@ -82,7 +82,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.6](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.6)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;28 patches total
+> **[v1.0.0-dev.7](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.7)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;31 patches total
 <details>
 <summary>📦 Morphe Manager&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
 <br>
@@ -96,7 +96,7 @@ provide privacy.
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [APKMirror search for collection apps](#apkmirror-search-for-collection-apps) | Changes Morphe Manager's download links for this collection's seven apps. Walmart Canada 26.31 opens its verified APKMirror APKM page; other versions/apps use a package-and-version Google search restricted to APKMirror, without nodpi. Other apps keep Manager's resolver. Does not download files automatically. |  |
+| [APKMirror search for collection apps](#apkmirror-search-for-collection-apps) | Changes Morphe Manager's download links for this collection's eight apps. Walmart Canada 26.31 opens its verified APKMirror APKM page; other versions/apps use a package-and-version Google search restricted to APKMirror, without nodpi. Other apps keep Manager's resolver. Does not download files automatically. |  |
 
 </details>
 
@@ -127,6 +127,25 @@ provide privacy.
 | [Sale-Ending Reminders — Canada](#sale-ending-reminders-canada) | Make Walmart's supplied promotion expiry text prominent on list items. In-list reminders only; no invented deadlines or background notifications. |  |
 | [Shopping Mode — Canada](#shopping-mode-canada) | Checklist switches for keeping the screen awake, larger checkboxes and hiding collected rows. Show collected restores them without changing your list. |  |
 | [Stock Availability — Canada](#stock-availability-canada) | Show Walmart's supplied availability and message below list item names. Unknown stays unknown; purchase limits are never treated as inventory counts. |  |
+
+</details>
+
+<details>
+<summary>📦 TAGTHAi&nbsp;&nbsp;•&nbsp;&nbsp;3 patches</summary>
+<br>
+
+**Package name:** `com.thaidigitalplatform.tagthai`
+
+**🎯 Supported versions:**
+
+| 🧪&nbsp;4.25.1 |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Allow TAGTHAi accessibility apps](#allow-tagthai-accessibility-apps) | Skips the local AppGuard accessibility-app check, including its reported app list. Intended for accessibility services installed from any source. Other sideloaded-app restrictions and server Play Integrity checks are not bypassed. Phone testing pending. |  |
+| [Allow TAGTHAi screenshots](#allow-tagthai-screenshots) | Clears FLAG_SECURE at TAGTHAi's three identified window-control sites. Allows screenshots and may expose previews in Recents. Screen-recording detection and protected third-party screens are not changed. Phone testing pending. |  |
+| [Select TAGTHAi text](#select-tagthai-text) | Adds a movable Select text button and a native copy/select panel for visible Flutter accessibility text. Enables the app's semantics tree; no system accessibility service is needed. Does not add inline selection or OCR. Phone testing pending. |  |
 
 </details>
 

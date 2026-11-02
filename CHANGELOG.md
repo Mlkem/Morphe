@@ -1,3 +1,9 @@
+## [1.0.0-dev.7](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.6...v1.0.0-dev.7) (2026-11-02)
+
+### ✨ New Features
+
+* **tagthai:** add accessibility, screenshot and text-selection patches ([804ed27](https://github.com/Mlkem/Morphe/commit/804ed27063b4b87cbf5e92eb8f2a5d8aebd34204))
+
 ## [1.0.0-dev.6](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.5...v1.0.0-dev.6) (2026-11-02)
 
 ### ✨ New Features
