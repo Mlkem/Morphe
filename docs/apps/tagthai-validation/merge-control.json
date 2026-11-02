@@ -1,0 +1,37 @@
+{
+  "date": "2026-11-02",
+  "package": "com.thaidigitalplatform.tagthai",
+  "version": "4.25.1",
+  "collection": "1.0.0-dev.8",
+  "selected_patch": "Merge XAPK only",
+  "desktop_input": "Supplied original split archive, merged using the existing desktop workflow",
+  "harness": "Adapted tests/merge/VerifyMergeOnly.java: select Merge XAPK only by name, apply to actual merged TAGTHAi input, compare entries before and after patching and signing",
+  "patcher": "2.1.0",
+  "effective_bytecode_mode": "NONE",
+  "effective_resource_mode": "RAW_ONLY",
+  "mpp_build": "local offline validation build, not the published release asset",
+  "mpp_sha256": "681ec9172762b5432a882ff2ba36af89a810c1265924ad6fbea4ecccd7e6465e",
+  "merged_input_sha256": "599237edc8e5889930af9755adae2a1c9aac66f738004fc5157fd2d29cfb59c5",
+  "checks": [
+    "original-merged.apk uses RAW_ONLY resources",
+    "original-merged.apk skips bytecode decoding/rewrite",
+    "original-merged.apk executes exactly one successful patch",
+    "original-merged.apk generates no replacement DEX",
+    "original-merged.apk generates no compiled resource APK",
+    "original-merged.apk generates no resource changes",
+    "original-merged.apk requests no deletions",
+    "Merge-only preserves every merged TAGTHAi app-entry byte (1260 entries)",
+    "Signed control passes ApkVerifier: []",
+    "Signing preserves every merged TAGTHAi app-entry byte (1260 entries)"
+  ],
+  "original_dex_and_native_entries_preserved_by_merge": 15,
+  "app_entries_preserved_by_noop_and_signing": 1260,
+  "signature_verification": "passed with a temporary test key",
+  "phone_result": "pending",
+  "root_cause_confirmed": false,
+  "limitations": [
+    "Desktop checks do not test Android startup or Manager runtime behavior.",
+    "Merge and re-signing can change packaging and signer identity despite preserving entry contents.",
+    "No APK or test signing key is published."
+  ]
+}

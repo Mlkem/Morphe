@@ -80,7 +80,8 @@ CI additionally builds with the official Gradle plugin before publishing each be
   secure-window inheritance and detach cleanup. The simulation uses API 35.
 - **99 Walmart JVM checks** and **57 Manager URL checks** pass. TAGTHAi joins the
   optional Manager search package list. Existing app patch sources are preserved.
-- No physical phone or Android 17 runtime test has been performed. The local
+- No physical phone or Android 17 runtime test was performed during initial
+  desktop validation; subsequent user-reported failures are recorded below. The local
   accessibility patch does not establish a bypass of every sideloaded-app check
   or server Play Integrity. [Setup, behavior and limits](apps/tagthai.md).
 
@@ -107,6 +108,11 @@ it does not force Flutter semantics during startup.
   New tests cover passive startup and permission-focus changes, timeout without
   stale text, detach during collection, and preserving an enabled service.
 - The 99 Walmart JVM checks and 57 Manager URL checks pass.
-- The white-screen failure is **not confirmed fixed on the phone**. Retry only
-  the accessibility patch from the original archive first; see
-  [the retest steps](apps/tagthai.md#retesting-the-notification-permission-hang).
+- The user reported the **same white screen on the accessibility-only dev.8
+  retry**. The revision did not resolve the launch failure. No root cause is
+  confirmed, and no further behavior change has been made based on this report.
+- The existing **Merge XAPK only** patch passes a desktop control on the supplied
+  merged APK: DEX processing is skipped, all 1,260 app entries are byte-identical
+  through patching and signing, and the signature verifies. Its phone result is
+  pending. [Control record](apps/tagthai-validation/merge-control.json) and
+  [phone control steps](apps/tagthai.md#retesting-the-notification-permission-hang).

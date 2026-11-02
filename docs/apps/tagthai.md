@@ -5,7 +5,9 @@ minimum Android 9 / API 28. These three patches are independent, opt-in, and
 experimental. They were developed against the supplied original ARM64 split
 archive. A white-screen hang was reported with dev.7 after granting notification
 permission, including with only the accessibility patch selected. The original
-app opened normally. Dev.8 revises startup behavior; phone confirmation is pending.
+app opened normally. The accessibility-only dev.8 retry produced the same white
+screen. The launch failure remains unresolved; desktop verification does not
+establish that these patches work on the phone.
 
 | Patch | Behavior | Limits |
 | --- | --- | --- |
@@ -35,12 +37,20 @@ a verified bypass of every installation-source restriction.
 
 ## Retesting the notification-permission hang
 
-Refresh to **v1.0.0-dev.8** and patch the **original** archive again with only
-**Allow TAGTHAi accessibility apps** selected first. Updating the source alone
-does not change an already installed APK. Use the same Morphe signing key to
-update the patched installation; there is no requirement to clear app data.
-The revised patch rejects the old SDK early-return implementation instead of
-silently stacking the new callback edit on top of it.
+The accessibility-only retry on **v1.0.0-dev.8** also failed. Do not repeat that
+test expecting a fix. The next control is the existing universal merge utility:
+
+1. Start from the same **original 4.25.1 split archive**, not a patched APK.
+2. Deselect every patch from every source, then select **Merge XAPK only** from
+   `Mlkem/Morphe`. The final selection must contain exactly one patch.
+3. Build and install using the same Morphe signing key as the existing patched
+   installation. Do not clear app data as part of this comparison.
+4. Open the app, follow the same permission flow if prompted, and record whether
+   it opens normally, shows another error, or reaches the same white screen.
+
+The merge-only patch is already in dev.8; another beta is not needed for this
+test. It skips bytecode rewriting and makes no app-code or resource edits. Morphe
+still merges the splits, aligns the APK, and signs with the user's key.
 
 Dev.8 preserves the original AppGuard method, its callback timing, and its DEX
 placement. It changes only the accessibility branch of TAGTHAi's callback class;
@@ -48,12 +58,17 @@ that class's unrelated file-error branch is retained. Text selection is also
 now activated only by a tap. The accessibility-only failure means the text and
 screenshot patches were not required to trigger the reported hang.
 
-These changes reduce interference with startup but do **not** establish the
-phone failure's root cause. If the accessibility-only retry still shows a white
-screen, compare with a copy made using only the universal **Merge XAPK only**
-patch from the original archive. If that copy also fails, re-signing/repackaging
-or another app-integrity check is implicated rather than the accessibility edit.
-Do not interpret a successful desktop build as a successful phone retest.
+These changes did **not** resolve the reported phone failure. If the merge-only
+copy also fails, the failure can occur without accessibility bytecode edits;
+investigate the merge/sign/install flow and runtime logs. That result alone does
+not prove an anti-tamper check is responsible. If the control opens normally,
+compare bytecode processing and the accessibility edit next. The control's phone
+result is pending.
+
+The desktop control skipped DEX processing, preserved all 1,260 merged app entries
+byte for byte through patching and signing, and passed APK signature verification.
+See the [control record](tagthai-validation/merge-control.json). This does not
+test Android launch or guarantee that Manager produces an identical APK.
 
 ## Text panel behavior
 

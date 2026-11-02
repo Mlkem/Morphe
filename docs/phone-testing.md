@@ -14,7 +14,10 @@ launch/login, accessibility and sideload-warning checks, screenshots, text
 selection, rotation/resume and protected-feature checks; see [its test notes](apps/tagthai.md).
 TAGTHAi dev.7 was reported to hang on a white screen after notification permission
 with all three patches and with accessibility alone; the original opened normally.
-Dev.8 changes SDK/callback handling and needs a fresh phone retest.
+The accessibility-only dev.8 retry produced the same white screen. Startup is
+still failing. The next phone test uses only **Merge XAPK only** from the original
+archive, with all patches from other sources deselected. Its result is pending;
+see the [control steps](apps/tagthai.md#retesting-the-notification-permission-hang).
 
 1. Test the dev release on the phone and record results here.
 2. Merge the tested dev branch into main without squashing release history.
