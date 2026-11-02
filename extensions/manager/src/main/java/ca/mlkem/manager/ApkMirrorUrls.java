@@ -38,7 +38,8 @@ public final class ApkMirrorUrls {
             || "com.wongnai.android".equals(packageName)
             || "com.neave.zoomearth".equals(packageName)
             || "com.pushpress.memberportal".equals(packageName)
-            || "com.openwith.app".equals(packageName);
+            || "com.openwith.app".equals(packageName)
+            || "com.rosteam.gpsemulator".equals(packageName);
     }
 
     private static String quote(String value) {

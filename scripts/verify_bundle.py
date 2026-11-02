@@ -4,11 +4,18 @@ import json, zipfile
 root=Path(__file__).resolve().parents[1]
 patches=json.loads((root/'patches-list.json').read_text())['patches']
 names=[p['name'] for p in patches]
-assert len(patches)==27, f'Expected 27 patches, found {len(patches)}'
+assert len(patches)==28, f'Expected 28 patches, found {len(patches)}'
 assert len(names)==len(set(names)), 'Duplicate patch names'
 packages={c['packageName'] for p in patches for c in (p.get('compatiblePackages') or [])}
-expected={'com.musicleague.app','ca.walmart.ecommerceapp','com.wongnai.android','com.neave.zoomearth','com.pushpress.memberportal','com.openwith.app','app.morphe.manager'}
+expected={'com.musicleague.app','ca.walmart.ecommerceapp','com.wongnai.android','com.neave.zoomearth','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','app.morphe.manager'}
 assert packages==expected, f'Unexpected app set: {packages}'
+gps=next(p for p in patches if p['name']=='Enable GPS Emulator Pro')
+assert gps['default'] is False, 'GPS Emulator must remain opt-in'
+assert len(gps['compatiblePackages']) == 1
+gps_target=gps['compatiblePackages'][0]
+assert gps_target['packageName'] == 'com.rosteam.gpsemulator'
+assert [t['version'] for t in gps_target['targets']] == ['3.36']
+assert all(t['minSdk'] == 29 for t in gps_target['targets'])
 openwith=next(p for p in patches if p['name']=='Enable Pro file-type handling')
 assert openwith['default'] is False, 'Open with must remain opt-in'
 assert len(openwith['compatiblePackages']) == 1
@@ -28,7 +35,7 @@ assert merge['default'] is False and merge['compatiblePackages'] is None
 for p in patches:
     if 'Hermes hide' in p['name']: assert p['default'] is False
     for c in p.get('compatiblePackages') or []:
-        if c['packageName'] in {'ca.walmart.ecommerceapp','com.pushpress.memberportal','com.openwith.app','app.morphe.manager'}:
+        if c['packageName'] in {'ca.walmart.ecommerceapp','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','app.morphe.manager'}:
             assert all(t['isExperimental'] for t in c['targets']), 'Unverified target must stay experimental'
 bundles=[p for p in (root/'patches/build/libs').glob('*.mpp')
          if not any(kind in p.name for kind in ('-sources', '-javadoc'))]
@@ -39,6 +46,8 @@ for p in bundles:
         assert len(files)==len(set(files))
         assert z.read('classes.dex').startswith(b'dex\n')
         assert any(f.endswith('.class') for f in files)
+        assert 'ca/mlkem/gps/GpsEmulatorProPatch.class' in files
+        assert b'Lca/mlkem/gps/GpsEmulatorProPatch;' in z.read('classes.dex')
         assert 'ca/mlkem/openwith/OpenWithProPatch.class' in files
         assert b'Lca/mlkem/openwith/OpenWithProPatch;' in z.read('classes.dex')
         assert 'ca/mlkem/manager/ApkMirrorSearchPatchKt.class' in files

@@ -47,3 +47,19 @@ CI additionally builds with the official Gradle plugin before publishing each be
   No APK or private signing key is included in this change.
 - These are desktop checks. Phone installation, browser handoff and preserving
   Manager settings/signing keys through replacement remain untested.
+
+## GPS Emulator integration — 2026-11-02
+
+- The full collection builds with **28 patches**, eight named apps and the
+  universal merge utility. GPS Emulator Pro is opt-in and 3.36 is experimental.
+- Both the standalone and combined MPP pass the GPS harness against the original
+  3.36 (336) APKM merged from 28 splits. All **452,482** method implementations
+  pass structural parsing; exactly three app methods change. Startup simulation,
+  preserved settings/resources, Android signature verification and rejection of
+  already-patched input pass. See [the record](apps/gps-validation/verification.json).
+- **53** APKMirror URL checks pass, including exact GPS Emulator package/version
+  lookup; the existing **99** Walmart JVM checks pass.
+- The old 3.31 manifest-only update blocker is not included. Setup notes explain
+  removing that obsolete local source if its version guard stops a 3.36 run.
+- Phone testing remains pending. The automated release workflow builds with the
+  official Gradle plugin and runs its Android UI regressions before publishing.

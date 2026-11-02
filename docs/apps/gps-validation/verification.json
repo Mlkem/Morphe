@@ -1,0 +1,43 @@
+{
+  "date": "2026-11-02",
+  "app": "com.rosteam.gpsemulator",
+  "version": "3.36",
+  "version_code": 336,
+  "original_apkm_sha256": "b4f5a97ef44260c5e17671516a32aa5feb4c3a9da5076dd6063c033292cc17a2",
+  "merged_original_sha256": "c608c223025a39058847b7520146a01d20ce77b05fae2ae190e14e7e0c416bc2",
+  "standalone_mpp_sha256": "1969de5e29bb56221dee421d1c1a76f449740f5ae7ac437c26357e50d7c9e109",
+  "combined_verification_mpp_sha256": "bdb224e0072c85601231c79fac07516c5b54896cc59c1561a7d6564c8941de22",
+  "combined_build": "local verification before automated release; not the published dev.5",
+  "patcher": "2.1.0",
+  "original_split_count": 28,
+  "classes": 73856,
+  "implemented_methods": 452482,
+  "changed_methods": [
+    "App.onCreate()V",
+    "MainActivity.deshabilitarPRO()V",
+    "SettingsFragment.deshabilitarPRO()V"
+  ],
+  "unchanged_resource_native_entries": 1611,
+  "passed": [
+    "standalone and combined bundle discovery",
+    "patch execution and APK rebuild",
+    "all output DEX method structures",
+    "startup Pro and 1000 favourites simulation",
+    "existing user choices preserved",
+    "billing downgrade early returns",
+    "exact three-method change scope",
+    "resource and native byte preservation",
+    "Android APK signature verification",
+    "already-patched input rejection"
+  ],
+  "phone_tested": false,
+  "phone_testing_pending": [
+    "Manager import",
+    "installation",
+    "startup",
+    "maps",
+    "mock locations",
+    "Pro features",
+    "same-key update"
+  ]
+}

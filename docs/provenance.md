@@ -12,6 +12,7 @@ older repository commit history was transferred.
 | Wongnai | Source embedded in wongnai-adfix-12.11.0-v1.0.0.mpp; MIT notice retained |
 | XAPK Merge | Source embedded in morphe-merge-xapk-only-v1.0.0.mpp |
 | PushPress | Saved pushpress-crossfit-only-morphe-source.zip |
+| GPS Emulator | Fresh patch for the supplied original 3.36 (336) APKMirror APKM; standalone 1.0.0-beta.1 preserved under `prebuilt/gps/` |
 
 ## Imported archive SHA-256
 
