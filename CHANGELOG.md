@@ -1,3 +1,9 @@
+## [1.0.0-dev.11](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.10...v1.0.0-dev.11) (2026-11-02)
+
+### 🐛 Bug Fixes
+
+* **zoomearth:** support the working LiteAPKs 6.3.3 input ([a2367ab](https://github.com/Mlkem/Morphe/commit/a2367ab9a44062848cf00c243977f1ad9be96fc0))
+
 ## [1.0.0-dev.10](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.9...v1.0.0-dev.10) (2026-11-02)
 
 ### 🐛 Bug Fixes
