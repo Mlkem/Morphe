@@ -20,5 +20,10 @@
   ],
   "same_patched_dex_across_runtimes": true,
   "patched_primary_dex_sha256": "e11bbd110c91b25de4a4422c1831dff2e99b96542277c601f1b8baf79a869027",
-  "candidate_mpp_sha256": "73ad9ab60bbbb54fd0ffba604814de13ce84e60c687229a4ba6ad23e59e092c3"
+  "candidate_mpp_sha256": "73ad9ab60bbbb54fd0ffba604814de13ce84e60c687229a4ba6ad23e59e092c3",
+  "published_release": "v1.0.0-dev.12",
+  "published_mpp_sha256": "ce70d7e78d6d2dae2c9f072af1ece6eab4c808582646f0db33bee44e4f8a0358",
+  "published_mpp_real_input_verification": "passed with Patcher 2.2.0-dev.2; identical output to candidate",
+  "release_workflow": "https://github.com/Mlkem/Morphe/actions/runs/41442159682",
+  "release_workflow_result": "success"
 }
