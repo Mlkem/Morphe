@@ -1,6 +1,6 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.0.0-dev.7",
+  "version": "1.0.0-dev.8",
   "patches": [
     {
       "name": "APKMirror search for collection apps",
@@ -72,7 +72,7 @@
     },
     {
       "name": "Allow TAGTHAi accessibility apps",
-      "description": "Skips the local AppGuard accessibility-app check, including its reported app list. Intended for accessibility services installed from any source. Other sideloaded-app restrictions and server Play Integrity checks are not bypassed. Phone testing pending.",
+      "description": "Normalizes the local accessibility result after AppGuard completes its check. Intended for accessibility services installed from any source. Other sideloaded-app restrictions and server Play Integrity checks are not bypassed. Phone testing pending.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -728,7 +728,7 @@
     },
     {
       "name": "Select TAGTHAi text",
-      "description": "Adds a movable Select text button and a native copy/select panel for visible Flutter accessibility text. Enables the app's semantics tree; no system accessibility service is needed. Does not add inline selection or OCR. Phone testing pending.",
+      "description": "Adds a movable Select text button and a native copy/select panel for visible Flutter accessibility text. Requests semantics only after tapping Select text; no system accessibility service is needed. Does not add inline selection or OCR. Phone testing pending.",
       "default": false,
       "category": null,
       "compatiblePackages": [

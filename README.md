@@ -82,7 +82,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.7](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.7)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;31 patches total
+> **[v1.0.0-dev.8](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.8)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;31 patches total
 <details>
 <summary>📦 Morphe Manager&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
 <br>
@@ -143,9 +143,9 @@ provide privacy.
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [Allow TAGTHAi accessibility apps](#allow-tagthai-accessibility-apps) | Skips the local AppGuard accessibility-app check, including its reported app list. Intended for accessibility services installed from any source. Other sideloaded-app restrictions and server Play Integrity checks are not bypassed. Phone testing pending. |  |
+| [Allow TAGTHAi accessibility apps](#allow-tagthai-accessibility-apps) | Normalizes the local accessibility result after AppGuard completes its check. Intended for accessibility services installed from any source. Other sideloaded-app restrictions and server Play Integrity checks are not bypassed. Phone testing pending. |  |
 | [Allow TAGTHAi screenshots](#allow-tagthai-screenshots) | Clears FLAG_SECURE at TAGTHAi's three identified window-control sites. Allows screenshots and may expose previews in Recents. Screen-recording detection and protected third-party screens are not changed. Phone testing pending. |  |
-| [Select TAGTHAi text](#select-tagthai-text) | Adds a movable Select text button and a native copy/select panel for visible Flutter accessibility text. Enables the app's semantics tree; no system accessibility service is needed. Does not add inline selection or OCR. Phone testing pending. |  |
+| [Select TAGTHAi text](#select-tagthai-text) | Adds a movable Select text button and a native copy/select panel for visible Flutter accessibility text. Requests semantics only after tapping Select text; no system accessibility service is needed. Does not add inline selection or OCR. Phone testing pending. |  |
 
 </details>
 

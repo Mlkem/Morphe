@@ -1,3 +1,9 @@
+## [1.0.0-dev.8](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.7...v1.0.0-dev.8) (2026-11-02)
+
+### 🐛 Bug Fixes
+
+* **tagthai:** preserve SDK execution and defer text capture ([a122036](https://github.com/Mlkem/Morphe/commit/a122036a5de42c98de6a7b07b4e5818e05303979))
+
 ## [1.0.0-dev.7](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.6...v1.0.0-dev.7) (2026-11-02)
 
 ### ✨ New Features
