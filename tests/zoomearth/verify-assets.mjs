@@ -23,6 +23,8 @@ for (let mask = 0; mask < 16; mask++) {
   const source = fs.readFileSync(path.join(root, mask ? `mask-${mask}/app.js` : 'original.js'), 'utf8');
   new vm.Script(source); checks++; // Parse the entire shipped JavaScript, not just edited fragments.
   const pro = !!(mask & 1), ads = !!(mask & 2), favorites = !!(mask & 4), quiet = !!(mask & 8);
+  if (pro) equal(source.includes('const Nt=Object.freeze({FREE:"free",PRO:"pro"})'), true,
+    'Local Pro keeps distinct free/pro account tiers, including on the LiteAPKs base');
   const localGetter = method(source, /get xt\(\)\{[^{}]*\}/);
   const serverGetter = pro ? method(source, /get mlkemServerPro\(\)\{[^{}]*\}/) : '';
   const routing = source.match(/pd=\(\)=>([^,]+),md=/)[1];

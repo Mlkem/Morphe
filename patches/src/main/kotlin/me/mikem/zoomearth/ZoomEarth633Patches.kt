@@ -8,12 +8,20 @@ private const val ORIGINAL_SHA256 = "9649130ea6b4fe7c085746c6c1608f19987f51df360
 private val zoom633 = Compatibility(
     name = "Zoom Earth",
     packageName = "com.neave.zoomearth",
-    description = "Supplied 6.3.3 (52) split archive; experimental until tested on a phone.",
-    apkFileType = ApkFileType.APKM,
-    targets = listOf(AppTarget(version = "6.3.3", isExperimental = true, minSdk = 32))
+    description = "Verified 6.3.3 (52) original archive or supplied working LiteAPKs APK; experimental.",
+    apkFileType = ApkFileType.APK,
+    targets = listOf(AppTarget(version = "6.3.3", isExperimental = true, minSdk = 26))
 )
 
 private data class AssetEdit(val before: String, val after: String)
+
+// The supplied working APK changes only this enum in the JavaScript bundle.
+// Restore distinct tier values when applying our local-Pro implementation so
+// the account's free tier cannot be mistaken for a paid server entitlement.
+private val liteTierEdit = AssetEdit(
+    "const Nt=Object.freeze({FREE:\"free\",PRO:\"pro\"})",
+    "const Nt=Object.freeze({FREE:\"pro\",PRO:\"pro\"})"
+)
 
 private val proEdits = listOf(
     AssetEdit(
@@ -56,25 +64,27 @@ private val allEdits = proEdits + adEdits + favoriteEdits + quietEdits
 private fun ResourcePatchContext.editZoomAsset(edits: List<AssetEdit>) {
     check(packageMetadata.packageName == zoom633.packageName &&
         packageMetadata.versionName == "6.3.3" && packageMetadata.versionCode == "52") {
-        "Requires Zoom Earth 6.3.3 (52). Select the supplied original archive."
+        "Requires Zoom Earth 6.3.3 (52). Select a verified original or supplied LiteAPKs input."
     }
     val file = get(ASSET)
     val source = file.readText(Charsets.UTF_8)
     // Recognize this collection's other independent edits in any execution order,
     // while rejecting unknown/minified bundles and any unrelated asset changes.
     val normalized = allEdits.fold(source) { text, edit -> text.replace(edit.after, edit.before) }
+        .replace(liteTierEdit.after, liteTierEdit.before)
     val digest = MessageDigest.getInstance("SHA-256").digest(normalized.toByteArray(Charsets.UTF_8))
         .joinToString("") { "%02x".format(it.toInt() and 0xff) }
     check(digest == ORIGINAL_SHA256) {
-        "Zoom Earth JavaScript differs from the verified 6.3.3 bundle. Select the original archive."
+        "Zoom Earth JavaScript differs from both verified 6.3.3 inputs. Select an unpatched verified input."
     }
     edits.forEach { edit ->
         val first = source.indexOf(edit.before)
         check(first >= 0 && source.indexOf(edit.before, first + edit.before.length) < 0) {
-            "Zoom Earth edit is already applied or its target is ambiguous. Select the original archive."
+            "Zoom Earth edit is already applied or its target is ambiguous. Select an unpatched verified input."
         }
     }
-    file.writeText(edits.fold(source) { text, edit -> text.replace(edit.before, edit.after) }, Charsets.UTF_8)
+    val input = if (edits == proEdits) source.replace(liteTierEdit.after, liteTierEdit.before) else source
+    file.writeText(edits.fold(input) { text, edit -> text.replace(edit.before, edit.after) }, Charsets.UTF_8)
 }
 
 val enableZoomEarthPro = rawResourcePatch(

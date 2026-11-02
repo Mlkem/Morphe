@@ -19,8 +19,8 @@ private val startupMethods = listOf(
 
 val allowZoomEarthPatchedInstallation = rawResourcePatch(
     name = "Allow Zoom Earth patched installation",
-    description = "Addresses the Get this app from Play startup screen in 6.3.3 by disabling two local installer/signature check methods. " +
-        "Preserves protected-code locations and native VM assets. Does not grant paid server access. Phone retest required.",
+    description = "Experimental original-APK startup attempt; dev.10 still showed Get this app from Play on the phone. " +
+        "Do not select for the working LiteAPKs APK. Disables two local checks, preserves native VM assets and does not grant paid server access.",
     default = false
 ) {
     compatibleWith(Compatibility(

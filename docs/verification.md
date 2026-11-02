@@ -159,3 +159,32 @@ it does not force Flutter semantics during startup.
 - Next evidence: the actual Morphe-generated patched APK and completed patch log.
   No additional patch or release is claimed as a fix from these desktop checks.
   [Machine record](apps/zoom-earth-startup-validation.json).
+
+## Zoom Earth working LiteAPKs input — 2026-11-02
+
+- The user supplied a LiteAPKs 6.3.3 (52) APK reported to launch on the phone.
+  It removes the native protection library/encrypted assets and restores six
+  main-activity lifecycle methods in an additional DEX. This is substantially
+  different from the dev.10 two-method startup attempt on the original archive.
+- Added **Remove Zoom Earth LiteAPKs promotions** as an opt-in raw patch. It
+  checks all three input DEX hashes, replaces only the two promotional startup
+  calls with NOPs and updates the DEX header checksums. Restored startup code,
+  secondary DEX files, manifest, libraries and resources are unchanged.
+- The four existing feature patches now accept both verified JavaScript inputs.
+  Selecting Pro restores distinct free/pro tier enum values before applying the
+  existing local UI / genuine server-entitlement split. Other feature patches
+  alone retain the input's tier behavior. Original-only startup and legacy 6.1
+  cleanup patches remain separate and must not be selected for this input.
+- Patcher 2.2.0-dev.2 passes all **31** nonempty cleanup/feature combinations,
+  reverse order, wrong/modified/repeated-input rejection and Android signing.
+  Exact comparison confirms only 12 DEX instruction bytes plus checksums change;
+  all unrelated app-entry bytes are retained. **1,144** JavaScript checks pass.
+- All 15 original-input feature combinations also pass (425 assertions), with
+  JavaScript outputs identical to the previous candidate. This confirms feature
+  compatibility, not successful startup of that protected original input.
+- The collection now contains **37 patches**. The supplied base's reported
+  successful launch does not establish that the new patched output works on
+  the phone; stable publication remains unapproved. No APK, restored app code
+  or signing key is published.
+  [Input/setup](apps/zoom-earth-liteapks.md),
+  [machine record](apps/zoom-earth-liteapks-validation.json).

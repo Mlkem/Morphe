@@ -4,20 +4,21 @@ import json, zipfile
 root=Path(__file__).resolve().parents[1]
 patches=json.loads((root/'patches-list.json').read_text())['patches']
 names=[p['name'] for p in patches]
-assert len(patches)==36, f'Expected 36 patches, found {len(patches)}'
+assert len(patches)==37, f'Expected 37 patches, found {len(patches)}'
 assert len(names)==len(set(names)), 'Duplicate patch names'
 packages={c['packageName'] for p in patches for c in (p.get('compatiblePackages') or [])}
 expected={'com.musicleague.app','ca.walmart.ecommerceapp','com.wongnai.android','com.neave.zoomearth','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','com.thaidigitalplatform.tagthai','app.morphe.manager'}
 assert packages==expected, f'Unexpected app set: {packages}'
-zoom_names={'Enable Zoom Earth Pro features','Remove Zoom Earth ads','100 Zoom Earth favourites','Quiet Zoom Earth prompts','Allow Zoom Earth patched installation'}
+zoom_names={'Enable Zoom Earth Pro features','Remove Zoom Earth ads','100 Zoom Earth favourites','Quiet Zoom Earth prompts','Allow Zoom Earth patched installation','Remove Zoom Earth LiteAPKs promotions'}
 zoom=[p for p in patches if p['name'] in zoom_names]
-assert len(zoom)==5
+assert len(zoom)==6
 for p in zoom:
     assert not p['default'] and len(p['compatiblePackages'])==1
     target=p['compatiblePackages'][0]
     assert target['packageName']=='com.neave.zoomearth'
     assert [t['version'] for t in target['targets']]==['6.3.3']
-    assert all(t['minSdk']==32 and t['isExperimental'] for t in target['targets'])
+    min_sdk=32 if p['name']=='Allow Zoom Earth patched installation' else 26
+    assert all(t['minSdk']==min_sdk and t['isExperimental'] for t in target['targets'])
 tagthai=[p for p in patches if any(c['packageName']=='com.thaidigitalplatform.tagthai' for c in p.get('compatiblePackages') or [])]
 assert len(tagthai)==3
 for p in tagthai:
@@ -65,6 +66,8 @@ for p in bundles:
         assert b'Lme/mikem/zoomearth/ZoomEarth633PatchesKt;' in z.read('classes.dex')
         assert 'me/mikem/zoomearth/ZoomEarthStartupPatchKt.class' in files
         assert b'Lme/mikem/zoomearth/ZoomEarthStartupPatchKt;' in z.read('classes.dex')
+        assert 'me/mikem/zoomearth/ZoomEarthLiteApksPatchKt.class' in files
+        assert b'Lme/mikem/zoomearth/ZoomEarthLiteApksPatchKt;' in z.read('classes.dex')
         assert 'ca/mlkem/tagthai/TagthaiPatchesKt.class' in files
         assert b'Lca/mlkem/tagthai/TagthaiPatchesKt;' in z.read('classes.dex')
         assert b'Lca/mlkem/tagthai/TextSelection;' in z.read('extensions/tagthai-text.mpe')

@@ -1,0 +1,58 @@
+{
+  "result": "passed",
+  "combinations": 31,
+  "removed_startup_calls": 2,
+  "instruction_bytes_replaced": 12,
+  "other_dex_bytes_unchanged_except_checksums": true,
+  "all_other_app_entries_unchanged": true,
+  "reverse_order": "passed",
+  "rejections": "passed",
+  "signature": "passed",
+  "phone_tested": false,
+  "date": "2026-11-02",
+  "candidate": "1.0.0-dev.11",
+  "package": "com.neave.zoomearth",
+  "version": "6.3.3",
+  "version_code": 52,
+  "input_min_sdk": 26,
+  "patcher": "2.2.0-dev.2",
+  "desktop": "2.0.0-dev.4",
+  "input_apk_sha256": "0c928aedb74a441a8d0189f3f2a40d5c749037ba8e4558e15e6ebd2791eaa6f1",
+  "input_phone_launch": "Reported working by user",
+  "patched_phone_retest": "pending",
+  "original_play_archive_startup": "still unresolved after dev.10",
+  "offline_mpp_sha256": "8f3477c1b9144a16eee0971da897b4140006401b145696ffd244aff653c8d3f1",
+  "javascript": {
+    "result": "passed",
+    "masks": 16,
+    "checks": 1144,
+    "scope": "Syntax of full bundle and extracted real methods with mocked native/network boundaries",
+    "phone_tested": false
+  },
+  "retained_unchanged": [
+    "Restored main-activity lifecycle implementations",
+    "Startup launcher and string/method restoration",
+    "classes2.dex",
+    "classes3.dex",
+    "AndroidManifest.xml",
+    "Native libraries",
+    "All resource entries"
+  ],
+  "input_dex_sha256": {
+    "classes.dex": "6e202b16eae292e6ef670a61bc296fbc9fc8f954df50406bcadab0f86f48af7d",
+    "classes2.dex": "9c974feffabb9a4bf12cf5420fc6ece73a881eefaa4cecfb4c0e4478eb8f7b40",
+    "classes3.dex": "0a2dbbb1821d49e34b80912414b6bfbe4fe16b44b4d795d687b8a38f39ae2de7"
+  },
+  "all_features_output_sha256": {
+    "classes.dex": "0b561a861dfeb6eef1859cbc44a23aaea76bcd84f9b6fb492e033e42468e3e0c",
+    "assets/public/assets/js/app.js": "f0afea8d3255d179fc24571902d2f1d99e492c4ac6e9a2528c0dd364aca5ec98"
+  },
+  "original_input_regression": {
+    "result": "passed",
+    "combinations": 15,
+    "assertions": 425,
+    "unchanged_entries_per_combination": 3150,
+    "phone_tested": false,
+    "all_15_javascript_outputs_match_previous_candidate": true
+  }
+}

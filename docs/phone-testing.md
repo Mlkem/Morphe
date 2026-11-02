@@ -23,9 +23,17 @@ Zoom Earth 6.3.3 (52) dev.9 was reported to show **Get this app from Play**.
 The user reported the same result after dev.10; startup remains unresolved.
 The exact applied patches and the installed APK have not been supplied. A desktop
 recheck of the published bundle with Patcher 2.2.0-dev.2 preserves both startup
-edits and matches the previous Patcher 2.1.0 DEX/JavaScript output. Next, inspect
-the actual Morphe-generated APK and completed patch log to distinguish missing
-edits from another runtime path. No passing phone result is recorded.
+edits and matches the previous Patcher 2.1.0 DEX/JavaScript output. The installed
+Morphe output remains unexamined. No passing phone result is recorded for the
+original archive.
+
+The user subsequently supplied a **LiteAPKs 6.3.3 APK that launches**. It removes
+the native protection library and uses restored lifecycle methods. The new
+LiteAPKs cleanup patch preserves that startup code and removes only two injected
+promotional calls; the four feature patches now accept this input. The supplied
+base's successful launch is not a passing phone test of our new output. Follow
+the [working-input steps](apps/zoom-earth-liteapks.md); do not apply the
+original-only startup attempt or legacy 6.1 nag patch to this APK.
 
 After startup is resolved, test live map/radar loading, foreground/resume, no ad
 footer, saving more than 30 places and retaining them after restart, and quiet

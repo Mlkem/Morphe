@@ -18,7 +18,8 @@ import java.util.zip.*;
 public class VerifyZoomEarth {
     static final String ASSET = "assets/public/assets/js/app.js";
     static final String[] NAMES = {"Enable Zoom Earth Pro features", "Remove Zoom Earth ads",
-        "100 Zoom Earth favourites", "Quiet Zoom Earth prompts", "Allow Zoom Earth patched installation"};
+        "100 Zoom Earth favourites", "Quiet Zoom Earth prompts", "Allow Zoom Earth patched installation",
+        "Remove Zoom Earth LiteAPKs promotions"};
     static int assertions;
     static void check(boolean ok, String message) {
         if (!ok) throw new AssertionError(message);
@@ -78,7 +79,7 @@ public class VerifyZoomEarth {
         for (String name : before.keySet()) if (!before.get(name).equals(after.get(name))) changed.add(name);
         Set<String> expected = new TreeSet<>();
         if ((mask & 15) != 0) expected.add(ASSET);
-        if ((mask & 16) != 0) expected.add("classes.dex");
+        if ((mask & 48) != 0) expected.add("classes.dex");
         check(changed.equals(expected), "Only the requested app entries changed: " + changed);
         Files.write(root.resolve("app.js"), read(output, ASSET));
         return output;

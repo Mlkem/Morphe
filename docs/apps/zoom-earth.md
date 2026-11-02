@@ -1,11 +1,18 @@
 # Zoom Earth 6.3.3
 
 Package **`com.neave.zoomearth`**, version **6.3.3 (52)**, minimum Android 12L /
-API 32. These five patches target the supplied split archive and are independent,
+API 32 for the original archive. Five patches target that archive and are independent,
 opt-in and experimental. Dev.9 was reported to redirect to **Get this app from
 Play**, and the user reported the same result after dev.10. Startup remains
 unresolved. The exact patches applied on the phone have not been confirmed;
 desktop checks passing does not establish that the installed APK can launch.
+
+**Working input now available:** the user supplied a LiteAPKs 6.3.3 APK that
+launches on the phone. The four feature patches now support its verified
+JavaScript, and a separate raw patch removes its two promotional startup calls.
+Follow the [LiteAPKs instructions](zoom-earth-liteapks.md) for this input. Its
+restored lifecycle code is retained; this does not resolve the original archive's
+startup failure. The new output still needs a phone retest.
 
 | Patch | Result | Limits |
 | --- | --- | --- |
@@ -15,7 +22,7 @@ desktop checks passing does not establish that the installed APK can launch.
 | 100 Zoom Earth favourites | Raises both the displayed-place limit and add-location limit to 100, from 3 free / 30 Pro. | Existing saved data is retained. Returning to an unpatched app restores its lower display limit. Works without the Pro patch. |
 | Quiet Zoom Earth prompts | Stops automatic subscription popups and automatic Play review requests. | Manual subscription actions remain available when Pro is not selected. Permission prompts, weather alerts, outage notices and error handling are preserved. |
 
-## Install
+## Original archive installation (startup unresolved)
 
 **Known issue:** dev.10 has not resolved the reported startup block. Before
 another retry, retain the actual patched APK exported by Morphe and its completed
@@ -99,7 +106,7 @@ deletion is performed.
 
 ## Validation
 
-The collection builds with 36 patches. The original real-APK harness applies all **15**
+The collection now builds with 37 patches. The original real-APK harness applies all **15**
 nonempty combinations to the merged supplied archive. For each combination it
 verifies that exactly one JavaScript asset changes and **3,150** other app entries
 remain byte-identical, including DEX and native libraries. It checks that DEX
