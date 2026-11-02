@@ -86,7 +86,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.11](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.11)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;37 patches total
+> **[v1.0.0-dev.12](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.12)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;38 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -249,6 +249,23 @@ provide privacy.
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
 | [Enable Pro file-type handling](#enable-pro-file-type-handling) | Open with 1.2.1 (11) local test: enables the shared Pro flag used by file-type settings and routing, and removes the two Play installation licence startup calls for a re-signed build. Phone testing pending. |  |
+
+</details>
+
+<details>
+<summary>📦 Songsterr&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
+
+**Package name:** `com.songsterr`
+
+**🎯 Supported versions:**
+
+| 🧪&nbsp;7.1.6 |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Enable Songsterr premium features](#enable-songsterr-premium-features) | Songsterr 7.1.6 (2012282388): selects the highest local access tier for player controls, premium UI and ad gating. Does not grant a server subscription, AI quota or unavailable content. Requires the verified original split bundle; phone testing pending. |  |
 
 </details>
 

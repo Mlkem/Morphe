@@ -1,6 +1,6 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.0.0-dev.11",
+  "version": "1.0.0-dev.12",
   "patches": [
     {
       "name": "100 Zoom Earth favourites",
@@ -388,6 +388,33 @@
               "isExperimental": true,
               "minSdk": 32,
               "description": "Version code 11; phone testing pending"
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Enable Songsterr premium features",
+      "description": "Songsterr 7.1.6 (2012282388): selects the highest local access tier for player controls, premium UI and ad gating. Does not grant a server subscription, AI quota or unavailable content. Requires the verified original split bundle; phone testing pending.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.songsterr",
+          "name": "Songsterr",
+          "description": "Original 7.1.6 (2012282388) split bundle, or its merged APK. Keep all native/resource splits.",
+          "apkFileType": "APKM",
+          "appIconColor": null,
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "7.1.6",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 32,
+              "description": null
             }
           ]
         }

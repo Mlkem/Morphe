@@ -1,3 +1,9 @@
+## [1.0.0-dev.12](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.11...v1.0.0-dev.12) (2026-11-02)
+
+### 🐛 Bug Fixes
+
+* **songsterr:** enable local premium features on verified 7.1.6 ([ab9e47a](https://github.com/Mlkem/Morphe/commit/ab9e47adcaffc1fcc941493b961568bdb5ac6224))
+
 ## [1.0.0-dev.11](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.10...v1.0.0-dev.11) (2026-11-02)
 
 ### 🐛 Bug Fixes
