@@ -21,6 +21,9 @@ import java.util.zip.*;
 public final class VerifyManagerMpp {
     private static final String RESOLVER = "Lapp/morphe/manager/domain/manager/DownloadUrlResolver;";
     private static final String EXTENSION = "Lca/mlkem/manager/ApkMirrorUrls;";
+    // The official Android Gradle build also emits this empty resource class;
+    // the offline Java/D8 verification build does not generate Android resources.
+    private static final String RESOURCE_CONSTRUCTOR = "Lca/mlkem/manager/extension/R;-><init>()V";
     private static final String HOOK = EXTENSION + "->forApp(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;";
 
     private static void check(boolean ok, String message) {
@@ -98,7 +101,13 @@ public final class VerifyManagerMpp {
         check(after.values().stream().anyMatch(m -> m.getDefiningClass().equals(EXTENSION) && m.getName().equals("forApp")), "extension missing");
         Set<String> added = new HashSet<>(after.keySet());
         added.removeAll(before.keySet());
-        check(added.stream().allMatch(m -> m.startsWith(EXTENSION + "->")), "unexpected added app methods");
+        check(added.stream().allMatch(m -> m.startsWith(EXTENSION + "->") || m.equals(RESOURCE_CONSTRUCTOR)), "unexpected added app methods");
+        if (added.contains(RESOURCE_CONSTRUCTOR)) {
+            List<Instruction> stub = instructions(after.get(RESOURCE_CONSTRUCTOR));
+            check(stub.size() == 2 && stub.get(0).getOpcode() == Opcode.INVOKE_DIRECT
+                && ((ReferenceInstruction)stub.get(0)).getReference().toString().equals("Ljava/lang/Object;-><init>()V")
+                && stub.get(1).getOpcode() == Opcode.RETURN_VOID, "resource class must be empty constructor boilerplate");
+        }
         check(after.keySet().containsAll(before.keySet()), "original methods missing");
         return count;
     }

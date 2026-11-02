@@ -1,0 +1,15 @@
+{
+  "input": "morphe-manager-2.4.0-dev.3.apk",
+  "input_sha256": "dde0a6a1280e5e5ed635818ec3ecd66629330b0ce22490e2f70a4758f49a0091",
+  "patcher": "2.1.0",
+  "original_methods": 143895,
+  "output_methods": 143900,
+  "verified_entry_hooks": 3,
+  "original_resolver_bodies_preserved": true,
+  "unchanged_resource_entries": 424,
+  "all_dex_methods_structurally_valid": true,
+  "phone_tested": false,
+  "release": "v1.0.0-dev.5",
+  "bundle_sha256": "7ba7e97b77caa8804f0368c73a25b7a76bb4cd894ad8bfe4482ae887de583808",
+  "android_gradle_resource_class_verified": true
+}
