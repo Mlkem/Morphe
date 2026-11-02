@@ -1,3 +1,9 @@
+## [1.0.0-dev.9](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.8...v1.0.0-dev.9) (2026-11-02)
+
+### ✨ New Features
+
+* **zoomearth:** add local Pro, ad removal and usability patches for 6.3.3 ([5779a0f](https://github.com/Mlkem/Morphe/commit/5779a0ffde5dca2cf9f0a16542f4024395637b01))
+
 ## [1.0.0-dev.8](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.7...v1.0.0-dev.8) (2026-11-02)
 
 ### 🐛 Bug Fixes

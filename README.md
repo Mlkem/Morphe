@@ -84,7 +84,28 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.8](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.8)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;31 patches total
+> **[v1.0.0-dev.9](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.9)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;35 patches total
+<details>
+<summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;5 patches</summary>
+<br>
+
+**Package name:** `com.neave.zoomearth`
+
+**🎯 Supported versions:**
+
+| 🧪&nbsp;6.3.3 |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [100 Zoom Earth favourites](#100-zoom-earth-favourites) | Raises the visible and add-location limits from 3 free / 30 Pro to 100 saved places. Keeps existing saved data and works independently of Pro. Phone testing pending. |  |
+| [Enable Zoom Earth Pro features](#enable-zoom-earth-pro-features) | Enables local Pro controls, hides Pro upsells and permits up to ten daily forecast rows when data is supplied. Paid radar/model data still uses the real account entitlement; this does not create a subscription. Phone testing pending. |  |
+| [Quiet Zoom Earth prompts](#quiet-zoom-earth-prompts) | Disables automatic subscription popups and review requests. Manual subscription actions, permission prompts and weather/outage notices remain available. Phone testing pending. |  |
+| [Remove LiteAPKS nag](#remove-liteapks-nag) | Removes the injected LiteAPKS / 9MOD promotional popup from Zoom Earth. |  |
+| [Remove Zoom Earth ads](#remove-zoom-earth-ads) | Stops the bundled banner controller from initializing or showing ads, and collapses the ad footer. Works independently of Pro. Phone testing pending. |  |
+
+</details>
+
 <details>
 <summary>📦 Morphe Manager&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
 <br>
@@ -224,23 +245,6 @@ provide privacy.
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
 | [Enable Pro file-type handling](#enable-pro-file-type-handling) | Open with 1.2.1 (11) local test: enables the shared Pro flag used by file-type settings and routing, and removes the two Play installation licence startup calls for a re-signed build. Phone testing pending. |  |
-
-</details>
-
-<details>
-<summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
-<br>
-
-**Package name:** `com.neave.zoomearth`
-
-**🎯 Supported versions:**
-
-| 6.1 |
-| :---: |
-
-| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
-|----------|----------------|-----------|
-| [Remove LiteAPKS nag](#remove-liteapks-nag) | Removes the injected LiteAPKS / 9MOD promotional popup from Zoom Earth. |  |
 
 </details>
 

@@ -1,7 +1,34 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.0.0-dev.8",
+  "version": "1.0.0-dev.9",
   "patches": [
+    {
+      "name": "100 Zoom Earth favourites",
+      "description": "Raises the visible and add-location limits from 3 free / 30 Pro to 100 saved places. Keeps existing saved data and works independently of Pro. Phone testing pending.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.neave.zoomearth",
+          "name": "Zoom Earth",
+          "description": "Supplied 6.3.3 (52) split archive; experimental until tested on a phone.",
+          "apkFileType": "APKM",
+          "appIconColor": null,
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "6.3.3",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 32,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
     {
       "name": "APKMirror search for collection apps",
       "description": "Changes Morphe Manager's download links for this collection's eight apps. Walmart Canada 26.31 opens its verified APKMirror APKM page; other versions/apps use a package-and-version Google search restricted to APKMirror, without nodpi. Other apps keep Manager's resolver. Does not download files automatically.",
@@ -341,6 +368,33 @@
       "options": []
     },
     {
+      "name": "Enable Zoom Earth Pro features",
+      "description": "Enables local Pro controls, hides Pro upsells and permits up to ten daily forecast rows when data is supplied. Paid radar/model data still uses the real account entitlement; this does not create a subscription. Phone testing pending.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.neave.zoomearth",
+          "name": "Zoom Earth",
+          "description": "Supplied 6.3.3 (52) split archive; experimental until tested on a phone.",
+          "apkFileType": "APKM",
+          "appIconColor": null,
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "6.3.3",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 32,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
       "name": "Find Item for Linked Items — Canada",
       "description": "Restore Find item on linked shopping-list products so they can be linked to a different product.",
       "default": true,
@@ -619,6 +673,33 @@
       "options": []
     },
     {
+      "name": "Quiet Zoom Earth prompts",
+      "description": "Disables automatic subscription popups and review requests. Manual subscription actions, permission prompts and weather/outage notices remain available. Phone testing pending.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.neave.zoomearth",
+          "name": "Zoom Earth",
+          "description": "Supplied 6.3.3 (52) split archive; experimental until tested on a phone.",
+          "apkFileType": "APKM",
+          "appIconColor": null,
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "6.3.3",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 32,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
       "name": "Remove LiteAPKS nag",
       "description": "Removes the injected LiteAPKS / 9MOD promotional popup from Zoom Earth.",
       "default": true,
@@ -665,6 +746,33 @@
               "versionCodes": null,
               "isExperimental": true,
               "minSdk": null,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Remove Zoom Earth ads",
+      "description": "Stops the bundled banner controller from initializing or showing ads, and collapses the ad footer. Works independently of Pro. Phone testing pending.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.neave.zoomearth",
+          "name": "Zoom Earth",
+          "description": "Supplied 6.3.3 (52) split archive; experimental until tested on a phone.",
+          "apkFileType": "APKM",
+          "appIconColor": null,
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "6.3.3",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 32,
               "description": null
             }
           ]
