@@ -41,5 +41,42 @@
   ],
   "signature_verification": "passed with temporary test key",
   "offline_mpp_sha256": "687071b4f7c41ec7d40ce6a9db0465ef4097078ca610aa0ce08f64f473c1b566",
-  "phone_retest_passed": false
+  "phone_retest_passed": false,
+  "result_scope": "Desktop/static checks only; reported phone startup remains unresolved",
+  "reported_dev10_phone_result": {
+    "date": "2026-11-02",
+    "screen": "Same Get this app from Play screen reported",
+    "result": "failed",
+    "selected_patches": "not confirmed",
+    "manager_generated_apk_received": false,
+    "completed_patch_log_received": false
+  },
+  "patcher_2_2_followup": {
+    "date": "2026-11-02",
+    "result": "passed",
+    "scope": "Desktop application and output comparison; no physical-device runtime test",
+    "release": "1.0.0-dev.10",
+    "release_mpp_sha256": "e9af6b3aa9168686d108ed22fcfee1064bad5b7ee941eab2cc98dad1d6f8a2c9",
+    "desktop": "2.0.0-dev.4",
+    "patcher": "2.2.0-dev.2",
+    "desktop_jar_sha256": "ed8184451a88b373ab38e575884523a709706195a7232e971fcf8cd61fc5a22c",
+    "configured_target_versions": [
+      "2.1.0",
+      "2.2.0-dev.2"
+    ],
+    "patches_applied": 5,
+    "bytecode_mode": "NONE",
+    "resource_mode": "RAW_ONLY",
+    "other_app_entries_unchanged": true,
+    "matches_previous_patcher_2_1_output": true,
+    "output_entry_sha256": {
+      "classes.dex": "9870e82267bb773b07c68be35b0461bbf2f5fb2a4fa51a437525740e56badbab",
+      "assets/public/assets/js/app.js": "f0afea8d3255d179fc24571902d2f1d99e492c4ac6e9a2528c0dd364aca5ec98"
+    },
+    "unchanged_app_entries": 3149
+  },
+  "next_evidence": [
+    "Actual Morphe-generated APK that was installed",
+    "Completed patch log with source version and selected patches"
+  ]
 }

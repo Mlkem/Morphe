@@ -20,14 +20,19 @@ archive, with all patches from other sources deselected. Its result is pending;
 see the [control steps](apps/tagthai.md#retesting-the-notification-permission-hang).
 
 Zoom Earth 6.3.3 (52) dev.9 was reported to show **Get this app from Play**.
-The new **Allow Zoom Earth patched installation** patch addresses the identified
-local startup checks; its phone retest is pending. Repatch the original archive
-with this fix and the desired feature patches. Test launch, live map/radar
-loading, foreground/resume, no ad footer, saving more than 30 places and retaining
-them after restart, and quiet prompts. Test daily forecasts and any subscribed
-data features with the appropriate account. Desktop tests passed the original 15
-feature combinations and all 16 combinations with the startup fix. This does not
-establish successful phone startup. See [its test notes](apps/zoom-earth.md).
+The user reported the same result after dev.10; startup remains unresolved.
+The exact applied patches and the installed APK have not been supplied. A desktop
+recheck of the published bundle with Patcher 2.2.0-dev.2 preserves both startup
+edits and matches the previous Patcher 2.1.0 DEX/JavaScript output. Next, inspect
+the actual Morphe-generated APK and completed patch log to distinguish missing
+edits from another runtime path. No passing phone result is recorded.
+
+After startup is resolved, test live map/radar loading, foreground/resume, no ad
+footer, saving more than 30 places and retaining them after restart, and quiet
+prompts. Test daily forecasts and any subscribed data features with the
+appropriate account. Desktop tests passed the original 15 feature combinations
+and all 16 combinations with the startup patch, but those checks do not establish
+successful phone startup. See [its test notes](apps/zoom-earth.md).
 
 1. Test the dev release on the phone and record results here.
 2. Merge the tested dev branch into main without squashing release history.

@@ -3,18 +3,24 @@
 Package **`com.neave.zoomearth`**, version **6.3.3 (52)**, minimum Android 12L /
 API 32. These five patches target the supplied split archive and are independent,
 opt-in and experimental. Dev.9 was reported to redirect to **Get this app from
-Play**. The new startup compatibility patch has passed desktop checks, but its
-phone retest is pending.
+Play**, and the user reported the same result after dev.10. Startup remains
+unresolved. The exact patches applied on the phone have not been confirmed;
+desktop checks passing does not establish that the installed APK can launch.
 
 | Patch | Result | Limits |
 | --- | --- | --- |
-| Allow Zoom Earth patched installation | Disables the two local installer/signature check methods associated with this startup path, preserving the original DEX layout and protected native VM initialization. | Select this for the reported Play Store launch block. Exact original DEX required; phone retest pending. Does not grant paid server access. |
+| Allow Zoom Earth patched installation | Disables the two local installer/signature check methods associated with this startup path, preserving the original DEX layout and protected native VM initialization. | Experimental attempt; the same Play Store block was reported after dev.10. Exact original DEX required. Does not grant paid server access. |
 | Enable Zoom Earth Pro features | Enables the bundled local Pro controls, suppresses Pro upsells and permits up to ten daily forecast rows when the service supplies them. Includes the normal local Pro favourites allowance. | Does not create a paid subscription. Paid radar/model data routes still follow the genuine account/store entitlement. Extended forecast coverage and push delivery depend on the service. |
 | Remove Zoom Earth ads | Prevents the JavaScript banner controller from initializing/showing/resuming ads and signals that the footer should collapse. | This is not a device-wide ad blocker or removal of every analytics SDK. Works without the Pro patch. |
 | 100 Zoom Earth favourites | Raises both the displayed-place limit and add-location limit to 100, from 3 free / 30 Pro. | Existing saved data is retained. Returning to an unpatched app restores its lower display limit. Works without the Pro patch. |
 | Quiet Zoom Earth prompts | Stops automatic subscription popups and automatic Play review requests. | Manual subscription actions remain available when Pro is not selected. Permission prompts, weather alerts, outage notices and error handling are preserved. |
 
 ## Install
+
+**Known issue:** dev.10 has not resolved the reported startup block. Before
+another retry, retain the actual patched APK exported by Morphe and its completed
+patch log, including source version and selected patches, for comparison with the
+verified desktop output.
 
 1. Refresh the `Mlkem/Morphe` **dev** source in Morphe; enable prereleases and
    **Experimental app versions**.
@@ -59,7 +65,19 @@ Morphe signing key to update the existing patched installation.
 
 Google describes installer checks in its [automatic protection documentation](https://support.google.com/googleplay/android-developer/answer/10183279).
 Desktop validation does not establish that every native runtime check has been
-handled; only a phone retest can confirm whether launch now succeeds.
+handled. The reported dev.10 retest still shows the same block.
+
+A follow-up applied the published dev.10 MPP with official Patcher
+**2.2.0-dev.2**, matching the version in the earlier Manager report. All five
+patches applied, and the final DEX and JavaScript matched the previously verified
+Patcher 2.1.0 output. All other app entries remained unchanged. This found no lost
+startup edits in desktop APK assembly; it does not prove which APK was installed
+on the phone or exclude another protected runtime path.
+
+Next, compare the actual Morphe-generated APK with those output hashes and check
+the completed patch log. If the edits match, an on-device startup trace is needed
+before selecting another code target. Avoid treating another unverified SDK edit
+as a confirmed fix.
 
 ## Pro behavior and data access
 
@@ -131,7 +149,8 @@ temporary signing keys are not published. [Machine record](zoom-earth-validation
 - Save more than 30 places, rename/reorder/remove them, restart and verify retention.
 - Open daily forecasts and check the available range without assuming server access.
 - Confirm automatic paywalls/review prompts stop while weather/outage notices remain.
-- If startup fails, record the exact patch selections and compare with only
-  **Merge XAPK only** on the same original archive before changing patch behavior.
+- For the current startup failure, retain the installed patched APK and completed
+  Morphe patch log. Confirm the source version and exact patch selections, then
+  compare the APK's DEX and JavaScript with the desktop output before another retry.
 
 The legacy 6.1 LiteAPKS/9MOD popup-removal source is retained unchanged.

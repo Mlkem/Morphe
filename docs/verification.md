@@ -148,5 +148,14 @@ it does not force Flutter semantics during startup.
   the patched DEX. Wrong package/version, unknown DEX changes and reapplication
   are rejected. The 1,136 JavaScript checks still pass.
 - Collection verification now expects 36 patches. Existing 99 Walmart JVM checks
-  and 57 Manager URL checks pass. The startup fix is **not yet phone-confirmed**.
+  and 57 Manager URL checks pass.
+- The user reported the **same Play Store block after dev.10**. Exact phone patch
+  selections and the installed APK remain unavailable. Startup is unresolved.
+- Applied the published dev.10 MPP with official Desktop 2.0.0-dev.4 / Patcher
+  2.2.0-dev.2, using configured targets 2.1.0 and 2.2.0-dev.2. All five patches
+  applied in both runs. Final DEX/JavaScript bytes matched the Patcher 2.1.0
+  candidate, and 3,149 other app entries were unchanged. This does not reproduce
+  the phone runtime or prove the contents of its installed APK.
+- Next evidence: the actual Morphe-generated patched APK and completed patch log.
+  No additional patch or release is claimed as a fix from these desktop checks.
   [Machine record](apps/zoom-earth-startup-validation.json).
