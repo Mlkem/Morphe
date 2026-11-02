@@ -84,9 +84,9 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.9](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.9)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;35 patches total
+> **[v1.0.0-dev.10](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.10)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;36 patches total
 <details>
-<summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;5 patches</summary>
+<summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;6 patches</summary>
 <br>
 
 **Package name:** `com.neave.zoomearth`
@@ -99,6 +99,7 @@ provide privacy.
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
 | [100 Zoom Earth favourites](#100-zoom-earth-favourites) | Raises the visible and add-location limits from 3 free / 30 Pro to 100 saved places. Keeps existing saved data and works independently of Pro. Phone testing pending. |  |
+| [Allow Zoom Earth patched installation](#allow-zoom-earth-patched-installation) | Addresses the Get this app from Play startup screen in 6.3.3 by disabling two local installer/signature check methods. Preserves protected-code locations and native VM assets. Does not grant paid server access. Phone retest required. |  |
 | [Enable Zoom Earth Pro features](#enable-zoom-earth-pro-features) | Enables local Pro controls, hides Pro upsells and permits up to ten daily forecast rows when data is supplied. Paid radar/model data still uses the real account entitlement; this does not create a subscription. Phone testing pending. |  |
 | [Quiet Zoom Earth prompts](#quiet-zoom-earth-prompts) | Disables automatic subscription popups and review requests. Manual subscription actions, permission prompts and weather/outage notices remain available. Phone testing pending. |  |
 | [Remove LiteAPKS nag](#remove-liteapks-nag) | Removes the injected LiteAPKS / 9MOD promotional popup from Zoom Earth. |  |

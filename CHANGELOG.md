@@ -1,3 +1,9 @@
+## [1.0.0-dev.10](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.9...v1.0.0-dev.10) (2026-11-02)
+
+### 🐛 Bug Fixes
+
+* **zoomearth:** address Play installer startup block in patched 6.3.3 ([46f65a4](https://github.com/Mlkem/Morphe/commit/46f65a414978af6dc0c7bf31ea2709ebb8ada1f1))
+
 ## [1.0.0-dev.9](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.8...v1.0.0-dev.9) (2026-11-02)
 
 ### ✨ New Features

@@ -1,6 +1,6 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.0.0-dev.9",
+  "version": "1.0.0-dev.10",
   "patches": [
     {
       "name": "100 Zoom Earth favourites",
@@ -144,6 +144,33 @@
               "versionCodes": null,
               "isExperimental": true,
               "minSdk": 28,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Allow Zoom Earth patched installation",
+      "description": "Addresses the Get this app from Play startup screen in 6.3.3 by disabling two local installer/signature check methods. Preserves protected-code locations and native VM assets. Does not grant paid server access. Phone retest required.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.neave.zoomearth",
+          "name": "Zoom Earth",
+          "description": "Original 6.3.3 (52) DEX required; experimental startup compatibility patch.",
+          "apkFileType": "APKM",
+          "appIconColor": null,
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "6.3.3",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 32,
               "description": null
             }
           ]
