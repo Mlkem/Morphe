@@ -1,0 +1,24 @@
+{
+  "result": "passed",
+  "input_package": "com.songsterr",
+  "version": "7.1.6",
+  "version_code": 2012282388,
+  "splits": 5,
+  "methods_parsed": 59823,
+  "changed_methods": 1,
+  "instruction_bytes_replaced": 4,
+  "preserved_app_entries": 1490,
+  "resolver_path": "existing Pro singleton, rank 9",
+  "input_rejections": 7,
+  "signature": "passed",
+  "phone_tested": false,
+  "server_features_tested": false,
+  "input_archive_sha256": "02a874f9507fd2c87483ff4684e6b536af3f3c5f042c7b08d3136cb10233f88d",
+  "runtimes": [
+    "Morphe Desktop 1.20.0 / Patcher 2.1.0",
+    "Morphe Desktop 2.0.0-dev.4 / Patcher 2.2.0-dev.2"
+  ],
+  "same_patched_dex_across_runtimes": true,
+  "patched_primary_dex_sha256": "e11bbd110c91b25de4a4422c1831dff2e99b96542277c601f1b8baf79a869027",
+  "candidate_mpp_sha256": "73ad9ab60bbbb54fd0ffba604814de13ce84e60c687229a4ba6ad23e59e092c3"
+}

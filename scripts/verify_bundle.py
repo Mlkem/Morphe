@@ -4,10 +4,10 @@ import json, zipfile
 root=Path(__file__).resolve().parents[1]
 patches=json.loads((root/'patches-list.json').read_text())['patches']
 names=[p['name'] for p in patches]
-assert len(patches)==37, f'Expected 37 patches, found {len(patches)}'
+assert len(patches)==38, f'Expected 38 patches, found {len(patches)}'
 assert len(names)==len(set(names)), 'Duplicate patch names'
 packages={c['packageName'] for p in patches for c in (p.get('compatiblePackages') or [])}
-expected={'com.musicleague.app','ca.walmart.ecommerceapp','com.wongnai.android','com.neave.zoomearth','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','com.thaidigitalplatform.tagthai','app.morphe.manager'}
+expected={'com.songsterr','com.musicleague.app','ca.walmart.ecommerceapp','com.wongnai.android','com.neave.zoomearth','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','com.thaidigitalplatform.tagthai','app.morphe.manager'}
 assert packages==expected, f'Unexpected app set: {packages}'
 zoom_names={'Enable Zoom Earth Pro features','Remove Zoom Earth ads','100 Zoom Earth favourites','Quiet Zoom Earth prompts','Allow Zoom Earth patched installation','Remove Zoom Earth LiteAPKs promotions'}
 zoom=[p for p in patches if p['name'] in zoom_names]
@@ -19,6 +19,12 @@ for p in zoom:
     assert [t['version'] for t in target['targets']]==['6.3.3']
     min_sdk=32 if p['name']=='Allow Zoom Earth patched installation' else 26
     assert all(t['minSdk']==min_sdk and t['isExperimental'] for t in target['targets'])
+songsterr=next(p for p in patches if p['name']=='Enable Songsterr premium features')
+assert not songsterr['default'] and len(songsterr['compatiblePackages'])==1
+song_target=songsterr['compatiblePackages'][0]
+assert song_target['packageName']=='com.songsterr'
+assert [t['version'] for t in song_target['targets']]==['7.1.6']
+assert all(t['minSdk']==32 and t['isExperimental'] for t in song_target['targets'])
 tagthai=[p for p in patches if any(c['packageName']=='com.thaidigitalplatform.tagthai' for c in p.get('compatiblePackages') or [])]
 assert len(tagthai)==3
 for p in tagthai:
@@ -62,6 +68,8 @@ for p in bundles:
         assert len(files)==len(set(files))
         assert z.read('classes.dex').startswith(b'dex\n')
         assert any(f.endswith('.class') for f in files)
+        assert 'me/mikem/songsterr/SongsterrPremiumPatchKt.class' in files
+        assert b'Lme/mikem/songsterr/SongsterrPremiumPatchKt;' in z.read('classes.dex')
         assert 'me/mikem/zoomearth/ZoomEarth633PatchesKt.class' in files
         assert b'Lme/mikem/zoomearth/ZoomEarth633PatchesKt;' in z.read('classes.dex')
         assert 'me/mikem/zoomearth/ZoomEarthStartupPatchKt.class' in files

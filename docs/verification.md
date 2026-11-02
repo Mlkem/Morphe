@@ -223,3 +223,19 @@ it does not force Flutter semantics during startup.
 - Verified Manager 2.4.0-dev.4 source for log instructions: Settings → Expert
   mode; completed result → Logs → Copy. Logs do not survive a process restart.
   [Comparison record](apps/zoom-earth-input-diagnosis.json).
+
+## Songsterr integration — 2026-11-02
+
+- The collection builds with **38 patches**, ten named apps and the universal
+  merge utility. Songsterr 7.1.6 (2012282388) is opt-in and experimental.
+- The actual MPP passes against the supplied five-split input with both Morphe
+  Patcher **2.1.0** and **2.2.0-dev.2**, producing identical patched primary DEX.
+- Exactly one instruction in the local access resolver changes. Its emitted
+  path returns the original Pro singleton (rank 9) without state-dependent reads.
+  All **59,823** method implementations parse; **1,490** other app entries and
+  every other DEX byte except checksums are preserved. Seven incompatible input
+  cases are rejected and Android signature verification passes.
+- The existing **99 Walmart JVM checks** and **57 Manager URL checks** pass.
+- These are desktop checks, not a successful Android launch or full player test.
+  Server entitlements and AI quotas remain outside the local patch. See
+  [scope and setup](apps/songsterr.md) and [the record](apps/songsterr-validation/verification.json).

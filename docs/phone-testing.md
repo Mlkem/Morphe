@@ -48,6 +48,14 @@ appropriate account. Desktop tests passed the original 15 feature combinations
 and all 16 combinations with the startup patch, but those checks do not establish
 successful phone startup. See [its test notes](apps/zoom-earth.md).
 
+Songsterr 7.1.6 (2012282388) is an opt-in experimental target. The supplied
+five-split bundle passes desktop merge, patch, DEX structure and signature checks.
+Phone installation, launch, playback, sign-in/out, background/resume and premium
+controls remain untested. Test speed, loops, count-in, metronome, solo/mute,
+transpose, printing and cached/offline playback where available, plus ad behavior.
+Server subscriptions, remote audio/content and AI quotas are not granted by the
+local access-level patch. See [the Songsterr instructions](apps/songsterr.md).
+
 1. Test the dev release on the phone and record results here.
 2. Merge the tested dev branch into main without squashing release history.
 3. Run `python3 scripts/check_phone_testing.py --digest`.
