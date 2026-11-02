@@ -12,6 +12,9 @@ merge/install. GPS Emulator 3.36 remains untested on the phone; its desktop
 verification does not approve stable publication. TAGTHAi 4.25.1 also needs
 launch/login, accessibility and sideload-warning checks, screenshots, text
 selection, rotation/resume and protected-feature checks; see [its test notes](apps/tagthai.md).
+TAGTHAi dev.7 was reported to hang on a white screen after notification permission
+with all three patches and with accessibility alone; the original opened normally.
+Dev.8 changes SDK/callback handling and needs a fresh phone retest.
 
 1. Test the dev release on the phone and record results here.
 2. Merge the tested dev branch into main without squashing release history.

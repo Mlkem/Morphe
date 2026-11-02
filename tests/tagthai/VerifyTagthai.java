@@ -25,7 +25,9 @@ public class VerifyTagthai {
  static final String MAIN="Lcom/thaidigitalplatform/tagthai/MainActivity;";
  static final String GUARD="Ltech/ainu/security/appguard/AinuAppGuard;";
  static final String[] NAMES={"Allow TAGTHAi accessibility apps","Allow TAGTHAi screenshots","Select TAGTHAi text"};
- static final String ACCESS=GUARD+"->onAccessibilityAction(Lkotlin/jvm/functions/Function2;)V";
+ static final String ACCESS="LQ8/r;->invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;";
+ static final String SDK=GUARD+"->onAccessibilityAction(Lkotlin/jvm/functions/Function2;)V";
+ static final String UPDATE="Lio/flutter/view/a;->a(Ljava/nio/ByteBuffer;[Ljava/lang/String;[Ljava/nio/ByteBuffer;)V";
  static final String STATE="Lio/flutter/view/b;->onAccessibilityStateChanged(Z)V";
  static final String CTOR="Lio/flutter/view/j;-><init>(Landroid/view/View;LB3/k;Landroid/view/accessibility/AccessibilityManager;Landroid/content/ContentResolver;Lio/flutter/plugin/platform/o;)V";
  static final String PLUGIN="LB9/a;->onMethodCall(LS7/o;LS7/q;)V";
@@ -56,6 +58,16 @@ public class VerifyTagthai {
      if(!classes.add(c.getType()))throw new AssertionError("Duplicate class "+c.getType());
      for(Method m:c.getMethods())if(m.getImplementation()!=null){new MutableMethodImplementation(m.getImplementation());out.put(m.toString(),m);}
     }
+   }
+  }
+  return out;
+ }
+ static Map<String,String> classLocations(Path path)throws Exception{
+  Map<String,String> out=new HashMap<>();
+  try(ZipFile zip=new ZipFile(path.toFile())){
+   for(ZipEntry e:Collections.list(zip.entries()))if(e.getName().matches("classes[0-9]*\\.dex")){
+    DexBackedDexFile dex=DexBackedDexFile.fromInputStream(Opcodes.getDefault(),new BufferedInputStream(zip.getInputStream(e)));
+    for(ClassDef c:dex.getClasses())out.put(c.getType(),e.getName());
    }
   }
   return out;
@@ -100,29 +112,42 @@ public class VerifyTagthai {
   Set<String> expected=new TreeSet<>();
   if((mask&1)!=0)expected.add(ACCESS);
   if((mask&2)!=0)expected.addAll(Set.of(MAIN+"->k()V",MAIN+"->onWindowFocusChanged(Z)V",PLUGIN));
-  if((mask&4)!=0)expected.addAll(Set.of(STATE,CTOR));
+  if((mask&4)!=0)expected.addAll(Set.of(UPDATE,CTOR));
   check(changed.equals(expected),"Exactly the selected methods changed: "+changed);
   long added=after.keySet().stream().filter(k->!before.containsKey(k)).count();
   check(((mask&4)!=0)==(added>0),"Text extension is present only when selected");
   for(String key:after.keySet())if(!before.containsKey(key))check(key.startsWith("Lca/mlkem/tagthai/"),"Only the text extension adds methods");
+  check(semantic(before.get(SDK)).equals(semantic(after.get(SDK))),"Original AppGuard call and callback timing are preserved");
+  check(semantic(before.get(STATE)).equals(semantic(after.get(STATE))),"Original Flutter state listener is unchanged; no forced startup semantics");
+  Map<String,String> oldLocations=classLocations(input),newLocations=classLocations(output);
+  for(String type:Set.of(GUARD,"Ltech/ainu/security/appguard/enum/AccessibilityResult;","Lio/flutter/view/b;"))
+   check(Objects.equals(oldLocations.get(type),newLocations.get(type)),"Read-only validation did not relocate original class: "+type);
   if((mask&1)!=0){
    List<Instruction> code=instructions(after.get(ACCESS));
-   check(ref(code.get(0)).contains("->DISABLE:"),"Accessibility result uses the original disabled-service enum");
-   check(ref(code.get(1)).equals("Ljava/util/ArrayList;"),"Callback receives an empty typed app list");
-   FiveRegisterInstruction invoke=(FiveRegisterInstruction)code.get(3);
-   check(invoke.getRegisterCount()==3 && invoke.getRegisterC()==2 && invoke.getRegisterD()==0 && invoke.getRegisterE()==1,"Callback arguments use correct registers");
-   check(code.get(4).getOpcode()==Opcode.RETURN_VOID,"Local SDK check is skipped after delivering its callback");
+   check(code.get(2).getOpcode()==Opcode.PACKED_SWITCH && code.get(3).getOpcode()==Opcode.CHECK_CAST && code.get(4).getOpcode()==Opcode.CHECK_CAST,"Shared callback dispatch precedes accessibility edit");
+   check(ref(code.get(5)).contains("->DISABLE:") && ((OneRegisterInstruction)code.get(5)).getRegisterA()==9,"Only accessibility result argument is normalized");
+   check(ref(code.get(6)).equals("Ljava/util/ArrayList;") && ((OneRegisterInstruction)code.get(6)).getRegisterA()==10,"Accessibility app list receives a new empty array list");
+   check(code.get(8).getOpcode()==Opcode.SGET,"Original callback body follows injected arguments");
+   // Resolve the packed-switch payload: its file-error branch must bypass the edit.
+   int address=0, switchAddress=0; Map<Integer,Instruction> byAddress=new HashMap<>();
+   for(Instruction i:code){byAddress.put(address,i);if(i==code.get(2))switchAddress=address;address+=i.getCodeUnits();}
+   SwitchPayload payload=(SwitchPayload)byAddress.get(switchAddress+((OffsetInstruction)code.get(2)).getCodeOffset());
+   for(SwitchElement e:payload.getSwitchElements())if(e.getKey()==0){
+    Instruction branch=byAddress.get(switchAddress+e.getOffset());
+    check(branch.getOpcode()==Opcode.MOVE_OBJECT && ((TwoRegisterInstruction)branch).getRegisterA()==1 && ((TwoRegisterInstruction)branch).getRegisterB()==9,"File-error callback branch bypasses accessibility normalization");
+   }
   }
   if((mask&2)!=0)for(String key:Set.of(MAIN+"->k()V",MAIN+"->onWindowFocusChanged(Z)V",PLUGIN)){
    check(instructions(after.get(key)).stream().noneMatch(i->ref(i).equals("Landroid/view/Window;->setFlags(II)V")||ref(i).equals("Landroid/view/Window;->addFlags(I)V")),"Secure-window activation removed at "+key);
   }
   if((mask&4)!=0){
-   Instruction first=instructions(after.get(STATE)).get(0);
-   check(first.getOpcode()==Opcode.CONST_4 && ((OneRegisterInstruction)first).getRegisterA()==7 && ((NarrowLiteralInstruction)first).getNarrowLiteral()==1,"Flutter semantics listener is enabled without system accessibility");
    List<Instruction> c=instructions(after.get(CTOR));
-   check(ref(c.get(c.size()-2)).equals("Lca/mlkem/tagthai/TextSelection;->attach(Landroid/view/View;Landroid/view/accessibility/AccessibilityNodeProvider;Ljava/util/Map;)V"),"Text panel attaches after bridge initialization");
+   check(ref(c.get(c.size()-2)).equals("Lca/mlkem/tagthai/TextSelection;->attach(Landroid/view/View;Landroid/view/accessibility/AccessibilityNodeProvider;Ljava/util/Map;Landroid/view/accessibility/AccessibilityManager$AccessibilityStateChangeListener;)V"),"Passive text hook attaches after bridge initialization");
    FiveRegisterInstruction call=(FiveRegisterInstruction)c.get(c.size()-2);
-   check(call.getRegisterCount()==3 && call.getRegisterC()==0 && call.getRegisterD()==6 && call.getRegisterE()==1,"Bridge hook arguments match View, provider, and semantics map");
+   check(call.getRegisterCount()==4 && call.getRegisterC()==0 && call.getRegisterD()==6 && call.getRegisterE()==1 && call.getRegisterF()==2,"Bridge hook receives View, provider, map and original listener");
+   List<Instruction> u=instructions(after.get(UPDATE));
+   check(ref(u.get(u.size()-2)).equals("Lca/mlkem/tagthai/TextSelection;->onSemanticsUpdated(Landroid/view/accessibility/AccessibilityNodeProvider;)V"),"Completed semantics frame notifies on-demand capture");
+   check(u.get(u.size()-5).getOpcode()==Opcode.MOVE_OBJECT_FROM16 && ((TwoRegisterInstruction)u.get(u.size()-5)).getRegisterB()==18,"High-register delegate receiver moved safely");
   }
   try(ApkModule apk=ApkModule.loadApkFile(output.toFile())){check(apk.getVersionCode()==4251001 && apk.getPackageName().equals("com.thaidigitalplatform.tagthai"),"Package and version code preserved");}
   int resources=0;
@@ -148,6 +173,7 @@ public class VerifyTagthai {
    apply(wrongVersion,mpp,mask,root.resolve("wrong-version-check"),true);
   }
   if(args.length>4)apply(Path.of(args[4]),mpp,mask,root.resolve("wrong-package"),true);
+  if(args.length>5)apply(Path.of(args[5]),mpp,mask,root.resolve("legacy-dev7"),true);
   Files.writeString(root.resolve("verification-result.json"),"{\"result\":\"passed\",\"mask\":"+mask+",\"changed_methods\":"+changed.size()+",\"original_methods\":"+before.size()+",\"added_methods\":"+added+",\"resources_preserved\":"+resources+",\"phone_tested\":false}\n");
  }
 }

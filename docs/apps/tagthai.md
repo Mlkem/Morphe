@@ -3,11 +3,13 @@
 Package **`com.thaidigitalplatform.tagthai`**, version **4.25.1 (4251001)**,
 minimum Android 9 / API 28. These three patches are independent, opt-in, and
 experimental. They were developed against the supplied original ARM64 split
-archive. Physical-device testing remains pending.
+archive. A white-screen hang was reported with dev.7 after granting notification
+permission, including with only the accessibility patch selected. The original
+app opened normally. Dev.8 revises startup behavior; phone confirmation is pending.
 
 | Patch | Behavior | Limits |
 | --- | --- | --- |
-| Allow TAGTHAi accessibility apps | Completes the local AppGuard accessibility callback with the original `DISABLE` result and an empty app list. The actual Android services stay enabled. | Covers this local check, including accessibility services installed outside Play. Does not bypass every restriction on other sideloaded apps or server Play Integrity. |
+| Allow TAGTHAi accessibility apps | Lets AppGuard execute normally, then changes TAGTHAi's own accessibility callback to `DISABLE` with an empty app list. The SDK class and actual Android services stay unchanged. | Covers this local check, including accessibility services installed outside Play. Does not bypass every restriction on other sideloaded apps or server Play Integrity. |
 | Allow TAGTHAi screenshots | Changes three verified `FLAG_SECURE` setters to clear that flag: screen-guard activation, window-focus changes and the secure-application Flutter plugin. | Recents previews may become visible. Screen-recording detection and separate protected SDK screens are unchanged. |
 | Select TAGTHAi text | Adds a movable **Select text** button. Tap it for a native selectable-text panel, long-press text to select a portion, or tap **Copy all**. | Extracts visible Flutter semantics text, not pixels. No OCR or inline selection in the original Flutter labels. Images, maps and some web/embedded views may supply no text. |
 
@@ -31,12 +33,37 @@ Neither token generation nor server decisions are replaced. The patched app may
 still be rejected on launch or when opening protected features; this beta is not
 a verified bypass of every installation-source restriction.
 
+## Retesting the notification-permission hang
+
+Refresh to **v1.0.0-dev.8** and patch the **original** archive again with only
+**Allow TAGTHAi accessibility apps** selected first. Updating the source alone
+does not change an already installed APK. Use the same Morphe signing key to
+update the patched installation; there is no requirement to clear app data.
+The revised patch rejects the old SDK early-return implementation instead of
+silently stacking the new callback edit on top of it.
+
+Dev.8 preserves the original AppGuard method, its callback timing, and its DEX
+placement. It changes only the accessibility branch of TAGTHAi's callback class;
+that class's unrelated file-error branch is retained. Text selection is also
+now activated only by a tap. The accessibility-only failure means the text and
+screenshot patches were not required to trigger the reported hang.
+
+These changes reduce interference with startup but do **not** establish the
+phone failure's root cause. If the accessibility-only retry still shows a white
+screen, compare with a copy made using only the universal **Merge XAPK only**
+patch from the original archive. If that copy also fails, re-signing/repackaging
+or another app-integrity check is implicated rather than the accessibility edit.
+Do not interpret a successful desktop build as a successful phone retest.
+
 ## Text panel behavior
 
-The text patch keeps Flutter's semantics delegate active without enabling an
-Android accessibility service or touch exploration. It registers the existing
-node provider after bridge initialization. Text is collected only when the user
-taps the button; it is not logged, stored, transmitted or automatically copied.
+The text patch leaves Flutter's original accessibility-state listener unchanged.
+It registers the button after bridge initialization but does not activate
+semantics during startup or permission prompts. On a tap it temporarily requests
+semantics, waits for a completed frame, collects visible text, then restores the
+current Android accessibility state. A two-second timeout restores state without
+copying stale text. An existing accessibility service is never disabled. Text is
+not logged, stored, transmitted or automatically copied.
 Password nodes, hidden nodes and descendants, nodes outside the visible host
 bounds, and invalid/stale nodes are excluded. Nodes are ordered by position;
 identical text at identical bounds is deduplicated. Output is capped at 100,000
@@ -44,8 +71,8 @@ characters and 4,096 nodes.
 
 The panel inherits the activity's current secure-window flag. The separate
 screenshot patch controls the original activity's screenshot behavior. Detaching
-the Flutter view removes the button and closes its panel. Keeping semantics
-active may add rendering work; phone performance needs checking.
+the Flutter view cancels pending collection, restores state, removes the button
+and closes its panel.
 
 ## Verification
 
@@ -58,7 +85,8 @@ The input APK, signed output and test key are not published.
 
 The Android test project includes `ca.mlkem.tagthai.TextSelectionTest`, covering
 Thai/English reading order, text bounds, hidden ancestors, passwords, stale nodes,
-native selection, clipboard behavior and view-detach cleanup. Both existing CI
+native selection, clipboard behavior, startup/focus changes, frame timeouts,
+existing accessibility services and view-detach cleanup. Both existing CI
 workflows run this test alongside the Walmart Android regressions.
 
 To reproduce the real-APK checks with JDK 21 and Morphe Desktop/Patcher 2.1.0:

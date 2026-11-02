@@ -41,7 +41,7 @@ available from Releases. Disable duplicate local sources for these apps.
 | PushPress Members | `com.pushpress.memberportal` 3.42.0 | CrossFit-only selector | Experimental; phone testing pending |
 | Open with | `com.openwith.app` 1.2.1 (11) | Pro file-type handling | Opt-in beta; phone testing pending |
 | GPS Emulator | `com.rosteam.gpsemulator` 3.36 (336) | Fresh Pro patch; 1,000 favourites | Opt-in beta; phone testing pending |
-| TAGTHAi | `com.thaidigitalplatform.tagthai` 4.25.1 (4251001) | Accessibility, screenshots, text panel | Three opt-in betas; phone testing pending |
+| TAGTHAi | `com.thaidigitalplatform.tagthai` 4.25.1 (4251001) | Accessibility, screenshots, text panel | Startup compatibility revision; phone retest pending |
 | Morphe Manager | `app.morphe.manager` 2.4.0-dev.1–dev.3 | APKMirror search for collection apps | Opt-in; phone testing pending |
 | Merge XAPK only | Universal | Merge-only 1.0.0 | Opt-in; uses Morphe's merge/sign flow |
 

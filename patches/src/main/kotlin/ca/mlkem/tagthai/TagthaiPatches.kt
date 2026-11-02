@@ -26,11 +26,19 @@ private fun BytecodePatchContext.requireOriginalVersion() {
         packageMetadata.versionName == "4.25.1" && packageMetadata.versionCode == "4251001") {
         "Requires original TAGTHAi 4.25.1 (4251001). Other versions are not verified."
     }
+    // Read immutable definitions so validation does not relocate protected SDK
+    // classes into the generated DEX. Also reject the old early-return patch.
+    val sdk = classDefBy(GUARD).methods.single { it.name == "onAccessibilityAction" }
+    val state = classDefBy("Lio/flutter/view/b;").methods.single { it.name == "onAccessibilityStateChanged" }
+    check(sdk.implementation!!.instructions.first().opcode == Opcode.CONST_STRING &&
+        state.implementation!!.instructions.first().opcode == Opcode.IGET_OBJECT) {
+        "Previously patched TAGTHAi detected. Select the original 4.25.1 archive, not the installed/patched APK."
+    }
 }
 
 val allowAccessibility = bytecodePatch(
     name = "Allow TAGTHAi accessibility apps",
-    description = "Skips the local AppGuard accessibility-app check, including its reported app list. " +
+    description = "Normalizes the local accessibility result after AppGuard completes its check. " +
         "Intended for accessibility services installed from any source. Other sideloaded-app " +
         "restrictions and server Play Integrity checks are not bypassed. Phone testing pending.",
     default = false
@@ -38,24 +46,22 @@ val allowAccessibility = bytecodePatch(
     compatibleWith(target)
     execute {
         requireOriginalVersion()
-        val method = Fingerprint(definingClass = GUARD, name = "onAccessibilityAction",
-            parameters = listOf("Lkotlin/jvm/functions/Function2;"), returnType = "V",
-            strings = listOf("callback", "core")).method
-        check(method.implementation!!.registerCount == 3 &&
-            method.instructions.first().opcode == Opcode.CONST_STRING &&
-            method.instructions.count { (it as? ReferenceInstruction)?.reference.toString() ==
-                "Ltech/ainu/security/appguard/AinuAppGuardCore;->onAccessibilityAction(Lkotlin/jvm/functions/Function2;)V" } == 1) {
+        val method = Fingerprint(definingClass = "LQ8/r;", name = "invoke",
+            parameters = listOf("Ljava/lang/Object;", "Ljava/lang/Object;"), returnType = "Ljava/lang/Object;",
+            strings = listOf("accessibility", "accessibilityList", "onAccessibilityAction = ")).method
+        val code = method.instructions.toList()
+        check(method.implementation!!.registerCount == 11 && code[2].opcode == Opcode.PACKED_SWITCH &&
+            code[3].opcode == Opcode.CHECK_CAST && (code[3] as ReferenceInstruction).reference.toString() == RESULT &&
+            code[4].opcode == Opcode.CHECK_CAST && code[5].opcode == Opcode.SGET) {
             "Accessibility callback differs from the original APK; refusing a partial patch."
         }
-        check(mutableClassDefBy(RESULT).fields.any { it.name == "DISABLE" && it.type == RESULT })
-        // v1 is the receiver, no longer needed after the early callback/return.
-        // Preserve the callback protocol rather than returning without a result.
-        method.addInstructions(0, """
-            sget-object v0, $RESULT->DISABLE:$RESULT
-            new-instance v1, Ljava/util/ArrayList;
-            invoke-direct {v1}, Ljava/util/ArrayList;-><init>()V
-            invoke-interface {p1, v0, v1}, Lkotlin/jvm/functions/Function2;->invoke(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
-            return-void
+        check(classDefBy(RESULT).fields.any { it.name == "DISABLE" && it.type == RESULT })
+        // Preserve the SDK call and its timing/side effects. This synthetic class
+        // also handles file errors: edit only the accessibility switch branch.
+        method.addInstructions(5, """
+            sget-object p1, $RESULT->DISABLE:$RESULT
+            new-instance p2, Ljava/util/ArrayList;
+            invoke-direct {p2}, Ljava/util/ArrayList;-><init>()V
         """.trimIndent())
     }
 }
@@ -110,7 +116,7 @@ val allowScreenshots = bytecodePatch(
 val selectText = bytecodePatch(
     name = "Select TAGTHAi text",
     description = "Adds a movable Select text button and a native copy/select panel for visible " +
-        "Flutter accessibility text. Enables the app's semantics tree; no system accessibility " +
+        "Flutter accessibility text. Requests semantics only after tapping Select text; no system accessibility " +
         "service is needed. Does not add inline selection or OCR. Phone testing pending.",
     default = false
 ) {
@@ -122,25 +128,35 @@ val selectText = bytecodePatch(
             parameters = listOf("Landroid/view/View;", "LB3/k;",
                 "Landroid/view/accessibility/AccessibilityManager;", "Landroid/content/ContentResolver;",
                 "Lio/flutter/plugin/platform/o;")).method
-        val state = Fingerprint(definingClass = "Lio/flutter/view/b;", name = "onAccessibilityStateChanged",
-            parameters = listOf("Z"), returnType = "V").method
+        val update = Fingerprint(definingClass = "Lio/flutter/view/a;", name = "a", returnType = "V",
+            parameters = listOf("Ljava/nio/ByteBuffer;", "[Ljava/lang/String;", "[Ljava/nio/ByteBuffer;")).method
         check(constructor.implementation!!.registerCount == 12 &&
             constructor.instructions.last().opcode == Opcode.RETURN_VOID &&
             constructor.instructions.none { (it as? ReferenceInstruction)?.reference.toString().contains("Lca/mlkem/tagthai/") })
-        check(state.implementation!!.registerCount == 8 && state.instructions.first().opcode == Opcode.IGET_OBJECT)
-        check(mutableClassDefBy(BRIDGE).fields.any { it.name == "g" && it.type == "Ljava/util/HashMap;" })
-        val nodeFields = mutableClassDefBy("Lio/flutter/view/g;").fields
+        check(update.implementation!!.registerCount == 22 && update.instructions.count { it.opcode == Opcode.RETURN_VOID } == 1 &&
+            update.instructions.last().opcode == Opcode.RETURN_VOID &&
+            update.instructions.none { (it as? ReferenceInstruction)?.reference.toString().contains("Lca/mlkem/tagthai/") })
+        val bridgeFields = classDefBy(BRIDGE).fields
+        check(bridgeFields.any { it.name == "g" && it.type == "Ljava/util/HashMap;" } &&
+            bridgeFields.any { it.name == "w" && it.type == "Lio/flutter/view/b;" })
+        val nodeFields = classDefBy("Lio/flutter/view/g;").fields
         check(nodeFields.any { it.name == "c" && it.type == "I" } &&
             nodeFields.any { it.name == "O" && it.type == "Lio/flutter/view/g;" })
-        check(state.instructions.count { (it as? ReferenceInstruction)?.reference.toString() ==
-            "Lio/flutter/embedding/engine/FlutterJNI;->setSemanticsEnabled(Z)V" } == 2)
-        // Keep the disposed-bridge guard and normal delegate registration intact.
-        // Do not enable Android touch exploration or change system accessibility.
-        state.addInstructions(0, "const/4 p1, 0x1")
+        // Register the button without changing Flutter accessibility state.
+        // The original state listener remains byte-for-byte unchanged.
         constructor.addInstructions(constructor.instructions.count() - 1, """
             iget-object v0, p0, $BRIDGE->a:Landroid/view/View;
             iget-object v1, p0, $BRIDGE->g:Ljava/util/HashMap;
-            invoke-static {v0, p0, v1}, Lca/mlkem/tagthai/TextSelection;->attach(Landroid/view/View;Landroid/view/accessibility/AccessibilityNodeProvider;Ljava/util/Map;)V
+            iget-object v2, p0, $BRIDGE->w:Lio/flutter/view/b;
+            invoke-static {v0, p0, v1, v2}, Lca/mlkem/tagthai/TextSelection;->attach(Landroid/view/View;Landroid/view/accessibility/AccessibilityNodeProvider;Ljava/util/Map;Landroid/view/accessibility/AccessibilityManager${'$'}AccessibilityStateChangeListener;)V
+        """.trimIndent())
+        // Notify only after a complete semantics update, avoiding stale text
+        // retained from a previous screen while semantics were disabled.
+        update.addInstructions(update.instructions.count() - 1, """
+            move-object/from16 v0, p0
+            iget-object v0, v0, Lio/flutter/view/a;->a:Ljava/lang/Object;
+            check-cast v0, $BRIDGE
+            invoke-static {v0}, Lca/mlkem/tagthai/TextSelection;->onSemanticsUpdated(Landroid/view/accessibility/AccessibilityNodeProvider;)V
         """.trimIndent())
     }
 }

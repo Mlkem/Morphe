@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.accessibility.AccessibilityNodeProvider;
+import android.view.accessibility.AccessibilityManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
@@ -29,19 +30,30 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 /** In-app, on-demand text selection. No service, storage or network permissions. */
 public final class TextSelection {
     static final String BUTTON_TAG = "mlkem.tagthai.select-text";
     static final int MAX_NODES = 4096;
     static final int MAX_TEXT = 100000;
+    static final long CAPTURE_TIMEOUT_MS = 2000;
+    private static final Map<AccessibilityNodeProvider, WeakReference<Source>> SOURCES = new WeakHashMap<>();
     private TextSelection() {}
 
-    public static void attach(View host, AccessibilityNodeProvider provider, Map<?, ?> nodes) {
-        if (host == null || provider == null || nodes == null) return;
-        Source source = new Source(host, provider, nodes);
+    public static void attach(View host, AccessibilityNodeProvider provider, Map<?, ?> nodes,
+            AccessibilityManager.AccessibilityStateChangeListener listener) {
+        if (host == null || provider == null || nodes == null || listener == null) return;
+        Source source = new Source(host, provider, nodes, listener);
+        SOURCES.put(provider, new WeakReference<>(source));
         host.addOnAttachStateChangeListener(source);
         host.post(() -> source.mount(host));
+    }
+
+    public static void onSemanticsUpdated(AccessibilityNodeProvider provider) {
+        WeakReference<Source> reference = SOURCES.get(provider);
+        Source source = reference == null ? null : reference.get();
+        if (source != null) source.onFrame();
     }
 
     static Activity activity(Context context) {
@@ -57,13 +69,19 @@ public final class TextSelection {
         final WeakReference<View> host;
         final WeakReference<AccessibilityNodeProvider> provider;
         final WeakReference<Map<?, ?>> nodes;
+        final WeakReference<AccessibilityManager.AccessibilityStateChangeListener> listener;
         Button button;
         AlertDialog dialog;
+        boolean pending, changedSemantics;
+        int request;
+        Runnable timeout;
 
-        Source(View view, AccessibilityNodeProvider bridge, Map<?, ?> semantics) {
+        Source(View view, AccessibilityNodeProvider bridge, Map<?, ?> semantics,
+                AccessibilityManager.AccessibilityStateChangeListener stateListener) {
             host = new WeakReference<>(view);
             provider = new WeakReference<>(bridge);
             nodes = new WeakReference<>(semantics);
+            listener = new WeakReference<>(stateListener);
         }
 
         void mount(View view) {
@@ -84,27 +102,84 @@ public final class TextSelection {
             layout.setMargins(dp(a, 12), dp(a, 56), dp(a, 12), dp(a, 12));
             parent.addView(chip, layout);
             chip.setElevation(dp(a, 8));
-            chip.setOnClickListener(v -> show(a));
+            chip.setOnClickListener(v -> capture());
             chip.setOnTouchListener(new Drag(parent));
             button = chip;
         }
 
-        void show(Activity a) {
-            if (a.isFinishing() || a.isDestroyed() || dialog != null) return;
+        boolean systemAccessibilityEnabled() {
             View view = host.get();
+            AccessibilityManager manager = view == null ? null :
+                (AccessibilityManager) view.getContext().getSystemService(Context.ACCESSIBILITY_SERVICE);
+            return manager != null && manager.isEnabled();
+        }
+
+        void capture() {
+            View view = host.get();
+            AccessibilityManager.AccessibilityStateChangeListener state = listener.get();
+            if (pending || dialog != null || view == null || !view.isAttachedToWindow() || state == null) return;
+            pending = true;
+            final int ticket = ++request;
+            if (button != null) { button.setEnabled(false); button.setText("Reading text…"); }
+            timeout = () -> finish(ticket, false);
+            view.postDelayed(timeout, CAPTURE_TIMEOUT_MS);
+            if (systemAccessibilityEnabled()) {
+                view.post(() -> finish(ticket, true));
+                return;
+            }
+            // This is the only place we activate semantics, after an explicit tap.
+            // Wait for the delegate's next complete update, not a timer or old cache.
+            changedSemantics = true;
+            try { state.onAccessibilityStateChanged(true); }
+            catch (RuntimeException unavailable) { finish(ticket, false); }
+        }
+
+        void onFrame() {
+            View view = host.get();
+            if (!pending || view == null) return;
+            final int ticket = request;
+            view.post(() -> finish(ticket, true));
+        }
+
+        void restore() {
+            if (!changedSemantics) return;
+            changedSemantics = false;
+            AccessibilityManager.AccessibilityStateChangeListener state = listener.get();
+            if (state != null) {
+                try { state.onAccessibilityStateChanged(systemAccessibilityEnabled()); }
+                catch (RuntimeException disposed) { /* The original listener guards disposed bridges. */ }
+            }
+        }
+
+        void finish(int ticket, boolean fresh) {
+            if (!pending || ticket != request) return;
+            pending = false;
+            View view = host.get();
+            if (view != null && timeout != null) view.removeCallbacks(timeout);
+            timeout = null;
+            if (button != null) { button.setEnabled(true); button.setText("Select text"); }
             AccessibilityNodeProvider bridge = provider.get();
             Map<?, ?> semantics = nodes.get();
             Rect viewport = new Rect();
-            if (view == null || bridge == null || semantics == null || !view.getGlobalVisibleRect(viewport)) return;
-            // Global visible bounds are root-relative; node bounds are screen-relative.
-            int[] rootLocation = new int[2];
-            view.getRootView().getLocationOnScreen(rootLocation);
-            viewport.offset(rootLocation[0], rootLocation[1]);
-            String text = collect(bridge, semantics, viewport);
+            String text = "";
+            try {
+                if (fresh && view != null && view.isAttachedToWindow() && bridge != null && semantics != null && view.getGlobalVisibleRect(viewport)) {
+                    int[] rootLocation = new int[2];
+                    view.getRootView().getLocationOnScreen(rootLocation);
+                    viewport.offset(rootLocation[0], rootLocation[1]);
+                    text = collect(bridge, semantics, viewport);
+                }
+            } finally { restore(); }
+            Activity a = view == null ? null : activity(view.getContext());
+            if (a == null || a.isFinishing() || a.isDestroyed() || !view.isAttachedToWindow()) return;
             if (text.isEmpty()) {
                 Toast.makeText(a, "No selectable text on this screen. Try again after it loads.", Toast.LENGTH_LONG).show();
                 return;
             }
+            show(a, text);
+        }
+
+        void show(Activity a, String text) {
             TextView body = new TextView(a);
             body.setText(text);
             body.setTextSize(18);
@@ -126,6 +201,11 @@ public final class TextSelection {
 
         public void onViewAttachedToWindow(View view) { view.post(() -> mount(view)); }
         public void onViewDetachedFromWindow(View view) {
+            pending = false;
+            request++;
+            if (timeout != null) view.removeCallbacks(timeout);
+            timeout = null;
+            restore();
             if (dialog != null) { dialog.dismiss(); dialog = null; }
             if (button != null && button.getParent() instanceof ViewGroup) ((ViewGroup) button.getParent()).removeView(button);
             button = null;

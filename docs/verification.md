@@ -83,3 +83,30 @@ CI additionally builds with the official Gradle plugin before publishing each be
 - No physical phone or Android 17 runtime test has been performed. The local
   accessibility patch does not establish a bypass of every sideloaded-app check
   or server Play Integrity. [Setup, behavior and limits](apps/tagthai.md).
+
+## TAGTHAi startup compatibility revision — 2026-11-02
+
+The user reported dev.7 hanging on a white screen after granting notifications,
+with all three patches and with accessibility alone. The original app opened
+normally. This report excludes the screenshot and text patches as necessary
+causes of that failure, but does not identify the root cause.
+
+Dev.8 leaves AppGuard's original method and DEX placement intact and normalizes
+only TAGTHAi's accessibility-result callback branch. It rejects the legacy SDK
+early-return implementation. Text selection now requests semantics only after a
+tap, waits for a complete update and restores the current accessibility state;
+it does not force Flutter semantics during startup.
+
+- All seven actual-APK combinations pass. The combined patch changes six original
+  methods and adds 53 extension methods, retaining all 1,164 resources/native
+  files. Checks explicitly verify unchanged SDK/state-listener methods and their
+  original DEX placement, the unrelated file-error callback branch, signature
+  verification, and rejection of legacy, already-patched, wrong-version and
+  unrelated input. [Machine record](apps/tagthai-validation/startup-fix.json).
+- 45 Android simulation tests pass: 36 Walmart tests and nine text-panel tests.
+  New tests cover passive startup and permission-focus changes, timeout without
+  stale text, detach during collection, and preserving an enabled service.
+- The 99 Walmart JVM checks and 57 Manager URL checks pass.
+- The white-screen failure is **not confirmed fixed on the phone**. Retry only
+  the accessibility patch from the original archive first; see
+  [the retest steps](apps/tagthai.md#retesting-the-notification-permission-hang).
