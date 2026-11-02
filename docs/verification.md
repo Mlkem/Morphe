@@ -133,3 +133,20 @@ it does not force Flutter semantics during startup.
   utility. Existing 99 Walmart JVM checks and 57 Manager URL checks pass.
 - Phone startup, live data and premium service responses remain unverified.
   [Setup and phone tests](apps/zoom-earth.md), [machine record](apps/zoom-earth-validation.json).
+
+## Zoom Earth Play installer startup block — 2026-11-02
+
+- A phone screenshot after dev.9 showed **Get this app from Play**; exact patch
+  selections were not supplied. The original desktop checks did not test this
+  runtime startup path and are not evidence of phone compatibility.
+- Added the opt-in **Allow Zoom Earth patched installation** patch for 6.3.3 (52).
+  It changes only two local installer/signature check method bodies in place and
+  updates the DEX checksums. Native VM setup/assets and all other DEX bytes stay
+  unchanged. It does not fabricate a license response or paid entitlement.
+- All 16 startup-fix/feature combinations pass. Original method indices, offsets,
+  sizes and unrelated data remain unchanged; Android signing verifies. D8 accepts
+  the patched DEX. Wrong package/version, unknown DEX changes and reapplication
+  are rejected. The 1,136 JavaScript checks still pass.
+- Collection verification now expects 36 patches. Existing 99 Walmart JVM checks
+  and 57 Manager URL checks pass. The startup fix is **not yet phone-confirmed**.
+  [Machine record](apps/zoom-earth-startup-validation.json).

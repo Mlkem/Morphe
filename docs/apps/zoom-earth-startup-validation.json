@@ -1,0 +1,45 @@
+{
+  "result": "passed",
+  "startup_combinations": 16,
+  "changed_methods": 2,
+  "dex_size_unchanged": true,
+  "dex_offsets_retained": true,
+  "all_other_dex_bytes_retained_except_header_checksums": true,
+  "phone_tested": false,
+  "date": "2026-11-02",
+  "candidate": "1.0.0-dev.10",
+  "package": "com.neave.zoomearth",
+  "version": "6.3.3",
+  "version_code": 52,
+  "reported_dev9_phone_result": {
+    "screen": "Get this app from Play",
+    "selected_patches": "not supplied"
+  },
+  "patcher": "2.1.0",
+  "patch_type": "raw resource with two in-place DEX method-body edits",
+  "method_targets": [
+    "Lcom/pairip/SignatureCheck;->verifyIntegrity(Landroid/content/Context;)V",
+    "Lcom/pairip/licensecheck/LicenseClient;->initializeLicenseCheck()V"
+  ],
+  "original_dex_sha256": "d31e82f10cdc3980c18abdadd38cc1b576faf538ccfd5d52a81bbf378f873952",
+  "d8_validation": "passed with R8/D8 9.6.0-alpha09, min API 32; validation output not used in APK",
+  "javascript": {
+    "result": "passed",
+    "masks": 16,
+    "checks": 1136,
+    "scope": "Syntax of full bundle and extracted real methods with mocked native/network boundaries",
+    "phone_tested": false
+  },
+  "native_vm_and_assets_unchanged": true,
+  "fake_license_response_sent": false,
+  "server_entitlement_bypassed": false,
+  "rejections": [
+    "wrong package",
+    "wrong version",
+    "unexpected DEX modification",
+    "already patched DEX"
+  ],
+  "signature_verification": "passed with temporary test key",
+  "offline_mpp_sha256": "687071b4f7c41ec7d40ce6a9db0465ef4097078ca610aa0ce08f64f473c1b566",
+  "phone_retest_passed": false
+}

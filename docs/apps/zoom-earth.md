@@ -1,11 +1,14 @@
 # Zoom Earth 6.3.3
 
 Package **`com.neave.zoomearth`**, version **6.3.3 (52)**, minimum Android 12L /
-API 32. These four patches target the supplied split archive and are independent,
-opt-in and experimental. A phone screenshot after dev.9 showed **Get this app from Play** instead of opening Zoom Earth. The launch failure is unresolved in the published release. Desktop validation below does not establish phone compatibility.
+API 32. These five patches target the supplied split archive and are independent,
+opt-in and experimental. Dev.9 was reported to redirect to **Get this app from
+Play**. The new startup compatibility patch has passed desktop checks, but its
+phone retest is pending.
 
 | Patch | Result | Limits |
 | --- | --- | --- |
+| Allow Zoom Earth patched installation | Disables the two local installer/signature check methods associated with this startup path, preserving the original DEX layout and protected native VM initialization. | Select this for the reported Play Store launch block. Exact original DEX required; phone retest pending. Does not grant paid server access. |
 | Enable Zoom Earth Pro features | Enables the bundled local Pro controls, suppresses Pro upsells and permits up to ten daily forecast rows when the service supplies them. Includes the normal local Pro favourites allowance. | Does not create a paid subscription. Paid radar/model data routes still follow the genuine account/store entitlement. Extended forecast coverage and push delivery depend on the service. |
 | Remove Zoom Earth ads | Prevents the JavaScript banner controller from initializing/showing/resuming ads and signals that the footer should collapse. | This is not a device-wide ad blocker or removal of every analytics SDK. Works without the Pro patch. |
 | 100 Zoom Earth favourites | Raises both the displayed-place limit and add-location limit to 100, from 3 free / 30 Pro. | Existing saved data is retained. Returning to an unpatched app restores its lower display limit. Works without the Pro patch. |
@@ -17,17 +20,46 @@ opt-in and experimental. A phone screenshot after dev.9 showed **Get this app fr
    **Experimental app versions**.
 2. Select the original **6.3.3 ZIP/APKM**, including its device splits. If the
    picker excludes ZIP files, rename a copy to `.apkm`.
-3. Choose any combination of the four patches above. Do **not** select the legacy
+3. Select **Allow Zoom Earth patched installation**, plus whichever of the four
+   feature patches you want. Do **not** select the legacy
    **Remove LiteAPKS nag** patch: that remains limited to its modified 6.1 input.
 4. Build, sign and install using your usual Morphe key. Keep that key for later
    updates. Android requires matching signatures to update an installed app.
 5. Check launch and live weather/map loading before relying on this build.
 
-All four edits are in the single bundled JavaScript asset
-`assets/public/assets/js/app.js`, shared by the app's language pages. No Android
-bytecode, native library, manifest, permission or compiled resource is rewritten.
-No extra extension or floating menu is installed. Other selected sources may
-perform their own edits, so use only these four for the initial test.
+The four feature patches edit only the bundled JavaScript asset
+`assets/public/assets/js/app.js`, shared by the app's language pages. The startup
+patch additionally changes two method bodies in `classes.dex` in place. Native
+libraries, the manifest, permissions and compiled resources remain unchanged.
+No extra extension or floating menu is installed. Use only these five patches
+from this source for the initial retest; other bytecode patches may alter the
+protected code layout or cause the strict input check to reject the APK.
+
+## Get this app from Play
+
+The reported screen is consistent with Google's installer protection. Inspection
+of the supplied APK found `com.pairip.application.Application`,
+`SignatureCheck.verifyIntegrity(Context)` and `LicenseClient.checkLicense(Context)`
+in the startup path. The licensing client can open a Play paywall activity and
+schedule app shutdown. The dev.9 JavaScript edits did not change this code.
+
+The new patch makes `SignatureCheck.verifyIntegrity(Context)` and
+`LicenseClient.initializeLicenseCheck()` return without initiating their checks.
+It keeps context setup, the Application wrapper, startup launcher, VM runner,
+encrypted assets and protected activity methods. It sends no fake license
+response, purchase receipt or integrity token. This is separate from Zoom Earth's
+paid weather-data entitlement.
+
+The patch verifies the complete original DEX SHA-256 before changing either
+method. It preserves the byte length, method/class indices, code offsets,
+register counts and exception tables. It updates the DEX header checksums and
+rejects an already modified DEX. Repatch the **original archive** with the new
+source; updating the source alone does not update the installed APK. Use the same
+Morphe signing key to update the existing patched installation.
+
+Google describes installer checks in its [automatic protection documentation](https://support.google.com/googleplay/android-developer/answer/10183279).
+Desktop validation does not establish that every native runtime check has been
+handled; only a phone retest can confirm whether launch now succeeds.
 
 ## Pro behavior and data access
 
@@ -49,7 +81,7 @@ deletion is performed.
 
 ## Validation
 
-The collection builds with 35 patches. The real-APK harness applies all **15**
+The collection builds with 36 patches. The original real-APK harness applies all **15**
 nonempty combinations to the merged supplied archive. For each combination it
 verifies that exactly one JavaScript asset changes and **3,150** other app entries
 remain byte-identical, including DEX and native libraries. It checks that DEX
@@ -64,6 +96,13 @@ states/logout, favourites limits and data preservation, ad initialization while
 offline, repeat initialization, automatic prompts and preserved manual flows.
 These are not full WebView or physical-device startup tests.
 
+The startup harness additionally tests all **16** combinations of the new fix
+with the existing features. It verifies exactly two changed method bodies,
+unchanged DEX bytes everywhere else except header checksums, the original native
+assets and VM code, identical feature JavaScript, repeated/wrong-input rejection
+and Android signing. D8 also accepts and processes the patched DEX. The 1,136
+JavaScript checks pass again with these outputs. [Startup record](zoom-earth-startup-validation.json).
+
 Reproduce with JDK 21, the official Morphe Desktop 1.20.0 JAR (Patcher 2.1.0),
 Node, the original extracted split APKs and a built collection MPP:
 
@@ -73,6 +112,11 @@ javac -cp "$MORPHE_DESKTOP_JAR" -d build/zoom-tests tests/zoomearth/VerifyZoomEa
 java -Xmx2g -cp "build/zoom-tests:$MORPHE_DESKTOP_JAR" VerifyZoomEarth \
   "$ORIGINAL_SPLIT_DIRECTORY" "$COLLECTION_MPP" build/zoom-checks
 node tests/zoomearth/verify-assets.mjs build/zoom-checks
+
+javac -cp "build/zoom-tests:$MORPHE_DESKTOP_JAR" -d build/zoom-tests tests/zoomearth/VerifyZoomStartup.java
+java -Xmx2g -cp "build/zoom-tests:$MORPHE_DESKTOP_JAR" VerifyZoomStartup \
+  build/zoom-checks/original-merged.apk "$COLLECTION_MPP" build/zoom-startup-checks build/zoom-checks
+node tests/zoomearth/verify-assets.mjs build/zoom-startup-checks
 ```
 
 Masks 1/2/4/8 select Pro/ads/favourites/quiet prompts. The harness expects the five
