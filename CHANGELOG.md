@@ -1,3 +1,10 @@
+## [1.0.0-dev.5](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.4...v1.0.0-dev.5) (2026-11-02)
+
+### 🐛 Bug Fixes
+
+* **manager:** add APKMirror lookup for collection apps ([10d4233](https://github.com/Mlkem/Morphe/commit/10d4233adb37a47b170c878d5afaa4e577b8d8b4))
+* **manager:** include the extension Android manifest ([ed424aa](https://github.com/Mlkem/Morphe/commit/ed424aa447662438643c90117ac1b41fb3491f4e))
+
 ## [1.0.0-dev.4](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.3...v1.0.0-dev.4) (2026-11-01)
 
 ### ✨ New Features

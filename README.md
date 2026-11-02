@@ -78,7 +78,24 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.4](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.4)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;26 patches total
+> **[v1.0.0-dev.5](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.5)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;27 patches total
+<details>
+<summary>📦 Morphe Manager&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
+
+**Package name:** `app.morphe.manager`
+
+**🎯 Supported versions:**
+
+| 🧪&nbsp;2.4.0-dev.1 | 🧪&nbsp;2.4.0-dev.2 | 🧪&nbsp;2.4.0-dev.3 |
+| :---: | :---: | :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [APKMirror search for collection apps](#apkmirror-search-for-collection-apps) | Changes Morphe Manager's download links for this collection's six apps. Walmart Canada 26.31 opens its verified APKMirror APKM page; other versions/apps use a package-and-version Google search restricted to APKMirror, without nodpi. Other apps keep Manager's resolver. Does not download files automatically. |  |
+
+</details>
+
 <details>
 <summary>📦 Walmart Canada&nbsp;&nbsp;•&nbsp;&nbsp;14 patches</summary>
 <br>
