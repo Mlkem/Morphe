@@ -116,3 +116,20 @@ it does not force Flutter semantics during startup.
   through patching and signing, and the signature verifies. Its phone result is
   pending. [Control record](apps/tagthai-validation/merge-control.json) and
   [phone control steps](apps/tagthai.md#retesting-the-notification-permission-hang).
+
+## Zoom Earth 6.3.3 — 2026-11-02
+
+- Four opt-in raw-resource patches add local Pro controls, ad suppression, 100
+  favourites and quiet automatic prompts. The legacy 6.1 patch is retained.
+- All 15 actual-APK combinations pass 425 structural assertions. Each changes
+  exactly one JavaScript asset and preserves 3,150 other app entries. DEX remains
+  byte-identical, resources are not recompiled, and Android signing verifies.
+- Reverse-order composition succeeds; repeated application, wrong package/version
+  and unknown asset modifications are rejected.
+- Full JavaScript syntax and real extracted methods pass 1,136 behavior checks
+  across the original and all variants. Paid radar/model routing follows the real
+  entitlement. No subscription or server entitlement is created.
+- The combined bundle verifies 35 patches across nine named apps, plus the merge
+  utility. Existing 99 Walmart JVM checks and 57 Manager URL checks pass.
+- Phone startup, live data and premium service responses remain unverified.
+  [Setup and phone tests](apps/zoom-earth.md), [machine record](apps/zoom-earth-validation.json).

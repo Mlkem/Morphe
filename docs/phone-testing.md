@@ -19,6 +19,12 @@ still failing. The next phone test uses only **Merge XAPK only** from the origin
 archive, with all patches from other sources deselected. Its result is pending;
 see the [control steps](apps/tagthai.md#retesting-the-notification-permission-hang).
 
+Zoom Earth 6.3.3 (52) has four new independent patches. Test launch, live map/radar
+loading, foreground/resume, no ad footer, saving more than 30 places and retaining
+them after restart, and quiet prompts. Test daily forecasts and any subscribed
+data features with the appropriate account. Desktop tests passed all 15 patch
+combinations; phone behavior is still unverified. See [its test notes](apps/zoom-earth.md).
+
 1. Test the dev release on the phone and record results here.
 2. Merge the tested dev branch into main without squashing release history.
 3. Run `python3 scripts/check_phone_testing.py --digest`.

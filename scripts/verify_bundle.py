@@ -4,11 +4,20 @@ import json, zipfile
 root=Path(__file__).resolve().parents[1]
 patches=json.loads((root/'patches-list.json').read_text())['patches']
 names=[p['name'] for p in patches]
-assert len(patches)==31, f'Expected 31 patches, found {len(patches)}'
+assert len(patches)==35, f'Expected 35 patches, found {len(patches)}'
 assert len(names)==len(set(names)), 'Duplicate patch names'
 packages={c['packageName'] for p in patches for c in (p.get('compatiblePackages') or [])}
 expected={'com.musicleague.app','ca.walmart.ecommerceapp','com.wongnai.android','com.neave.zoomearth','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','com.thaidigitalplatform.tagthai','app.morphe.manager'}
 assert packages==expected, f'Unexpected app set: {packages}'
+zoom_names={'Enable Zoom Earth Pro features','Remove Zoom Earth ads','100 Zoom Earth favourites','Quiet Zoom Earth prompts'}
+zoom=[p for p in patches if p['name'] in zoom_names]
+assert len(zoom)==4
+for p in zoom:
+    assert not p['default'] and len(p['compatiblePackages'])==1
+    target=p['compatiblePackages'][0]
+    assert target['packageName']=='com.neave.zoomearth'
+    assert [t['version'] for t in target['targets']]==['6.3.3']
+    assert all(t['minSdk']==32 and t['isExperimental'] for t in target['targets'])
 tagthai=[p for p in patches if any(c['packageName']=='com.thaidigitalplatform.tagthai' for c in p.get('compatiblePackages') or [])]
 assert len(tagthai)==3
 for p in tagthai:
@@ -52,6 +61,8 @@ for p in bundles:
         assert len(files)==len(set(files))
         assert z.read('classes.dex').startswith(b'dex\n')
         assert any(f.endswith('.class') for f in files)
+        assert 'me/mikem/zoomearth/ZoomEarth633PatchesKt.class' in files
+        assert b'Lme/mikem/zoomearth/ZoomEarth633PatchesKt;' in z.read('classes.dex')
         assert 'ca/mlkem/tagthai/TagthaiPatchesKt.class' in files
         assert b'Lca/mlkem/tagthai/TagthaiPatchesKt;' in z.read('classes.dex')
         assert b'Lca/mlkem/tagthai/TextSelection;' in z.read('extensions/tagthai-text.mpe')

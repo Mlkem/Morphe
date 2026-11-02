@@ -1,0 +1,45 @@
+{
+  "result": "passed",
+  "combinations": 15,
+  "assertions": 425,
+  "unchanged_entries_per_combination": 3150,
+  "phone_tested": false,
+  "date": "2026-11-02",
+  "package": "com.neave.zoomearth",
+  "version": "6.3.3",
+  "version_code": 52,
+  "min_sdk": 32,
+  "target_sdk": 37,
+  "patcher": "2.1.0",
+  "desktop": "1.20.0",
+  "bytecode_mode": "NONE",
+  "resource_mode": "RAW_ONLY",
+  "candidate": "1.0.0-dev.9",
+  "javascript": {
+    "result": "passed",
+    "masks": 16,
+    "checks": 1136,
+    "scope": "Syntax of full bundle and extracted real methods with mocked native/network boundaries",
+    "phone_tested": false
+  },
+  "only_changed_entry": "assets/public/assets/js/app.js",
+  "signature_verification": "passed with temporary local test key",
+  "reverse_order_composition": "passed",
+  "rejections": [
+    "already applied, every combination",
+    "wrong package",
+    "wrong version",
+    "unknown JavaScript modification"
+  ],
+  "server_data_routing": "genuine account/store entitlement retained",
+  "subscription_created": false,
+  "native_favorites_get_set_cap_found": false,
+  "live_server_access_tested": false,
+  "sha256": {
+    "supplied_archive": "77a2ec7cb8b5a37e7a7cf6be1e1b35b86507dececb96d2209efaff31f5af81f6",
+    "base_apk": "2eb8b3818ed81a39c2f49398afdb095dce73403cfeec5939f44eb27a70dd732a",
+    "original_javascript": "9649130ea6b4fe7c085746c6c1608f19987f51df360814cefab4e62b62ec741a",
+    "offline_mpp": "7763309cfdb63ba4dc70d9cbb9c6871b31513f5242097dbcf14339f0cf22362f"
+  },
+  "mpp_note": "Local offline validation build; the published release is produced by official Gradle CI."
+}
