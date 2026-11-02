@@ -19,7 +19,7 @@
   "desktop": "2.0.0-dev.4",
   "input_apk_sha256": "0c928aedb74a441a8d0189f3f2a40d5c749037ba8e4558e15e6ebd2791eaa6f1",
   "input_phone_launch": "Reported working by user",
-  "patched_phone_retest": "Reported unsuccessful; exact symptom unconfirmed",
+  "patched_phone_retest": "Pending with correct LiteAPKs input; uploaded failing APK uses original Play input",
   "original_play_archive_startup": "still unresolved after dev.10",
   "offline_mpp_sha256": "8f3477c1b9144a16eee0971da897b4140006401b145696ffd244aff653c8d3f1",
   "javascript": {
@@ -55,14 +55,18 @@
     "phone_tested": false,
     "all_15_javascript_outputs_match_previous_candidate": true
   },
-  "result_scope": "Desktop/static checks only; user reports dev.11 does not work",
+  "result_scope": "Desktop/static checks passed; attached failing output is from a different input",
   "reported_dev11_phone_result": {
     "date": "2026-11-02",
     "user_report": "Still doesn't work.",
     "symptom": "not confirmed",
     "selected_patches": "not confirmed",
-    "manager_generated_apk_received": false,
-    "patch_log_received": false
+    "manager_generated_apk_received": true,
+    "patch_log_received": false,
+    "assessed_input": "original protected Play archive",
+    "assessed_code": "Four feature edits plus original-only startup edit",
+    "liteapks_cleanup_path_tested_by_supplied_output": false,
+    "comparison_record": "zoom-earth-input-diagnosis.json"
   },
   "published_bundle_verification": {
     "mpp_sha256": "42a4e0db4e449aec08aa40666d05abd947845c7785ef959322d89b746573f559",

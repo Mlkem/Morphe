@@ -1,0 +1,45 @@
+{
+  "date": "2026-11-02",
+  "package": "com.neave.zoomearth",
+  "version": "6.3.3",
+  "version_code": 52,
+  "received_apk": "Zoom_Earth-v6.3.3-mlkemac_patches-v1.0.0-dev.11.apk",
+  "received_apk_sha256": "f3dead0cfab6c8acd2e1aa5fae24591dd3de12e1e8ecbb37ad983bc93f9e1da3",
+  "finding": "Uploaded failing output uses original protected Play input, not supplied working LiteAPKs input",
+  "phone_output": {
+    "min_sdk": 32,
+    "main_dex_bytes": 7492056,
+    "main_dex_sha256": "9870e82267bb773b07c68be35b0461bbf2f5fb2a4fa51a437525740e56badbab",
+    "main_dex_exact_match": "Verified original-input startup-patch output",
+    "javascript_sha256": "f0afea8d3255d179fc24571902d2f1d99e492c4ac6e9a2528c0dd364aca5ec98",
+    "four_feature_patches_match": true,
+    "libpairipcore_present": true,
+    "license_activity_present": true,
+    "secondary_dex_files": [],
+    "app_entries": 3151
+  },
+  "comparison_to_original": {
+    "entry_names_identical": true,
+    "changed_entries": [
+      "AndroidManifest.xml",
+      "assets/public/assets/js/app.js",
+      "classes.dex",
+      "resources.arsc"
+    ]
+  },
+  "expected_liteapks_output": {
+    "min_sdk": 26,
+    "main_dex_bytes": 6885412,
+    "main_dex_sha256": "0b561a861dfeb6eef1859cbc44a23aaea76bcd84f9b6fb492e033e42468e3e0c",
+    "secondary_dex_files": [
+      "classes2.dex",
+      "classes3.dex"
+    ],
+    "libpairipcore_present": false,
+    "license_activity_present": false,
+    "app_entries": 3140
+  },
+  "runtime_cause": "Original-input protection path remains unresolved; no trace supplied",
+  "phone_test_of_correct_liteapks_output": "pending",
+  "next_action": "Manually select supplied Zoom Earth v6.3.3 (Premium).apk for a new job; choose LiteAPKs promotions cleanup and four features, excluding original-only startup and legacy nag patches"
+}

@@ -203,3 +203,23 @@ it does not force Flutter semantics during startup.
   No new code change or release is justified by the failure report alone.
 - Next evidence: completed Morphe patch log and the generated APK, if building
   succeeded. Phone compatibility and stable approval remain unresolved.
+
+## Attached dev.11 APK identifies an input mismatch — 2026-11-02
+
+- Inspected the actual `Zoom_Earth-v6.3.3-mlkemac_patches-v1.0.0-dev.11.apk`
+  supplied by the user. It is derived from the original Play archive, not the
+  supplied working LiteAPKs APK. Its 7,492,056-byte main DEX exactly matches the
+  verified original-input startup-patch output. It retains `libpairipcore.so`,
+  encrypted VM assets and `LicenseActivity`, and has no secondary DEX files.
+- Its JavaScript exactly matches all four feature patches. Relative to the merged
+  original input, only DEX, JavaScript, manifest and resources table differ; the
+  app-entry set is identical. The working LiteAPKs input instead has a
+  6,885,412-byte main DEX and two additional restored/support DEX files.
+- This corrects the prior unqualified dev.11 failure attribution: the supplied
+  output does not test the LiteAPKs cleanup path. The original-input startup
+  attempt remains unsuccessful; a phone test of the LiteAPKs-based output is
+  still pending. No additional code change or release is required to select the
+  correct input.
+- Verified Manager 2.4.0-dev.4 source for log instructions: Settings → Expert
+  mode; completed result → Logs → Copy. Logs do not survive a process restart.
+  [Comparison record](apps/zoom-earth-input-diagnosis.json).

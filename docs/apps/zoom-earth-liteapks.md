@@ -4,12 +4,13 @@ The user reports that the supplied **Zoom Earth v6.3.3 (Premium).apk** launches
 on the phone. Package `com.neave.zoomearth`, version **6.3.3 (52)**, minimum
 API **26**. This is a different input from the original Play split archive.
 
-**Dev.11 phone result: unsuccessful.** The user reported “Still doesn't work”
-after the release. The exact symptom, selected patches, completed patch log and
-Manager-generated APK have not been supplied. The working LiteAPKs input and
-the failing Morphe output are separate evidence; the input alone cannot establish
-what was installed or why it failed. Obtain the actual generated APK and patch
-log before choosing another code change.
+**Input mismatch identified:** the user reported dev.11 unsuccessful, then
+supplied the Manager-generated APK. Its DEX matches the original Play archive
+with the old startup patch applied, and it still contains `libpairipcore.so`.
+The LiteAPKs input's `classes2.dex` and `classes3.dex` are absent. This output was
+not built from the supplied working LiteAPKs base; it does not establish a
+failure of the LiteAPKs cleanup path. A phone retest using the correct input is
+still pending. [Comparison record](zoom-earth-input-diagnosis.json).
 
 The original archive still showed **Get this app from Play** after dev.10.
 The working APK has no `libpairipcore.so`, removes the encrypted VM assets, and
@@ -22,7 +23,11 @@ or distributed inside the patch bundle.
 
 1. Refresh the `Mlkem/Morphe` **dev** source and enable prereleases and
    **Experimental app versions**.
-2. Select the exact supplied **Zoom Earth v6.3.3 (Premium).apk** as input.
+2. Start a new patch job and manually select the exact supplied
+   **Zoom Earth v6.3.3 (Premium).apk** using **Open APK file**. Do not reuse the
+   earlier original ZIP, installed original app, saved original copy or exported
+   `Zoom_Earth-v6.3.3-mlkemac_patches-v1.0.0-dev.11.apk`. Updating the patch source
+   does not replace the chosen input.
 3. Select **Remove Zoom Earth LiteAPKs promotions**, plus the desired feature
    patches below. They are all opt-in.
 4. Leave **Allow Zoom Earth patched installation** and the legacy
@@ -73,8 +78,9 @@ app-entry bytes and all DEX bytes outside the two calls and checksum fields.
 The restored lifecycle code is therefore unchanged in the output. JavaScript
 checks use the actual emitted asset with mocked native/network boundaries.
 
-These desktop checks did not establish phone compatibility; the dev.11 retest
-was reported unsuccessful. Once the failure is resolved, confirm launch, resume, live map and
+These desktop checks do not establish phone compatibility. The supplied failing
+output used the original Play input, so the LiteAPKs-based output still needs its
+own phone test. Confirm launch, resume, live map and
 weather data, absence of the two startup promotions and banner, favourites after
 restart, and quiet prompts before approving stable publication.
 
@@ -89,3 +95,12 @@ java -Xmx2g -cp "build/zoom-tests:$MORPHE_DESKTOP_JAR" VerifyZoomLite \
   "$WORKING_LITE_APK" "$COLLECTION_MPP" build/zoom-lite-checks build/zoom-checks
 node tests/zoomearth/verify-assets.mjs build/zoom-lite-checks
 ```
+
+## Copying a patch log
+
+For Morphe Manager 2.4.0-dev.4, enable **Expert mode** in **Settings**. After
+patching, tap **Logs** on the result screen, then **Copy** in the bottom bar.
+Paste that text with the report. The log screen is also available while patching.
+The run's log is not retained across Manager process restarts; if it is gone,
+copy the log from the next run. A failed-patching error dialog has its own **Copy**
+button for the diagnostics and error.
