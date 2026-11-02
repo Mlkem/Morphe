@@ -19,7 +19,7 @@ still failing. The next phone test uses only **Merge XAPK only** from the origin
 archive, with all patches from other sources deselected. Its result is pending;
 see the [control steps](apps/tagthai.md#retesting-the-notification-permission-hang).
 
-Zoom Earth 6.3.3 (52) has four new independent patches. Test launch, live map/radar
+Zoom Earth 6.3.3 (52) dev.9 was reported to redirect to **Get this app from Play**. The published four feature patches do not resolve this startup check. Phone launch is not verified. Test launch, live map/radar
 loading, foreground/resume, no ad footer, saving more than 30 places and retaining
 them after restart, and quiet prompts. Test daily forecasts and any subscribed
 data features with the appropriate account. Desktop tests passed all 15 patch

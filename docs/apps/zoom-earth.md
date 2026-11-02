@@ -2,7 +2,7 @@
 
 Package **`com.neave.zoomearth`**, version **6.3.3 (52)**, minimum Android 12L /
 API 32. These four patches target the supplied split archive and are independent,
-opt-in and experimental. Phone testing is pending.
+opt-in and experimental. A phone screenshot after dev.9 showed **Get this app from Play** instead of opening Zoom Earth. The launch failure is unresolved in the published release. Desktop validation below does not establish phone compatibility.
 
 | Patch | Result | Limits |
 | --- | --- | --- |
