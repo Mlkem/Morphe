@@ -1,10 +1,10 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.0.0-dev.5",
+  "version": "1.0.0-dev.6",
   "patches": [
     {
       "name": "APKMirror search for collection apps",
-      "description": "Changes Morphe Manager's download links for this collection's six apps. Walmart Canada 26.31 opens its verified APKMirror APKM page; other versions/apps use a package-and-version Google search restricted to APKMirror, without nodpi. Other apps keep Manager's resolver. Does not download files automatically.",
+      "description": "Changes Morphe Manager's download links for this collection's seven apps. Walmart Canada 26.31 opens its verified APKMirror APKM page; other versions/apps use a package-and-version Google search restricted to APKMirror, without nodpi. Other apps keep Manager's resolver. Does not download files automatically.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -226,6 +226,33 @@
               "isExperimental": false,
               "minSdk": null,
               "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Enable GPS Emulator Pro",
+      "description": "GPS Emulator 3.36 (336): enables the app's shared Pro setting and 1,000 favourites at startup, and prevents billing callbacks from resetting Pro settings. Built against the original APKMirror APKM. Phone testing pending.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "com.rosteam.gpsemulator",
+          "name": "GPS Emulator",
+          "description": "Enable Pro on original 3.36",
+          "apkFileType": "APKM",
+          "appIconColor": null,
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "3.36",
+              "versionCodes": {},
+              "isExperimental": true,
+              "minSdk": 29,
+              "description": "Version code 336; phone testing pending"
             }
           ]
         }

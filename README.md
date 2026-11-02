@@ -80,7 +80,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.5](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.5)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;27 patches total
+> **[v1.0.0-dev.6](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.6)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;28 patches total
 <details>
 <summary>📦 Morphe Manager&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
 <br>
@@ -94,7 +94,7 @@ provide privacy.
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [APKMirror search for collection apps](#apkmirror-search-for-collection-apps) | Changes Morphe Manager's download links for this collection's six apps. Walmart Canada 26.31 opens its verified APKMirror APKM page; other versions/apps use a package-and-version Google search restricted to APKMirror, without nodpi. Other apps keep Manager's resolver. Does not download files automatically. |  |
+| [APKMirror search for collection apps](#apkmirror-search-for-collection-apps) | Changes Morphe Manager's download links for this collection's seven apps. Walmart Canada 26.31 opens its verified APKMirror APKM page; other versions/apps use a package-and-version Google search restricted to APKMirror, without nodpi. Other apps keep Manager's resolver. Does not download files automatically. |  |
 
 </details>
 
@@ -165,6 +165,24 @@ provide privacy.
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
 | [Disable Wongnai Google ads](#disable-wongnai-google-ads) | Stops the identified Google banner, native and interstitial ad loaders in Wongnai 12.11.0, and uses its existing photo-ad fallback. |  |
+
+</details>
+
+<details>
+<summary>📦 GPS Emulator&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
+
+**Package name:** `com.rosteam.gpsemulator`
+
+**🎯 Supported versions:**
+
+| 🧪&nbsp;3.36 |
+| :---: |
+| Version code 336; phone testing pending |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Enable GPS Emulator Pro](#enable-gps-emulator-pro) | GPS Emulator 3.36 (336): enables the app's shared Pro setting and 1,000 favourites at startup, and prevents billing callbacks from resetting Pro settings. Built against the original APKMirror APKM. Phone testing pending. |  |
 
 </details>
 

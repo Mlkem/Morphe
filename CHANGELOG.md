@@ -1,3 +1,9 @@
+## [1.0.0-dev.6](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.5...v1.0.0-dev.6) (2026-11-02)
+
+### ✨ New Features
+
+* **gps:** add fresh GPS Emulator 3.36 Pro patch ([9e2aefa](https://github.com/Mlkem/Morphe/commit/9e2aefaaad72126e43d3be096ef91016867de1a7))
+
 ## [1.0.0-dev.5](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.4...v1.0.0-dev.5) (2026-11-02)
 
 ### 🐛 Bug Fixes
