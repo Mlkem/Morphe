@@ -9,7 +9,9 @@ Test Music League intro and Spotify connection, Zoom Earth popups, PushPress
 workout selection, Wongnai photos and ads, Walmart shopping-list features,
 GPS Emulator Pro settings, map loading, mock locations and favourites, and XAPK
 merge/install. GPS Emulator 3.36 remains untested on the phone; its desktop
-verification does not approve stable publication.
+verification does not approve stable publication. TAGTHAi 4.25.1 also needs
+launch/login, accessibility and sideload-warning checks, screenshots, text
+selection, rotation/resume and protected-feature checks; see [its test notes](apps/tagthai.md).
 
 1. Test the dev release on the phone and record results here.
 2. Merge the tested dev branch into main without squashing release history.

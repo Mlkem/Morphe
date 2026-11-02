@@ -63,3 +63,23 @@ CI additionally builds with the official Gradle plugin before publishing each be
   removing that obsolete local source if its version guard stops a 3.36 run.
 - Phone testing remains pending. The automated release workflow builds with the
   official Gradle plugin and runs its Android UI regressions before publishing.
+
+## TAGTHAi integration — 2026-11-02
+
+- The collection builds with **31 patches**, nine named apps and the universal
+  merge utility. All three TAGTHAi 4.25.1 targets are opt-in and experimental.
+- The actual MPP passes all **seven combinations** against the supplied original
+  split archive. The complete combination changes exactly six of **38,513**
+  original methods and adds 37 text-extension methods. All **1,164** non-DEX
+  resources/native files remain byte-identical. DEX structure, callback/hook
+  registers, extension selection, Android signatures and rejection of modified,
+  wrong-version and unrelated inputs pass. [Machine record](apps/tagthai-validation/verification.json).
+- **41 Android simulation tests** pass: 36 existing Walmart regressions and five
+  new TAGTHAi text-panel tests. Tests cover Thai/English order, hidden ancestors,
+  passwords, offscreen nodes, invalid nodes, selectable text, explicit copying,
+  secure-window inheritance and detach cleanup. The simulation uses API 35.
+- **99 Walmart JVM checks** and **57 Manager URL checks** pass. TAGTHAi joins the
+  optional Manager search package list. Existing app patch sources are preserved.
+- No physical phone or Android 17 runtime test has been performed. The local
+  accessibility patch does not establish a bypass of every sideloaded-app check
+  or server Play Integrity. [Setup, behavior and limits](apps/tagthai.md).

@@ -14,7 +14,7 @@ private val versions = listOf("2.4.0-dev.1", "2.4.0-dev.2", "2.4.0-dev.3")
 
 val apkMirrorSearch = bytecodePatch(
     name = "APKMirror search for collection apps",
-    description = "Changes Morphe Manager's download links for this collection's seven apps. " +
+    description = "Changes Morphe Manager's download links for this collection's eight apps. " +
         "Walmart Canada 26.31 opens its verified APKMirror APKM page; other versions/apps " +
         "use a package-and-version Google search restricted to APKMirror, without nodpi. " +
         "Other apps keep Manager's resolver. Does not download files automatically.",

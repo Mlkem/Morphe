@@ -23,7 +23,7 @@ public final class ApkMirrorUrlsTest {
             {"ca.walmart.ecommerceapp", "26.40"}, {"com.musicleague.app", "1.4.9"},
             {"com.wongnai.android", "12.11.0"}, {"com.neave.zoomearth", "6.1"},
             {"com.pushpress.memberportal", "3.42.0"}, {"com.openwith.app", "1.2.1"},
-            {"com.rosteam.gpsemulator", "3.36"}
+            {"com.rosteam.gpsemulator", "3.36"}, {"com.thaidigitalplatform.tagthai", "4.25.1"}
         };
         for (String[] app : apps) {
             String q = query(app[0], app[1]);

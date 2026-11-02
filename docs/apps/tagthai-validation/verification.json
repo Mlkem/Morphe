@@ -1,0 +1,109 @@
+{
+  "date": "2026-11-02",
+  "package": "com.thaidigitalplatform.tagthai",
+  "version": "4.25.1",
+  "version_code": 4251001,
+  "original_archive_sha256": "3ecc38b26257ab08e1f626c6e23c76d190601f9704f7842c435fb14400d8ff27",
+  "original_base_apk_sha256": "82cf515cba0c01eb3564456a7efb799508bed2194e6e7aa38edcfa9f66b1baa1",
+  "desktop_build": "offline verification build; release uses official Gradle workflow",
+  "mpp_sha256": "c7c303651f84e850e801461227326ae4ed671fd3850d49953c19a7dd57e814e9",
+  "patcher": "2.1.0",
+  "bytecode_mode": "STRIP_FAST",
+  "combinations": [
+    {
+      "result": "passed",
+      "mask": 1,
+      "changed_methods": 1,
+      "original_methods": 38513,
+      "added_methods": 0,
+      "resources_preserved": 1164,
+      "phone_tested": false
+    },
+    {
+      "result": "passed",
+      "mask": 2,
+      "changed_methods": 3,
+      "original_methods": 38513,
+      "added_methods": 0,
+      "resources_preserved": 1164,
+      "phone_tested": false
+    },
+    {
+      "result": "passed",
+      "mask": 3,
+      "changed_methods": 4,
+      "original_methods": 38513,
+      "added_methods": 0,
+      "resources_preserved": 1164,
+      "phone_tested": false
+    },
+    {
+      "result": "passed",
+      "mask": 4,
+      "changed_methods": 2,
+      "original_methods": 38513,
+      "added_methods": 37,
+      "resources_preserved": 1164,
+      "phone_tested": false
+    },
+    {
+      "result": "passed",
+      "mask": 5,
+      "changed_methods": 3,
+      "original_methods": 38513,
+      "added_methods": 37,
+      "resources_preserved": 1164,
+      "phone_tested": false
+    },
+    {
+      "result": "passed",
+      "mask": 6,
+      "changed_methods": 5,
+      "original_methods": 38513,
+      "added_methods": 37,
+      "resources_preserved": 1164,
+      "phone_tested": false
+    },
+    {
+      "result": "passed",
+      "mask": 7,
+      "changed_methods": 6,
+      "original_methods": 38513,
+      "added_methods": 37,
+      "resources_preserved": 1164,
+      "phone_tested": false
+    }
+  ],
+  "signature_verification": "passed for combined output",
+  "reject_reapplication": "passed for all seven combinations",
+  "reject_wrong_version": "passed: manifest version 4.25.2",
+  "reject_unrelated_package": "passed: GPS Emulator 3.36",
+  "android_simulation": {
+    "runner": "Robolectric 4.16.1",
+    "sdk": 35,
+    "suites": [
+      {
+        "suite": "app.canada.walmart.UiRegressionTest",
+        "tests": 13,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "suite": "app.canada.walmart.ToolsRegressionTest",
+        "tests": 23,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "suite": "ca.mlkem.tagthai.TextSelectionTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0
+      }
+    ]
+  },
+  "walmart_jvm_checks": 99,
+  "manager_url_checks": 57,
+  "phone_tested": false,
+  "server_integrity_bypassed": false
+}

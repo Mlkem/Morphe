@@ -4,11 +4,17 @@ import json, zipfile
 root=Path(__file__).resolve().parents[1]
 patches=json.loads((root/'patches-list.json').read_text())['patches']
 names=[p['name'] for p in patches]
-assert len(patches)==28, f'Expected 28 patches, found {len(patches)}'
+assert len(patches)==31, f'Expected 31 patches, found {len(patches)}'
 assert len(names)==len(set(names)), 'Duplicate patch names'
 packages={c['packageName'] for p in patches for c in (p.get('compatiblePackages') or [])}
-expected={'com.musicleague.app','ca.walmart.ecommerceapp','com.wongnai.android','com.neave.zoomearth','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','app.morphe.manager'}
+expected={'com.musicleague.app','ca.walmart.ecommerceapp','com.wongnai.android','com.neave.zoomearth','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','com.thaidigitalplatform.tagthai','app.morphe.manager'}
 assert packages==expected, f'Unexpected app set: {packages}'
+tagthai=[p for p in patches if any(c['packageName']=='com.thaidigitalplatform.tagthai' for c in p.get('compatiblePackages') or [])]
+assert len(tagthai)==3
+for p in tagthai:
+    assert not p['default']
+    assert [t['version'] for t in p['compatiblePackages'][0]['targets']]==['4.25.1']
+    assert all(t['minSdk']==28 and t['isExperimental'] for t in p['compatiblePackages'][0]['targets'])
 gps=next(p for p in patches if p['name']=='Enable GPS Emulator Pro')
 assert gps['default'] is False, 'GPS Emulator must remain opt-in'
 assert len(gps['compatiblePackages']) == 1
@@ -35,7 +41,7 @@ assert merge['default'] is False and merge['compatiblePackages'] is None
 for p in patches:
     if 'Hermes hide' in p['name']: assert p['default'] is False
     for c in p.get('compatiblePackages') or []:
-        if c['packageName'] in {'ca.walmart.ecommerceapp','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','app.morphe.manager'}:
+        if c['packageName'] in {'ca.walmart.ecommerceapp','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','com.thaidigitalplatform.tagthai','app.morphe.manager'}:
             assert all(t['isExperimental'] for t in c['targets']), 'Unverified target must stay experimental'
 bundles=[p for p in (root/'patches/build/libs').glob('*.mpp')
          if not any(kind in p.name for kind in ('-sources', '-javadoc'))]
@@ -46,13 +52,16 @@ for p in bundles:
         assert len(files)==len(set(files))
         assert z.read('classes.dex').startswith(b'dex\n')
         assert any(f.endswith('.class') for f in files)
+        assert 'ca/mlkem/tagthai/TagthaiPatchesKt.class' in files
+        assert b'Lca/mlkem/tagthai/TagthaiPatchesKt;' in z.read('classes.dex')
+        assert b'Lca/mlkem/tagthai/TextSelection;' in z.read('extensions/tagthai-text.mpe')
         assert 'ca/mlkem/gps/GpsEmulatorProPatch.class' in files
         assert b'Lca/mlkem/gps/GpsEmulatorProPatch;' in z.read('classes.dex')
         assert 'ca/mlkem/openwith/OpenWithProPatch.class' in files
         assert b'Lca/mlkem/openwith/OpenWithProPatch;' in z.read('classes.dex')
         assert 'ca/mlkem/manager/ApkMirrorSearchPatchKt.class' in files
         assert b'Lca/mlkem/manager/ApkMirrorSearchPatchKt;' in z.read('classes.dex')
-        for name in ['extensions/canada.mpe','extensions/pushpress-crossfit-only.mpe','extensions/manager-apkmirror.mpe']:
+        for name in ['extensions/canada.mpe','extensions/pushpress-crossfit-only.mpe','extensions/manager-apkmirror.mpe','extensions/tagthai-text.mpe']:
             assert z.read(name).startswith(b'dex\n'), name
             assert b'Lkotlin/' not in z.read(name), f'Unexpected Kotlin runtime in Java extension: {name}'
         assert b'Lca/mlkem/manager/ApkMirrorUrls;' in z.read('extensions/manager-apkmirror.mpe')

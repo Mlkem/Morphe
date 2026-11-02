@@ -39,6 +39,7 @@ public final class ApkMirrorUrls {
             || "com.neave.zoomearth".equals(packageName)
             || "com.pushpress.memberportal".equals(packageName)
             || "com.openwith.app".equals(packageName)
+            || "com.thaidigitalplatform.tagthai".equals(packageName)
             || "com.rosteam.gpsemulator".equals(packageName);
     }
 

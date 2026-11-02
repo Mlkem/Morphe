@@ -3,7 +3,7 @@
 # mlkemac patches
 
 A single Morphe source for Music League, Walmart Canada, Wongnai, Zoom Earth,
-PushPress, Open with, GPS Emulator, an optional Morphe Manager APKMirror search fix, and the XAPK
+PushPress, Open with, GPS Emulator, TAGTHAi, an optional Morphe Manager APKMirror search fix, and the XAPK
 merge-only utility.
 
 **[Add source to Morphe](https://morphe.software/add-source?github=Mlkem/Morphe&name=mlkemac%20patches)** ·
@@ -22,7 +22,7 @@ https://github.com/Mlkem/Morphe/tree/dev
 
 An explicit `dev` source enables prerelease updates from the start. Alternatively,
 use the Add source link above and enable **Pre-release patches**. Enable
-**Experimental app versions** for Walmart Canada, PushPress, Open with, GPS Emulator and the Manager patch. Choose
+**Experimental app versions** for Walmart Canada, PushPress, Open with, GPS Emulator, TAGTHAi and the Manager patch. Choose
 the original app APK/APKM/XAPK, select patches, then patch and install. Keep your existing Morphe
 APK signing key so future patched apps can update in place.
 
@@ -41,11 +41,13 @@ available from Releases. Disable duplicate local sources for these apps.
 | PushPress Members | `com.pushpress.memberportal` 3.42.0 | CrossFit-only selector | Experimental; phone testing pending |
 | Open with | `com.openwith.app` 1.2.1 (11) | Pro file-type handling | Opt-in beta; phone testing pending |
 | GPS Emulator | `com.rosteam.gpsemulator` 3.36 (336) | Fresh Pro patch; 1,000 favourites | Opt-in beta; phone testing pending |
+| TAGTHAi | `com.thaidigitalplatform.tagthai` 4.25.1 (4251001) | Accessibility, screenshots, text panel | Three opt-in betas; phone testing pending |
 | Morphe Manager | `app.morphe.manager` 2.4.0-dev.1–dev.3 | APKMirror search for collection apps | Opt-in; phone testing pending |
 | Merge XAPK only | Universal | Merge-only 1.0.0 | Opt-in; uses Morphe's merge/sign flow |
 
 The Music League Hermes patch, Walmart Remove Shop patch and universal merge utility
-are off by default, as are the Open with and GPS Emulator Pro patches. See
+are off by default, as are the Open with and GPS Emulator Pro patches and all three
+TAGTHAi patches. See [TAGTHAi setup and limits](docs/apps/tagthai.md). See
 [GPS Emulator setup and validation](docs/apps/gps-emulator.md). See [Open with setup and
 validation](docs/apps/openwith.md). Walmart price history records prices you actually encounter;
 it does not provide past prices from a remote database. See [Walmart details](docs/apps/walmart-canada.md).
