@@ -1,3 +1,13 @@
+## [1.0.0-dev.18](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.17...v1.0.0-dev.18) (2026-11-03)
+
+### ✨ New Features
+
+* **eufy:** add camera-focused navigation and promotion cleanup ([5b7c90f](https://github.com/Mlkem/Morphe/commit/5b7c90f4baab342110933aac7663824e9489bf9d))
+
+### 🐛 Bug Fixes
+
+* **eufy:** include extension manifest for Android release builds ([5fb9005](https://github.com/Mlkem/Morphe/commit/5fb900566d0c2bdee42e2e340bb3aeb6f9a8fd50))
+
 ## [1.0.0-dev.17](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.16...v1.0.0-dev.17) (2026-11-03)
 
 ### 🐛 Bug Fixes

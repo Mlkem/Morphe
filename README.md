@@ -92,7 +92,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.17](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.17)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;39 patches total
+> **[v1.0.0-dev.18](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.18)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;41 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -124,12 +124,12 @@ provide privacy.
 
 **🎯 Supported versions:**
 
-| 🧪&nbsp;2.4.0-dev.1 | 🧪&nbsp;2.4.0-dev.2 | 🧪&nbsp;2.4.0-dev.3 |
-| :---: | :---: | :---: |
+| 🧪&nbsp;2.4.0-dev.1 | 🧪&nbsp;2.4.0-dev.2 | 🧪&nbsp;2.4.0-dev.3 | 🧪&nbsp;2.4.0-dev.4 |
+| :---: | :---: | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [APKMirror search for collection apps](#apkmirror-search-for-collection-apps) | Changes Morphe Manager's download links for this collection's eight apps. Walmart Canada 26.31 opens its verified APKMirror APKM page; other versions/apps use a package-and-version Google search restricted to APKMirror, without nodpi. Other apps keep Manager's resolver. Does not download files automatically. |  |
+| [APKMirror search for collection apps](#apkmirror-search-for-collection-apps) | Changes Morphe Manager's download links for this collection's supported apps. Walmart Canada 26.31 and Anker eufy 6.1.20_31181 open verified APKMirror APKM pages; other versions/apps use a package-and-version Google search restricted to APKMirror, without nodpi. Other apps keep Manager's resolver. Does not download files automatically. |  |
 
 </details>
 
@@ -289,6 +289,24 @@ provide privacy.
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
 | [Enable Songsterr premium features](#enable-songsterr-premium-features) | Songsterr 7.1.6 (2012282388): selects the highest local access tier for player controls, premium UI and ad gating. Does not grant a server subscription, AI quota or unavailable content. Requires the verified original split bundle; phone testing pending. |  |
+
+</details>
+
+<details>
+<summary>📦 Anker eufy&nbsp;&nbsp;•&nbsp;&nbsp;2 patches</summary>
+<br>
+
+**Package name:** `com.oceanwing.battery.cam`
+
+**🎯 Supported versions:**
+
+| 🧪&nbsp;6.1.20_31181 |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Hide Eufy Discover, Smart and Shop](#hide-eufy-discover-smart-and-shop) | Hides Discover, Smart and Shop in the main bottom navigation, retaining original tab indices. Restored hidden tabs return to Home. Other Smart controls, cameras, events and Profile are preserved. Phone testing pending. |  |
+| [Hide Eufy promotions](#hide-eufy-promotions) | Collapses the identified camera-home marketing and AI offer banners and promotional inbox cards, and closes the identified shopping and solar-panel offer popups. No network blocking or notification filtering; remote/React Native offers may remain. Phone testing pending. |  |
 
 </details>
 
