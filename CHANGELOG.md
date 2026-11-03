@@ -1,3 +1,9 @@
+## [1.0.0-dev.14](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.13...v1.0.0-dev.14) (2026-11-03)
+
+### 🐛 Bug Fixes
+
+* **gboard:** make floating block an add-on for stock Gboard ([7f8e0d0](https://github.com/Mlkem/Morphe/commit/7f8e0d0396500eed3d96418968c255417c53ac37))
+
 ## [1.0.0-dev.13](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.12...v1.0.0-dev.13) (2026-11-03)
 
 ### ✨ New Features

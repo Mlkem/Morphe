@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-11-03T07:26:09",
-  "description": "## [1.0.0-dev.13](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.12...v1.0.0-dev.13) (2026-11-03)\n\n### ✨ New Features\n\n* **gboard:** block floating keyboard in verified GboardWu build ([79de615](https://github.com/Mlkem/Morphe/commit/79de615abe4ac87145eac453944eb7c4d1862fd7))",
-  "download_url": "https://github.com/Mlkem/Morphe/releases/download/v1.0.0-dev.13/patches-1.0.0-dev.13.mpp",
+  "created_at": "2026-11-03T07:47:22",
+  "description": "## [1.0.0-dev.14](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.13...v1.0.0-dev.14) (2026-11-03)\n\n### 🐛 Bug Fixes\n\n* **gboard:** make floating block an add-on for stock Gboard ([7f8e0d0](https://github.com/Mlkem/Morphe/commit/7f8e0d0396500eed3d96418968c255417c53ac37))",
+  "download_url": "https://github.com/Mlkem/Morphe/releases/download/v1.0.0-dev.14/patches-1.0.0-dev.14.mpp",
   "signature_download_url": "",
-  "version": "1.0.0-dev.13"
+  "version": "1.0.0-dev.14"
 }
