@@ -128,6 +128,61 @@ public class VerifyGboard {
         }
         return s.toString();
     }
+    record Action(String type, List<Integer> entries) {}
+    record Key(List<Action> actions) {}
+    static boolean zero(Object value) { return value==null || Integer.valueOf(0).equals(value); }
+    /** Executes the actual action-lookup DEX against merged/cached menu fixtures. */
+    static Action lookup(Method m, Key key, String type) {
+        Object[] r=new Object[m.getImplementation().getRegisterCount()];
+        r[r.length-2]=key;r[r.length-1]=type;
+        var code=code(m);int pc=0;Object result=null;
+        for(int step=0;step<1000;step++) {
+            Instruction i=code.get(pc);check(i!=null,"Popup instruction boundary "+m+" pc="+pc+" key="+key+" type="+type);
+            int next=pc+i.getCodeUnits();
+            int a=i instanceof OneRegisterInstruction x?x.getRegisterA():-1;
+            int b=i instanceof TwoRegisterInstruction x?x.getRegisterB():-1;
+            switch(i.getOpcode()) {
+                case CONST_4, CONST_16 -> r[a]=((NarrowLiteralInstruction)i).getNarrowLiteral();
+                case MOVE_OBJECT -> r[a]=r[b];
+                case CHECK_CAST, NOP -> {}
+                case IGET_OBJECT -> {
+                    String field=((ReferenceInstruction)i).getReference().toString();
+                    if(field.equals("Lcom/google/android/libraries/inputmethod/metadata/SoftKeyDef;->h:Lwns;"))r[a]=((Key)r[b]).actions();
+                    else if(field.equals("Lcom/google/android/libraries/inputmethod/metadata/ActionDef;->e:Lqae;"))r[a]=((Action)r[b]).type();
+                    else if(field.equals("Lcom/google/android/libraries/inputmethod/metadata/ActionDef;->f:Lwns;"))r[a]=((Action)r[b]).entries();
+                    else throw new AssertionError("Unexpected popup field "+field);
+                }
+                case IGET -> {
+                    check(((ReferenceInstruction)i).getReference().toString().equals("Lqbc;->c:I"),"Reads popup keycode");
+                    r[a]=(Integer)r[b];
+                }
+                case SGET_OBJECT -> {
+                    String field=((ReferenceInstruction)i).getReference().toString();
+                    check(field.equals("Lqae;->a:Lqae;")||field.equals("Lqae;->b:Lqae;"),"Known action type");
+                    r[a]=field.contains("->a:")?"PRESS":"LONG_PRESS";
+                }
+                case INVOKE_INTERFACE -> {
+                    String call=((ReferenceInstruction)i).getReference().toString();
+                    Object receiver=r[((FiveRegisterInstruction)i).getRegisterC()];
+                    switch(call) {
+                        case "Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;" -> result=((Iterable<?>)receiver).iterator();
+                        case "Ljava/util/Iterator;->hasNext()Z" -> result=((Iterator<?>)receiver).hasNext()?1:0;
+                        case "Ljava/util/Iterator;->next()Ljava/lang/Object;" -> result=((Iterator<?>)receiver).next();
+                        default -> throw new AssertionError("Unexpected popup call "+call);
+                    }
+                }
+                case MOVE_RESULT, MOVE_RESULT_OBJECT -> r[a]=result;
+                case IF_EQZ -> {if(zero(r[a]))next=pc+((OffsetInstruction)i).getCodeOffset();}
+                case IF_NEZ -> {if(!zero(r[a]))next=pc+((OffsetInstruction)i).getCodeOffset();}
+                case IF_NE -> {if(!Objects.equals(r[a],r[b]))next=pc+((OffsetInstruction)i).getCodeOffset();}
+                case GOTO, GOTO_16, GOTO_32 -> next=pc+((OffsetInstruction)i).getCodeOffset();
+                case RETURN_OBJECT -> {return zero(r[a])?null:(Action)r[a];}
+                default -> throw new AssertionError("Unexpected popup instruction "+i.getOpcode());
+            }
+            pc=next;
+        }
+        throw new AssertionError("Popup lookup did not terminate");
+    }
     public static void main(String[] args) throws Exception {
         Path input=Path.of(args[0]), output=Path.of(args[1]);
         var before=hashes(input);var after=hashes(output);
@@ -137,7 +192,9 @@ public class VerifyGboard {
         var originals=methods(input);var patched=methods(output);
         check(originals.keySet().equals(patched.keySet()),"All method identities retained");
         Set<String> changes=Set.of("Lpra;->a()I","Lpqw;->aq()Z","Lpqw;->ae()Z","Lpqw;->ag(IZZ)Z","Lpqw;->at(Z)Z",
-            "Lpqw;->fV(Lpev;Landroid/view/inputmethod/EditorInfo;)J");
+            "Lpqw;->fV(Lpev;Landroid/view/inputmethod/EditorInfo;)J",
+            "Lcom/google/android/libraries/inputmethod/metadata/SoftKeyDef;->g(Lqae;)Lcom/google/android/libraries/inputmethod/metadata/ActionDef;",
+            "Lcom/google/android/libraries/inputmethod/metadata/SoftKeyDef;->h(Lqae;)Lcom/google/android/libraries/inputmethod/metadata/ActionDef;");
         for(String key:originals.keySet())if(!changes.contains(key))
             check(body(originals.get(key)).equals(body(patched.get(key))),"Unchanged method "+key);
         Method resolve=patched.get("Lpra;->a()I");
@@ -171,6 +228,28 @@ public class VerifyGboard {
             check(execute(shortcutState,new Object[]{"this",keyboard,editor},Map.of(),0,-1)==0,
                 "One-handed shortcut hidden for every keyboard/editor combination");
         }
+        List<Method> popupMethods=new ArrayList<>();int popupCases=0;
+        for(String name:List.of("g","h")) {
+            String signature="Lcom/google/android/libraries/inputmethod/metadata/SoftKeyDef;->"+name+"(Lqae;)Lcom/google/android/libraries/inputmethod/metadata/ActionDef;";
+            Method original=originals.get(signature), filtered=patched.get(signature);popupMethods.add(filtered);
+            for(List<Integer> entries:List.of(List.<Integer>of(),List.of(-10057),List.of(-10057,-10018),
+                    List.of(-10018,-10057),List.of(66,-10057,-10018),List.of(-10057,-10057),
+                    List.of(66),List.of(-10018),List.of(97,98,99))) {
+                for(boolean hasPress:new boolean[]{false,true}) {
+                    Action press=new Action("PRESS",List.of(66));Action longPress=new Action("LONG_PRESS",entries);
+                    var actions=new ArrayList<Action>();if(hasPress)actions.add(press);actions.add(longPress);
+                    Key key=new Key(actions);
+                    for(String type:new String[]{null,"PRESS","LONG_PRESS","SLIDE_UP"}) {
+                        Action baselineAction=lookup(original,key,type);
+                        Action expected=baselineAction!=null && baselineAction.type().equals("LONG_PRESS") && baselineAction.entries().contains(-10057)?null:baselineAction;
+                        Action actual=lookup(filtered,key,type);
+                        check(actual==expected,"Merged popup filtering: "+name+" entries="+entries+" press="+hasPress+" query="+type+" expected="+expected+" actual="+actual);
+                        if(type!=null && type.equals("LONG_PRESS"))check(baselineAction==longPress,"Baseline exposes the reported popup");
+                        popupCases++;
+                    }
+                }
+            }
+        }
         List<ClassProvider> providers=new ArrayList<>();Set<String> classes=new HashSet<>();int methods=0;
         for(String name:hashes(output).keySet())if(name.matches("classes[0-9]*\\.dex")) {
             var d=dex(read(output,name));providers.add(new DexClassProvider(d));
@@ -188,10 +267,15 @@ public class VerifyGboard {
             var analysis=new MethodAnalyzer(classpath,m,null,false);
             check(analysis.getAnalysisException()==null,"Register/type analysis: "+m+" "+analysis.getAnalysisException());
         }
+        for(Method m:popupMethods) {
+            var analysis=new MethodAnalyzer(classpath,m,null,false);
+            check(analysis.getAnalysisException()==null,"Popup register/type analysis: "+m+" "+analysis.getAnalysisException());
+        }
         check(methods>10000,"All output methods decoded");
         System.out.println("PASS: 49 restored/temporary combinations, 11 requested modes, floating gates and both one-handed eligibility inputs.");
         System.out.println("PASS: long-press shortcut state is empty for all four keyboard/editor combinations.");
-        System.out.println("PASS: 6 changed methods pass register/type analysis; "+methods+" methods decoded.");
+        System.out.println("PASS: "+popupCases+" merged popup cases: one-handed popups removed; normal taps and other actions preserved.");
+        System.out.println("PASS: 8 changed methods pass register/type analysis; "+methods+" methods decoded.");
         System.out.println("PASS: all resources, native libraries and every other method retained.");
         System.out.println(assertions+" assertions; Android/device runtime testing remains pending.");
     }

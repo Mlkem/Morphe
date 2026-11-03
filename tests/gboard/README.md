@@ -25,10 +25,15 @@ Verify the combined output against the baseline with the same harness. Repeat
 with the two bundle arguments reversed. Do not merge the MPP archives.
 
 The harness executes the emitted code over 49 saved/temporary combinations and
-11 requested-mode values, validates floating gates, both one-handed eligibility inputs, four shortcut-state input combinations and the six methods'
-register types, decodes all output instructions, rejects duplicate classes,
+11 requested-mode values, validates floating gates, both one-handed eligibility
+inputs, four shortcut-state input combinations and the eight methods' register types, decodes all output instructions, rejects duplicate classes,
 and compares every other method body and all non-DEX payload files. It does not
 launch Android or establish phone compatibility.
+
+It also executes both original and patched action-lookup methods against 144
+merged-menu cases. The original code must expose the one-handed popup, while the
+patched code must return no long-press action for that menu. Mixed Enter/Send
+popups, repeated entries, null queries, normal taps and unaffected menus are covered.
 
 Negative checks: reapply this option to its own output, and apply it to a copy
 of stock whose mode-resolver instruction shape has been changed. Both must fail
