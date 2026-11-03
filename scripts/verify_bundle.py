@@ -4,10 +4,10 @@ import json, zipfile
 root=Path(__file__).resolve().parents[1]
 patches=json.loads((root/'patches-list.json').read_text())['patches']
 names=[p['name'] for p in patches]
-assert len(patches)==39, f'Expected 39 patches, found {len(patches)}'
+assert len(patches)==41, f'Expected 41 patches, found {len(patches)}'
 assert len(names)==len(set(names)), 'Duplicate patch names'
 packages={c['packageName'] for p in patches for c in (p.get('compatiblePackages') or [])}
-expected={'com.google.android.inputmethod.latin','com.songsterr','com.musicleague.app','ca.walmart.ecommerceapp','com.wongnai.android','com.neave.zoomearth','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','com.thaidigitalplatform.tagthai','app.morphe.manager'}
+expected={'com.oceanwing.battery.cam','com.google.android.inputmethod.latin','com.songsterr','com.musicleague.app','ca.walmart.ecommerceapp','com.wongnai.android','com.neave.zoomearth','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','com.thaidigitalplatform.tagthai','app.morphe.manager'}
 assert packages==expected, f'Unexpected app set: {packages}'
 zoom_names={'Enable Zoom Earth Pro features','Remove Zoom Earth ads','100 Zoom Earth favourites','Quiet Zoom Earth prompts','Allow Zoom Earth patched installation','Remove Zoom Earth LiteAPKs promotions'}
 zoom=[p for p in patches if p['name'] in zoom_names]
@@ -19,6 +19,13 @@ for p in zoom:
     assert [t['version'] for t in target['targets']]==['6.3.3']
     min_sdk=32 if p['name']=='Allow Zoom Earth patched installation' else 26
     assert all(t['minSdk']==min_sdk and t['isExperimental'] for t in target['targets'])
+eufy=[p for p in patches if any(c['packageName']=='com.oceanwing.battery.cam' for c in p.get('compatiblePackages') or [])]
+assert len(eufy)==2
+for p in eufy:
+    assert not p['default']
+    assert p['compatiblePackages'][0]['apkFileType']=='APKM'
+    assert [t['version'] for t in p['compatiblePackages'][0]['targets']]==['6.1.20_31181']
+    assert all(t['isExperimental'] and t['minSdk']==29 for t in p['compatiblePackages'][0]['targets'])
 gboard=next(p for p in patches if p['name']=='Disable Gboard floating and one-handed modes')
 assert not gboard['default'] and len(gboard['compatiblePackages'])==1
 assert gboard['description'].find('original Gboard APK') >= 0
@@ -57,7 +64,7 @@ assert manager['default'] is False, 'Manager search must remain opt-in'
 assert len(manager['compatiblePackages']) == 1
 manager_target=manager['compatiblePackages'][0]
 assert manager_target['packageName'] == 'app.morphe.manager'
-assert [t['version'] for t in manager_target['targets']] == ['2.4.0-dev.1','2.4.0-dev.2','2.4.0-dev.3']
+assert [t['version'] for t in manager_target['targets']] == ['2.4.0-dev.1','2.4.0-dev.2','2.4.0-dev.3','2.4.0-dev.4']
 assert all(t['minSdk'] == 26 for t in manager_target['targets'])
 merge=next(p for p in patches if p['name']=='Merge XAPK only')
 assert merge['default'] is False and merge['compatiblePackages'] is None
@@ -75,6 +82,8 @@ for p in bundles:
         assert len(files)==len(set(files))
         assert z.read('classes.dex').startswith(b'dex\n')
         assert any(f.endswith('.class') for f in files)
+        assert 'ca/mlkem/eufy/EufyPatchesKt.class' in files
+        assert b'Lca/mlkem/eufy/CameraOnly;' in z.read('extensions/eufy-camera-only.mpe')
         assert 'ca/mlkem/gboard/DisableFloatingKeyboardPatchKt.class' in files
         assert b'Lca/mlkem/gboard/DisableFloatingKeyboardPatchKt;' in z.read('classes.dex')
         assert 'me/mikem/songsterr/SongsterrPremiumPatchKt.class' in files
@@ -94,7 +103,7 @@ for p in bundles:
         assert b'Lca/mlkem/openwith/OpenWithProPatch;' in z.read('classes.dex')
         assert 'ca/mlkem/manager/ApkMirrorSearchPatchKt.class' in files
         assert b'Lca/mlkem/manager/ApkMirrorSearchPatchKt;' in z.read('classes.dex')
-        for name in ['extensions/canada.mpe','extensions/pushpress-crossfit-only.mpe','extensions/manager-apkmirror.mpe','extensions/tagthai-text.mpe']:
+        for name in ['extensions/canada.mpe','extensions/pushpress-crossfit-only.mpe','extensions/manager-apkmirror.mpe','extensions/tagthai-text.mpe','extensions/eufy-camera-only.mpe']:
             assert z.read(name).startswith(b'dex\n'), name
             assert b'Lkotlin/' not in z.read(name), f'Unexpected Kotlin runtime in Java extension: {name}'
         assert b'Lca/mlkem/manager/ApkMirrorUrls;' in z.read('extensions/manager-apkmirror.mpe')

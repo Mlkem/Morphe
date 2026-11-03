@@ -19,6 +19,13 @@ public final class ApkMirrorUrls {
                 + "walmart-grocery-shopping-26-31-android-apk-download/";
         }
 
+        // Verified APKMirror bundle: Anker eufy, build 31181, all splits.
+        if ("com.oceanwing.battery.cam".equals(packageName) && "6.1.20_31181".equals(requested)) {
+            return "https://www.apkmirror.com/apk/anker/anker-eufy/"
+                + "anker-eufy-6-1-20_31181-release/"
+                + "anker-eufy-6-1-20_31181-android-apk-download/";
+        }
+
         // Package identity distinguishes similarly named apps. Do not add nodpi,
         // CPU architecture or .apk: bundles and multi-density releases are valid.
         // Preserve the full requested version; a different build may not patch.
@@ -33,7 +40,8 @@ public final class ApkMirrorUrls {
     }
 
     private static boolean supported(String packageName) {
-        return "ca.walmart.ecommerceapp".equals(packageName)
+        return "com.oceanwing.battery.cam".equals(packageName)
+            || "ca.walmart.ecommerceapp".equals(packageName)
             || "com.musicleague.app".equals(packageName)
             || "com.wongnai.android".equals(packageName)
             || "com.neave.zoomearth".equals(packageName)

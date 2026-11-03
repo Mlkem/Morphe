@@ -26,7 +26,7 @@ def dex(source,name,minapi):
     return out/'classes.dex'
 patchdex=dex(b/'patches.jar','patch-dex','26')
 extensions={}
-for name,resource in [('canada','canada.mpe'),('pushpress','pushpress-crossfit-only.mpe'),('manager','manager-apkmirror.mpe'),('tagthai','tagthai-text.mpe')]:
+for name,resource in [('canada','canada.mpe'),('pushpress','pushpress-crossfit-only.mpe'),('manager','manager-apkmirror.mpe'),('eufy','eufy-camera-only.mpe'),('tagthai','tagthai-text.mpe')]:
     out=b/(name+'-classes');out.mkdir()
     run(jdk/'javac','--release','8','-cp',t/'android.jar','-d',out,*root.glob(f'extensions/{name}/src/main/java/**/*.java'))
     jar_tree(b/(name+'.jar'),out)

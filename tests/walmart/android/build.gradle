@@ -1,7 +1,7 @@
 plugins { id 'java' }
 repositories { mavenCentral(); google() }
 sourceSets {
-    main.java.srcDirs = ['../../../extensions/canada/src/main/java', '../../../extensions/tagthai/src/main/java']
+    main.java.srcDirs = ['../../../extensions/canada/src/main/java', '../../../extensions/tagthai/src/main/java', '../../../extensions/eufy/src/main/java']
     test.java.srcDirs = ['src/test/java', '../fixtures']
 }
 dependencies {

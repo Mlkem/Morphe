@@ -10,12 +10,12 @@ import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 
 private const val RESOLVER = "Lapp/morphe/manager/domain/manager/DownloadUrlResolver;"
 private const val HOOK = "Lca/mlkem/manager/ApkMirrorUrls;->forApp(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"
-private val versions = listOf("2.4.0-dev.1", "2.4.0-dev.2", "2.4.0-dev.3")
+private val versions = listOf("2.4.0-dev.1", "2.4.0-dev.2", "2.4.0-dev.3", "2.4.0-dev.4")
 
 val apkMirrorSearch = bytecodePatch(
     name = "APKMirror search for collection apps",
-    description = "Changes Morphe Manager's download links for this collection's eight apps. " +
-        "Walmart Canada 26.31 opens its verified APKMirror APKM page; other versions/apps " +
+    description = "Changes Morphe Manager's download links for this collection's supported apps. " +
+        "Walmart Canada 26.31 and Anker eufy 6.1.20_31181 open verified APKMirror APKM pages; other versions/apps " +
         "use a package-and-version Google search restricted to APKMirror, without nodpi. " +
         "Other apps keep Manager's resolver. Does not download files automatically.",
     default = false
@@ -29,7 +29,7 @@ val apkMirrorSearch = bytecodePatch(
     extendWith("extensions/manager-apkmirror.mpe")
     execute {
         check(packageMetadata.packageName == "app.morphe.manager" && packageMetadata.versionName in versions) {
-            "Requires official Morphe Manager 2.4.0-dev.1, dev.2 or dev.3."
+            "Requires official Morphe Manager 2.4.0-dev.1, dev.2, dev.3 or dev.4."
         }
         // Cover the immediate UI link, async resolution, and helper-app fallback.
         // Check every entry point before mutating any of them.
