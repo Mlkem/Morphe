@@ -1,26 +1,35 @@
-# GboardWu real-input verification
+# Gboard stock-input and composition verification
 
-Use the exact APK identified in [the app guide](../../docs/apps/gboardwu.md).
+Use the original stock Gboard APK identified in [the app guide](../../docs/apps/gboard.md).
 APKs, extracted code and signing keys must stay outside this repository.
 
-Build the collection using the standard Gradle build or `scripts/build_offline.py`.
-The local check used JDK 21, Morphe Desktop 1.20.0 and Kotlin compiler 2.4.0 with
-language/API level 2.2. The normal CI build uses the repository's pinned toolchain.
+Build the full collection with Gradle or `scripts/build_offline.py`. Before the
+offline build, move earlier MPPs out of `patches/build/libs` so the catalog
+generator and verification read only the current candidate.
+
+The local verification uses JDK 21 and Morphe Desktop 1.20.0. Production CI uses
+the repository's pinned build toolchain.
 
 ```sh
-java -jar "$MORPHE_JAR" patch "$INPUT_APK" -p "$MPP" \
+java -jar "$MORPHE_JAR" patch "$STOCK_APK" -p "$MPP" \
   -e 'Disable Gboard floating keyboard' --exclusive --unsigned \
-  -o "$OUTPUT_APK" -r "$RESULT_JSON"
+  -o "$SOLO_APK" -r "$RESULT_JSON"
 javac -cp "$MORPHE_JAR" -d "$TEST_CLASSES" tests/gboard/VerifyGboard.java
-java -Xmx3g -cp "$MORPHE_JAR:$TEST_CLASSES" VerifyGboard "$INPUT_APK" "$OUTPUT_APK"
+java -Xmx4g -cp "$MORPHE_JAR:$TEST_CLASSES" VerifyGboard "$STOCK_APK" "$SOLO_APK"
 ```
 
-The harness executes the emitted mode-selection instructions across saved,
-temporary and requested modes, checks all output DEX instructions and the changed
-methods' register types, and verifies exact byte preservation. It does not launch
-Android or establish physical-phone compatibility.
+For composition, build a baseline with all named patches from
+`jasonwu1994/Gboard-patches` v4.2.0-dev.2. Build a second APK from the same stock
+input with the identical selection plus this patch from the mlkemac bundle.
+Verify the combined output against the baseline with the same harness. Repeat
+with the two bundle arguments reversed. Do not merge the MPP archives.
 
-Also rerun the patch against its own output, and against copies of the original
-with one changed byte in `classes.dex` and `classes5.dex` separately. Every case
-must fail the input hash guard and must not produce an output APK. Keep these
-negative-test copies outside the repository.
+The harness executes the emitted code over 49 saved/temporary combinations and
+11 requested-mode values, validates both false gates and the four methods'
+register types, decodes all output instructions, rejects duplicate classes,
+and compares every other method body and all non-DEX payload files. It does not
+launch Android or establish phone compatibility.
+
+Negative checks: reapply this option to its own output, and apply it to a copy
+of stock whose mode-resolver instruction shape has been changed. Both must fail
+before producing an APK. Keep these diagnostic inputs outside the repository.

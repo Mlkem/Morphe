@@ -7,7 +7,7 @@ names=[p['name'] for p in patches]
 assert len(patches)==39, f'Expected 39 patches, found {len(patches)}'
 assert len(names)==len(set(names)), 'Duplicate patch names'
 packages={c['packageName'] for p in patches for c in (p.get('compatiblePackages') or [])}
-expected={'dev.jason.com.google.android.inputmethod.latin','com.songsterr','com.musicleague.app','ca.walmart.ecommerceapp','com.wongnai.android','com.neave.zoomearth','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','com.thaidigitalplatform.tagthai','app.morphe.manager'}
+expected={'com.google.android.inputmethod.latin','com.songsterr','com.musicleague.app','ca.walmart.ecommerceapp','com.wongnai.android','com.neave.zoomearth','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','com.thaidigitalplatform.tagthai','app.morphe.manager'}
 assert packages==expected, f'Unexpected app set: {packages}'
 zoom_names={'Enable Zoom Earth Pro features','Remove Zoom Earth ads','100 Zoom Earth favourites','Quiet Zoom Earth prompts','Allow Zoom Earth patched installation','Remove Zoom Earth LiteAPKs promotions'}
 zoom=[p for p in patches if p['name'] in zoom_names]
@@ -21,8 +21,9 @@ for p in zoom:
     assert all(t['minSdk']==min_sdk and t['isExperimental'] for t in target['targets'])
 gboard=next(p for p in patches if p['name']=='Disable Gboard floating keyboard')
 assert not gboard['default'] and len(gboard['compatiblePackages'])==1
+assert gboard['description'].find('original Gboard APK') >= 0
 gboard_target=gboard['compatiblePackages'][0]
-assert gboard_target['packageName']=='dev.jason.com.google.android.inputmethod.latin'
+assert gboard_target['packageName']=='com.google.android.inputmethod.latin'
 assert [t['version'] for t in gboard_target['targets']]==['18.5.4.993608717-release-arm64-v8a']
 assert all(t['isExperimental'] for t in gboard_target['targets'])
 songsterr=next(p for p in patches if p['name']=='Enable Songsterr premium features')

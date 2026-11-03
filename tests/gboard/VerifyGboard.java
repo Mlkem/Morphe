@@ -11,7 +11,7 @@ import java.security.*;
 import java.util.*;
 import java.util.zip.*;
 
-/** Verifies real MPP output, including byte preservation and executed mode paths. */
+/** Verifies real MPP output, including coexistence and executed mode paths. */
 public class VerifyGboard {
     static int assertions;
     static void check(boolean ok, String why) {
@@ -48,7 +48,7 @@ public class VerifyGboard {
         return ((DexBackedInstruction)m.getImplementation().getInstructions().iterator().next()).instructionStart;
     }
     static int execute(Method m, Object[] r, Map<String,Integer> fields, int pc, int stop) {
-        var code = code(m);
+        var code = code(m); int result=0;
         for (int step=0; step<20; step++) {
             if (pc==stop) return (Integer)r[12];
             Instruction i = code.get(pc);
@@ -63,6 +63,12 @@ public class VerifyGboard {
                     check(fields.containsKey(key),"Known field "+key);
                     r[two.getRegisterA()]=fields.get(key);
                 }
+                case INVOKE_VIRTUAL -> {
+                    check(((ReferenceInstruction)i).getReference().toString().equals("Lpra;->d()Z"),"Only temporary-mode query");
+                    result=fields.get("Lpra;->f:I")!=0?1:0;
+                }
+                case MOVE_RESULT -> r[((OneRegisterInstruction)i).getRegisterA()]=result;
+                case IF_EQZ -> { if ((Integer)r[((OneRegisterInstruction)i).getRegisterA()]==0) next=pc+((OffsetInstruction)i).getCodeOffset(); }
                 case IF_NEZ -> { if ((Integer)r[((OneRegisterInstruction)i).getRegisterA()]!=0) next=pc+((OffsetInstruction)i).getCodeOffset(); }
                 case IF_NE -> {
                     var two=(TwoRegisterInstruction)i;
@@ -76,30 +82,57 @@ public class VerifyGboard {
         }
         throw new AssertionError("Path did not terminate");
     }
-    static void preserved(byte[] a, byte[] b, List<int[]> edits) throws Exception {
-        check(a.length==b.length,"DEX length retained");
-        for (int i=0;i<a.length;i++) {
-            boolean allowed=i>=8 && i<32;
-            for (int[] range:edits) allowed|=i>=range[0] && i<range[1];
-            if (!allowed && a[i]!=b[i]) throw new AssertionError("Unexpected byte edit at "+i);
+    static Map<String,Method> methods(Path apk) throws Exception {
+        Map<String,Method> result=new TreeMap<>();Set<String> classes=new HashSet<>();
+        try(ZipFile z=new ZipFile(apk.toFile())) {
+            for(var e:Collections.list(z.entries()))if(e.getName().matches("classes[0-9]*\\.dex")) {
+                var d=dex(z.getInputStream(e).readAllBytes());
+                for(var c:d.getClasses()) {
+                    check(classes.add(c.getType()),"Unique class "+c.getType());
+                    for(var m:c.getMethods())result.put(m.toString(),m);
+                }
+            }
         }
-        check(Arrays.equals(MessageDigest.getInstance("SHA-1").digest(Arrays.copyOfRange(b,32,b.length)),Arrays.copyOfRange(b,12,32)),"DEX SHA-1");
-        Adler32 adler=new Adler32();adler.update(b,12,b.length-12);
-        check(ByteBuffer.wrap(b).order(ByteOrder.LITTLE_ENDIAN).getInt(8)==(int)adler.getValue(),"DEX checksum");
+        return result;
+    }
+    static String body(Method m) {
+        var impl=m.getImplementation();if(impl==null)return "no code";
+        var s=new StringBuilder().append(impl.getRegisterCount());
+        for(var i:impl.getInstructions()) {
+            s.append('|').append(i.getOpcode());
+            if(i instanceof OneRegisterInstruction a)s.append(" a").append(a.getRegisterA());
+            if(i instanceof TwoRegisterInstruction a)s.append(" b").append(a.getRegisterB());
+            if(i instanceof ThreeRegisterInstruction a)s.append(" c").append(a.getRegisterC());
+            if(i instanceof FiveRegisterInstruction a)s.append(" regs").append(a.getRegisterCount()).append(',').append(a.getRegisterC()).append(',').append(a.getRegisterD()).append(',').append(a.getRegisterE()).append(',').append(a.getRegisterF()).append(',').append(a.getRegisterG());
+            if(i instanceof RegisterRangeInstruction a)s.append(" range").append(a.getStartRegister()).append(',').append(a.getRegisterCount());
+            if(i instanceof ReferenceInstruction a)s.append(" ref").append(a.getReference());
+            if(i instanceof DualReferenceInstruction a)s.append(" ref2").append(a.getReference2());
+            if(i instanceof WideLiteralInstruction a)s.append(" literal").append(a.getWideLiteral());
+            if(i instanceof OffsetInstruction a)s.append(" offset").append(a.getCodeOffset());
+            if(i instanceof com.android.tools.smali.dexlib2.iface.instruction.formats.ArrayPayload a)s.append(" array").append(a.getElementWidth()).append(a.getArrayElements());
+            if(i instanceof SwitchPayload a)for(var e:a.getSwitchElements())s.append(" case").append(e.getKey()).append(':').append(e.getOffset());
+        }
+        for(var t:impl.getTryBlocks()) {
+            s.append(" try").append(t.getStartCodeAddress()).append(':').append(t.getCodeUnitCount());
+            for(var h:t.getExceptionHandlers())s.append(':').append(h.getExceptionType()).append(':').append(h.getHandlerCodeAddress());
+        }
+        return s.toString();
     }
     public static void main(String[] args) throws Exception {
         Path input=Path.of(args[0]), output=Path.of(args[1]);
         var before=hashes(input);var after=hashes(output);
-        check(before.keySet().equals(after.keySet()),"No application files added or removed");
-        Set<String> changed=new TreeSet<>();
-        for(String name:before.keySet()) if(!before.get(name).equals(after.get(name)))changed.add(name);
-        check(changed.equals(Set.of("classes.dex","classes5.dex")),"Only the two targeted DEX files change: "+changed);
-
-        byte[] primary=read(output,"classes.dex"), runtime=read(output,"classes5.dex");
-        Method resolve=method(dex(primary),"Lpra;->a()I");
-        Method support=method(dex(runtime),"Lpqw;->aq()Z");
-        Method auto=method(dex(runtime),"Lpqw;->ae()Z");
-        Method setter=method(dex(runtime),"Lpqw;->ag(IZZ)Z");
+        before.keySet().removeIf(n->n.matches("classes[0-9]*\\.dex"));
+        after.keySet().removeIf(n->n.matches("classes[0-9]*\\.dex"));
+        check(before.equals(after),"All non-DEX application files retained");
+        var originals=methods(input);var patched=methods(output);
+        check(originals.keySet().equals(patched.keySet()),"All method identities retained");
+        Set<String> changes=Set.of("Lpra;->a()I","Lpqw;->aq()Z","Lpqw;->ae()Z","Lpqw;->ag(IZZ)Z");
+        for(String key:originals.keySet())if(!changes.contains(key))
+            check(body(originals.get(key)).equals(body(patched.get(key))),"Unchanged method "+key);
+        Method resolve=patched.get("Lpra;->a()I");
+        Method support=patched.get("Lpqw;->aq()Z");
+        Method auto=patched.get("Lpqw;->ae()Z");
+        Method setter=patched.get("Lpqw;->ag(IZZ)Z");
         for(int stored=0;stored<=6;stored++)for(int temporary=0;temporary<=6;temporary++) {
             Object[] r={null,"this"};
             int effective=temporary!=0?temporary:stored;
@@ -109,20 +142,16 @@ public class VerifyGboard {
         }
         for(int requested:new int[]{Integer.MIN_VALUE,-1,0,1,2,3,4,5,6,255,Integer.MAX_VALUE}) {
             Object[] r=new Object[15];Arrays.fill(r,"untouched");r[12]=requested;
-            int value=execute(setter,r,Map.of(),22,27);
+            int value=execute(setter,r,Map.of(),0,4);
             check(value==(requested==3?1:requested),"Requested mode "+requested);
-            for(int i=0;i<r.length;i++)if(i!=2 && i!=12)check("untouched".equals(r[i]),"Other register preserved");
+            for(int i=0;i<r.length;i++)if(i!=0 && i!=12)check("untouched".equals(r[i]),"Other register preserved");
         }
         for(Method m:List.of(support,auto)) {
             Object[] r=new Object[m.getImplementation().getRegisterCount()];r[r.length-1]="this";
             check(execute(m,r,Map.of(),0,-1)==0,"Capability/automatic entry disabled");
         }
-        preserved(read(input,"classes.dex"),primary,List.of(new int[]{start(resolve),start(resolve)+24}));
-        preserved(read(input,"classes5.dex"),runtime,List.of(new int[]{start(support),start(support)+4},
-            new int[]{start(auto),start(auto)+4},new int[]{start(setter)+44,start(setter)+54}));
-
         List<ClassProvider> providers=new ArrayList<>();Set<String> classes=new HashSet<>();int methods=0;
-        for(String name:after.keySet())if(name.matches("classes[0-9]*\\.dex")) {
+        for(String name:hashes(output).keySet())if(name.matches("classes[0-9]*\\.dex")) {
             var d=dex(read(output,name));providers.add(new DexClassProvider(d));
             for(var c:d.getClasses()) {
                 check(classes.add(c.getType()),"Unique class "+c.getType());
@@ -141,7 +170,7 @@ public class VerifyGboard {
         check(methods>10000,"All output methods decoded");
         System.out.println("PASS: 49 restored/temporary combinations, 11 requested modes, both false gates.");
         System.out.println("PASS: 4 changed methods pass register/type analysis; "+methods+" methods decoded.");
-        System.out.println("PASS: all resources, native libraries, other DEX files and code outside 42 targeted bytes unchanged.");
+        System.out.println("PASS: all resources, native libraries and every other method retained.");
         System.out.println(assertions+" assertions; Android/device runtime testing remains pending.");
     }
 }
