@@ -9,6 +9,7 @@ import app.morphe.patcher.util.smali.ExternalLabel
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
+import com.android.tools.smali.dexlib2.iface.instruction.WideLiteralInstruction
 
 private const val PACKAGE = "com.google.android.inputmethod.latin"
 private const val VERSION = "18.5.4.993608717-release-arm64-v8a"
@@ -16,7 +17,8 @@ private const val VERSION = "18.5.4.993608717-release-arm64-v8a"
 /** Normal bytecode patch: shares Morphe's method model with other Gboard sources. */
 val disableGboardFloatingKeyboard = bytecodePatch(
     name = "Disable Gboard floating and one-handed modes",
-    description = "Prevents automatic, toolbar and restored floating or one-handed keyboard activation. " +
+    description = "Hides the Enter-key long-press one-handed shortcut and prevents automatic, toolbar " +
+        "and restored floating or one-handed keyboard activation. " +
         "Select alongside your usual Gboard patches on the original Gboard APK. " +
         "Preserves normal and split modes. Phone testing pending.",
     default = false
@@ -37,6 +39,9 @@ val disableGboardFloatingKeyboard = bytecodePatch(
             parameters = emptyList(), returnType = "Z", isStatic = false).method
         val oneHanded = Fingerprint(definingClass = "Lpqw;", name = "at",
             parameters = listOf("Z"), returnType = "Z", isStatic = false).method
+        val shortcutState = Fingerprint(definingClass = "Lpqw;", name = "fV",
+            parameters = listOf("Lpev;", "Landroid/view/inputmethod/EditorInfo;"),
+            returnType = "J", isStatic = false).method
         val setter = Fingerprint(definingClass = "Lpqw;", name = "ag",
             parameters = listOf("I", "Z", "Z"), returnType = "Z", isStatic = false,
             strings = listOf("setKeyboardMode() newKeyboardMode=%s, updatePreferences=%s")).method
@@ -58,6 +63,13 @@ val disableGboardFloatingKeyboard = bytecodePatch(
                 "Lpqo;->d(Landroid/content/Context;Lqvt;)Z").all { it in references(oneHanded) }) {
             "Unexpected Gboard one-handed eligibility method"
         }
+        check(shortcutState.implementation!!.registerCount == 3 &&
+            shortcutState.instructions.first().opcode == Opcode.CONST_4 &&
+            setOf("Lpqw;->at(Z)Z", "Lpqw;->G()I",
+                "Lpsq;->r(Landroid/content/Context;)Z").all { it in references(shortcutState) } &&
+            shortcutState.instructions.any {
+                (it as? WideLiteralInstruction)?.wideLiteral == 0x800000000L
+            }) { "Unexpected Gboard one-handed long-press shortcut state provider" }
         check(setter.implementation!!.registerCount == 15 &&
             setter.instructions.first().opcode == Opcode.SGET_OBJECT &&
             (setter.instructions.first() as OneRegisterInstruction).registerA == 0 &&
@@ -101,5 +113,11 @@ val disableGboardFloatingKeyboard = bytecodePatch(
         support.addInstructions(0, "const/4 v0, 0x0\nreturn v0")
         auto.addInstructions(0, "const/4 v0, 0x0\nreturn v0")
         oneHanded.addInstructions(0, "const/4 v0, 0x0\nreturn v0")
+        // SHOW_ONE_HANDED_MODE_SWITCH gates the resource merge that adds the
+        // LONG_PRESS action (-10057) to Enter and other keys. This provider
+        // contributes only that flag: return an empty state, not a disabled
+        // menu item. Normal Enter and unrelated long-press actions stay intact.
+        // v0/v1 can overwrite incoming parameters because we return immediately.
+        shortcutState.addInstructions(0, "const-wide/16 v0, 0x0\nreturn-wide v0")
     }
 }

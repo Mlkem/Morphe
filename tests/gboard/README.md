@@ -25,7 +25,7 @@ Verify the combined output against the baseline with the same harness. Repeat
 with the two bundle arguments reversed. Do not merge the MPP archives.
 
 The harness executes the emitted code over 49 saved/temporary combinations and
-11 requested-mode values, validates floating gates, both one-handed eligibility inputs and the five methods'
+11 requested-mode values, validates floating gates, both one-handed eligibility inputs, four shortcut-state input combinations and the six methods'
 register types, decodes all output instructions, rejects duplicate classes,
 and compares every other method body and all non-DEX payload files. It does not
 launch Android or establish phone compatibility.
