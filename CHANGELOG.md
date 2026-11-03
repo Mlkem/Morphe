@@ -1,3 +1,9 @@
+## [1.0.0-dev.16](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.15...v1.0.0-dev.16) (2026-11-03)
+
+### 🐛 Bug Fixes
+
+* **gboard:** hide the Enter long-press one-handed shortcut ([c11499b](https://github.com/Mlkem/Morphe/commit/c11499b7eea673c481f82a93b820c8f213142999))
+
 ## [1.0.0-dev.15](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.14...v1.0.0-dev.15) (2026-11-03)
 
 ### 🐛 Bug Fixes

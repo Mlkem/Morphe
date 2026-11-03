@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-11-03T08:02:30",
-  "description": "## [1.0.0-dev.15](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.14...v1.0.0-dev.15) (2026-11-03)\n\n### 🐛 Bug Fixes\n\n* **gboard:** block one-handed mode in the existing layout patch ([f7c1ab8](https://github.com/Mlkem/Morphe/commit/f7c1ab8593ca84be620f27830617efce7b97d9a0))",
-  "download_url": "https://github.com/Mlkem/Morphe/releases/download/v1.0.0-dev.15/patches-1.0.0-dev.15.mpp",
+  "created_at": "2026-11-03T08:19:19",
+  "description": "## [1.0.0-dev.16](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.15...v1.0.0-dev.16) (2026-11-03)\n\n### 🐛 Bug Fixes\n\n* **gboard:** hide the Enter long-press one-handed shortcut ([c11499b](https://github.com/Mlkem/Morphe/commit/c11499b7eea673c481f82a93b820c8f213142999))",
+  "download_url": "https://github.com/Mlkem/Morphe/releases/download/v1.0.0-dev.16/patches-1.0.0-dev.16.mpp",
   "signature_download_url": "",
-  "version": "1.0.0-dev.15"
+  "version": "1.0.0-dev.16"
 }
