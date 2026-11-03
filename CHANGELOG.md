@@ -1,3 +1,9 @@
+## [1.0.0-dev.13](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.12...v1.0.0-dev.13) (2026-11-03)
+
+### ✨ New Features
+
+* **gboard:** block floating keyboard in verified GboardWu build ([79de615](https://github.com/Mlkem/Morphe/commit/79de615abe4ac87145eac453944eb7c4d1862fd7))
+
 ## [1.0.0-dev.12](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.11...v1.0.0-dev.12) (2026-11-02)
 
 ### 🐛 Bug Fixes

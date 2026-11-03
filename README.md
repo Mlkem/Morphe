@@ -90,7 +90,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.12](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.12)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;38 patches total
+> **[v1.0.0-dev.13](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.13)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;39 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -200,6 +200,23 @@ provide privacy.
 | [Neutralize bundled ad unit IDs and premium banners](#neutralize-bundled-ad-unit-ids-and-premium-banners) | Replaces bundled ad unit IDs and premium/reward banner copy in the Hermes bundle with same-length non-serving/blank values while leaving the AdMob app ID intact. |  |
 | [Neutralize premium and reward-ad prompts](#neutralize-premium-and-reward-ad-prompts) | Force-removes the remaining premium/reward banner strings from the bundled Hermes asset. |  |
 | [Pin local Expo config](#pin-local-expo-config) | Neutralizes Expo OTA update configuration in the bundled Expo config so the APK prefers local bundled assets. |  |
+
+</details>
+
+<details>
+<summary>📦 GboardWu&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
+
+**Package name:** `dev.jason.com.google.android.inputmethod.latin`
+
+**🎯 Supported versions:**
+
+| 🧪&nbsp;18.5.4.993608717-release-arm64-v8a |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Disable Gboard floating keyboard](#disable-gboard-floating-keyboard) | Keeps GboardWu docked when floating mode is requested, including toolbar taps, automatic transitions and saved floating state. Requires GboardWu 18.5.4 with Gboard Patches 4.2.0-dev.2 as the input APK. Preserves normal, one-handed and split modes. Phone testing pending. |  |
 
 </details>
 
