@@ -1,3 +1,9 @@
+## [1.0.0-dev.17](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.16...v1.0.0-dev.17) (2026-11-03)
+
+### 🐛 Bug Fixes
+
+* **gboard:** suppress resolved one-handed long-press popups ([5a37ce6](https://github.com/Mlkem/Morphe/commit/5a37ce67ff7009d3059eead93735c0b49dcdc4b5))
+
 ## [1.0.0-dev.16](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.15...v1.0.0-dev.16) (2026-11-03)
 
 ### 🐛 Bug Fixes

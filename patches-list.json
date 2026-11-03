@@ -1,6 +1,6 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.0.0-dev.16",
+  "version": "1.0.0-dev.17",
   "patches": [
     {
       "name": "100 Zoom Earth favourites",
@@ -261,7 +261,7 @@
     },
     {
       "name": "Disable Gboard floating and one-handed modes",
-      "description": "Hides the Enter-key long-press one-handed shortcut and prevents automatic, toolbar and restored floating or one-handed keyboard activation. Select alongside your usual Gboard patches on the original Gboard APK. Preserves normal and split modes. Phone testing pending.",
+      "description": "Suppresses long-press popups containing one-handed mode, including holding Enter, and prevents automatic, toolbar and restored floating or one-handed keyboard activation. Select alongside your usual Gboard patches on the original Gboard APK. Preserves normal and split modes. Phone testing pending.",
       "default": false,
       "category": null,
       "compatiblePackages": [

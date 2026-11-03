@@ -91,7 +91,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.16](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.16)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;39 patches total
+> **[v1.0.0-dev.17](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.17)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;39 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -217,7 +217,7 @@ provide privacy.
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [Disable Gboard floating and one-handed modes](#disable-gboard-floating-and-one-handed-modes) | Hides the Enter-key long-press one-handed shortcut and prevents automatic, toolbar and restored floating or one-handed keyboard activation. Select alongside your usual Gboard patches on the original Gboard APK. Preserves normal and split modes. Phone testing pending. |  |
+| [Disable Gboard floating and one-handed modes](#disable-gboard-floating-and-one-handed-modes) | Suppresses long-press popups containing one-handed mode, including holding Enter, and prevents automatic, toolbar and restored floating or one-handed keyboard activation. Select alongside your usual Gboard patches on the original Gboard APK. Preserves normal and split modes. Phone testing pending. |  |
 
 </details>
 
