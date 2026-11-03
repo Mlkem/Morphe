@@ -3,7 +3,7 @@
 # mlkemac patches
 
 A single Morphe source for Music League, Walmart Canada, Wongnai, Zoom Earth,
-PushPress, Open with, GPS Emulator, TAGTHAi, Songsterr, an optional Morphe Manager APKMirror search fix, and the XAPK
+PushPress, Open with, GPS Emulator, TAGTHAi, Songsterr, GboardWu, an optional Morphe Manager APKMirror search fix, and the XAPK
 merge-only utility.
 
 **[Add source to Morphe](https://morphe.software/add-source?github=Mlkem/Morphe&name=mlkemac%20patches)** ·
@@ -22,7 +22,7 @@ https://github.com/Mlkem/Morphe/tree/dev
 
 An explicit `dev` source enables prerelease updates from the start. Alternatively,
 use the Add source link above and enable **Pre-release patches**. Enable
-**Experimental app versions** for Walmart Canada, Zoom Earth 6.3.3, PushPress, Open with, GPS Emulator, TAGTHAi, Songsterr and the Manager patch. Choose
+**Experimental app versions** for Walmart Canada, Zoom Earth 6.3.3, PushPress, Open with, GPS Emulator, TAGTHAi, Songsterr, GboardWu and the Manager patch. Choose
 the original app APK/APKM/XAPK, select patches, then patch and install. Keep your existing Morphe
 APK signing key so future patched apps can update in place.
 
@@ -43,6 +43,7 @@ available from Releases. Disable duplicate local sources for these apps.
 | GPS Emulator | `com.rosteam.gpsemulator` 3.36 (336) | Fresh Pro patch; 1,000 favourites | Opt-in beta; phone testing pending |
 | TAGTHAi | `com.thaidigitalplatform.tagthai` 4.25.1 (4251001) | Accessibility, screenshots, text panel | Known white-screen launch failure in dev.7 and dev.8; diagnosis pending |
 | Songsterr | `com.songsterr` 7.1.6 (2012282388) | Highest local premium tier; player/UI/ad gates | Opt-in; server features and phone runtime unverified |
+| GboardWu | `dev.jason.com.google.android.inputmethod.latin` 18.5.4; Gboard Patches 4.2.0-dev.2 | Complete regular floating-keyboard block | Opt-in beta; exact uploaded APK required; phone testing pending |
 | Morphe Manager | `app.morphe.manager` 2.4.0-dev.1–dev.3 | APKMirror search for collection apps | Opt-in; phone testing pending |
 | Merge XAPK only | Universal | Merge-only 1.0.0 | Opt-in; uses Morphe's merge/sign flow |
 
@@ -55,6 +56,9 @@ See [TAGTHAi setup and limits](docs/apps/tagthai.md). See
 [GPS Emulator setup and validation](docs/apps/gps-emulator.md). See [Open with setup and
 validation](docs/apps/openwith.md). Walmart price history records prices you actually encounter;
 it does not provide past prices from a remote database. See [Walmart details](docs/apps/walmart-canada.md).
+
+For GboardWu, use the **already-patched GboardWu 4.2.0-dev.2 input** and select only
+**Disable Gboard floating keyboard**. See [GboardWu installation and limits](docs/apps/gboardwu.md).
 
 ### Finding the original APK
 

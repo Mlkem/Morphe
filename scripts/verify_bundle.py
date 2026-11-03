@@ -4,10 +4,10 @@ import json, zipfile
 root=Path(__file__).resolve().parents[1]
 patches=json.loads((root/'patches-list.json').read_text())['patches']
 names=[p['name'] for p in patches]
-assert len(patches)==38, f'Expected 38 patches, found {len(patches)}'
+assert len(patches)==39, f'Expected 39 patches, found {len(patches)}'
 assert len(names)==len(set(names)), 'Duplicate patch names'
 packages={c['packageName'] for p in patches for c in (p.get('compatiblePackages') or [])}
-expected={'com.songsterr','com.musicleague.app','ca.walmart.ecommerceapp','com.wongnai.android','com.neave.zoomearth','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','com.thaidigitalplatform.tagthai','app.morphe.manager'}
+expected={'dev.jason.com.google.android.inputmethod.latin','com.songsterr','com.musicleague.app','ca.walmart.ecommerceapp','com.wongnai.android','com.neave.zoomearth','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','com.thaidigitalplatform.tagthai','app.morphe.manager'}
 assert packages==expected, f'Unexpected app set: {packages}'
 zoom_names={'Enable Zoom Earth Pro features','Remove Zoom Earth ads','100 Zoom Earth favourites','Quiet Zoom Earth prompts','Allow Zoom Earth patched installation','Remove Zoom Earth LiteAPKs promotions'}
 zoom=[p for p in patches if p['name'] in zoom_names]
@@ -19,6 +19,12 @@ for p in zoom:
     assert [t['version'] for t in target['targets']]==['6.3.3']
     min_sdk=32 if p['name']=='Allow Zoom Earth patched installation' else 26
     assert all(t['minSdk']==min_sdk and t['isExperimental'] for t in target['targets'])
+gboard=next(p for p in patches if p['name']=='Disable Gboard floating keyboard')
+assert not gboard['default'] and len(gboard['compatiblePackages'])==1
+gboard_target=gboard['compatiblePackages'][0]
+assert gboard_target['packageName']=='dev.jason.com.google.android.inputmethod.latin'
+assert [t['version'] for t in gboard_target['targets']]==['18.5.4.993608717-release-arm64-v8a']
+assert all(t['isExperimental'] for t in gboard_target['targets'])
 songsterr=next(p for p in patches if p['name']=='Enable Songsterr premium features')
 assert not songsterr['default'] and len(songsterr['compatiblePackages'])==1
 song_target=songsterr['compatiblePackages'][0]
@@ -68,6 +74,8 @@ for p in bundles:
         assert len(files)==len(set(files))
         assert z.read('classes.dex').startswith(b'dex\n')
         assert any(f.endswith('.class') for f in files)
+        assert 'ca/mlkem/gboard/DisableFloatingKeyboardPatchKt.class' in files
+        assert b'Lca/mlkem/gboard/DisableFloatingKeyboardPatchKt;' in z.read('classes.dex')
         assert 'me/mikem/songsterr/SongsterrPremiumPatchKt.class' in files
         assert b'Lme/mikem/songsterr/SongsterrPremiumPatchKt;' in z.read('classes.dex')
         assert 'me/mikem/zoomearth/ZoomEarth633PatchesKt.class' in files
