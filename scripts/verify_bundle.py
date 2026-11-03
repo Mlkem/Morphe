@@ -19,7 +19,7 @@ for p in zoom:
     assert [t['version'] for t in target['targets']]==['6.3.3']
     min_sdk=32 if p['name']=='Allow Zoom Earth patched installation' else 26
     assert all(t['minSdk']==min_sdk and t['isExperimental'] for t in target['targets'])
-gboard=next(p for p in patches if p['name']=='Disable Gboard floating keyboard')
+gboard=next(p for p in patches if p['name']=='Disable Gboard floating and one-handed modes')
 assert not gboard['default'] and len(gboard['compatiblePackages'])==1
 assert gboard['description'].find('original Gboard APK') >= 0
 gboard_target=gboard['compatiblePackages'][0]

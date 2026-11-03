@@ -70,6 +70,10 @@ public class VerifyGboard {
                 case MOVE_RESULT -> r[((OneRegisterInstruction)i).getRegisterA()]=result;
                 case IF_EQZ -> { if ((Integer)r[((OneRegisterInstruction)i).getRegisterA()]==0) next=pc+((OffsetInstruction)i).getCodeOffset(); }
                 case IF_NEZ -> { if ((Integer)r[((OneRegisterInstruction)i).getRegisterA()]!=0) next=pc+((OffsetInstruction)i).getCodeOffset(); }
+                case IF_EQ -> {
+                    var two=(TwoRegisterInstruction)i;
+                    if (Objects.equals(r[two.getRegisterA()],r[two.getRegisterB()])) next=pc+((OffsetInstruction)i).getCodeOffset();
+                }
                 case IF_NE -> {
                     var two=(TwoRegisterInstruction)i;
                     if (!Objects.equals(r[two.getRegisterA()],r[two.getRegisterB()])) next=pc+((OffsetInstruction)i).getCodeOffset();
@@ -126,29 +130,34 @@ public class VerifyGboard {
         check(before.equals(after),"All non-DEX application files retained");
         var originals=methods(input);var patched=methods(output);
         check(originals.keySet().equals(patched.keySet()),"All method identities retained");
-        Set<String> changes=Set.of("Lpra;->a()I","Lpqw;->aq()Z","Lpqw;->ae()Z","Lpqw;->ag(IZZ)Z");
+        Set<String> changes=Set.of("Lpra;->a()I","Lpqw;->aq()Z","Lpqw;->ae()Z","Lpqw;->ag(IZZ)Z","Lpqw;->at(Z)Z");
         for(String key:originals.keySet())if(!changes.contains(key))
             check(body(originals.get(key)).equals(body(patched.get(key))),"Unchanged method "+key);
         Method resolve=patched.get("Lpra;->a()I");
         Method support=patched.get("Lpqw;->aq()Z");
         Method auto=patched.get("Lpqw;->ae()Z");
         Method setter=patched.get("Lpqw;->ag(IZZ)Z");
+        Method oneHanded=patched.get("Lpqw;->at(Z)Z");
         for(int stored=0;stored<=6;stored++)for(int temporary=0;temporary<=6;temporary++) {
             Object[] r={null,"this"};
             int effective=temporary!=0?temporary:stored;
             int value=execute(resolve,r,Map.of("Lpra;->c:I",stored,"Lpra;->f:I",temporary),0,-1);
-            check(value==(effective==3?1:effective),"Saved/temporary modes "+stored+"/"+temporary);
-            check(value!=3,"Floating never resolves");
+            check(value==((effective==2 || effective==3)?1:effective),"Saved/temporary modes "+stored+"/"+temporary);
+            check(value!=2 && value!=3,"One-handed and floating never resolve");
         }
         for(int requested:new int[]{Integer.MIN_VALUE,-1,0,1,2,3,4,5,6,255,Integer.MAX_VALUE}) {
             Object[] r=new Object[15];Arrays.fill(r,"untouched");r[12]=requested;
-            int value=execute(setter,r,Map.of(),0,4);
-            check(value==(requested==3?1:requested),"Requested mode "+requested);
+            int value=execute(setter,r,Map.of(),0,7);
+            check(value==((requested==2 || requested==3)?1:requested),"Requested mode "+requested);
             for(int i=0;i<r.length;i++)if(i!=0 && i!=12)check("untouched".equals(r[i]),"Other register preserved");
         }
         for(Method m:List.of(support,auto)) {
             Object[] r=new Object[m.getImplementation().getRegisterCount()];r[r.length-1]="this";
             check(execute(m,r,Map.of(),0,-1)==0,"Capability/automatic entry disabled");
+        }
+        for(int enabled=0;enabled<=1;enabled++) {
+            Object[] r={null,"this",enabled};
+            check(execute(oneHanded,r,Map.of(),0,-1)==0,"One-handed eligibility disabled for "+enabled);
         }
         List<ClassProvider> providers=new ArrayList<>();Set<String> classes=new HashSet<>();int methods=0;
         for(String name:hashes(output).keySet())if(name.matches("classes[0-9]*\\.dex")) {
@@ -163,13 +172,13 @@ public class VerifyGboard {
             }
         }
         var classpath=new ClassPath(providers);
-        for(Method m:List.of(resolve,support,auto,setter)) {
+        for(Method m:List.of(resolve,support,auto,setter,oneHanded)) {
             var analysis=new MethodAnalyzer(classpath,m,null,false);
             check(analysis.getAnalysisException()==null,"Register/type analysis: "+m+" "+analysis.getAnalysisException());
         }
         check(methods>10000,"All output methods decoded");
-        System.out.println("PASS: 49 restored/temporary combinations, 11 requested modes, both false gates.");
-        System.out.println("PASS: 4 changed methods pass register/type analysis; "+methods+" methods decoded.");
+        System.out.println("PASS: 49 restored/temporary combinations, 11 requested modes, floating gates and both one-handed eligibility inputs.");
+        System.out.println("PASS: 5 changed methods pass register/type analysis; "+methods+" methods decoded.");
         System.out.println("PASS: all resources, native libraries and every other method retained.");
         System.out.println(assertions+" assertions; Android/device runtime testing remains pending.");
     }

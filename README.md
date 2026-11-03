@@ -43,7 +43,7 @@ available from Releases. Disable duplicate local sources for these apps.
 | GPS Emulator | `com.rosteam.gpsemulator` 3.36 (336) | Fresh Pro patch; 1,000 favourites | Opt-in beta; phone testing pending |
 | TAGTHAi | `com.thaidigitalplatform.tagthai` 4.25.1 (4251001) | Accessibility, screenshots, text panel | Known white-screen launch failure in dev.7 and dev.8; diagnosis pending |
 | Songsterr | `com.songsterr` 7.1.6 (2012282388) | Highest local premium tier; player/UI/ad gates | Opt-in; server features and phone runtime unverified |
-| Gboard | `com.google.android.inputmethod.latin` 18.5.4 arm64 | Optional floating-keyboard block alongside standard Gboard patches | Opt-in beta; phone testing pending |
+| Gboard | `com.google.android.inputmethod.latin` 18.5.4 arm64 | Optional floating and one-handed mode block alongside standard Gboard patches | Opt-in beta; phone testing pending |
 | Morphe Manager | `app.morphe.manager` 2.4.0-dev.1–dev.3 | APKMirror search for collection apps | Opt-in; phone testing pending |
 | Merge XAPK only | Universal | Merge-only 1.0.0 | Opt-in; uses Morphe's merge/sign flow |
 
@@ -58,7 +58,7 @@ validation](docs/apps/openwith.md). Walmart price history records prices you act
 it does not provide past prices from a remote database. See [Walmart details](docs/apps/walmart-canada.md).
 
 For Gboard, select the **original stock Gboard 18.5.4 arm64 APK**, then add
-**Disable Gboard floating keyboard** alongside your usual patches in the same run.
+**Disable Gboard floating and one-handed modes** alongside your usual patches in the same run.
 See [Gboard installation and compatibility](docs/apps/gboard.md).
 
 ### Finding the original APK
@@ -91,7 +91,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.14](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.14)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;39 patches total
+> **[v1.0.0-dev.15](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.15)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;39 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -217,7 +217,7 @@ provide privacy.
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [Disable Gboard floating keyboard](#disable-gboard-floating-keyboard) | Prevents automatic, toolbar and restored floating keyboard activation. Select alongside your usual Gboard patches on the original Gboard APK. Preserves normal, one-handed and split modes. Phone testing pending. |  |
+| [Disable Gboard floating and one-handed modes](#disable-gboard-floating-and-one-handed-modes) | Prevents automatic, toolbar and restored floating or one-handed keyboard activation. Select alongside your usual Gboard patches on the original Gboard APK. Preserves normal and split modes. Phone testing pending. |  |
 
 </details>
 

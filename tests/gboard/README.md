@@ -12,7 +12,7 @@ the repository's pinned build toolchain.
 
 ```sh
 java -jar "$MORPHE_JAR" patch "$STOCK_APK" -p "$MPP" \
-  -e 'Disable Gboard floating keyboard' --exclusive --unsigned \
+  -e 'Disable Gboard floating and one-handed modes' --exclusive --unsigned \
   -o "$SOLO_APK" -r "$RESULT_JSON"
 javac -cp "$MORPHE_JAR" -d "$TEST_CLASSES" tests/gboard/VerifyGboard.java
 java -Xmx4g -cp "$MORPHE_JAR:$TEST_CLASSES" VerifyGboard "$STOCK_APK" "$SOLO_APK"
@@ -25,7 +25,7 @@ Verify the combined output against the baseline with the same harness. Repeat
 with the two bundle arguments reversed. Do not merge the MPP archives.
 
 The harness executes the emitted code over 49 saved/temporary combinations and
-11 requested-mode values, validates both false gates and the four methods'
+11 requested-mode values, validates floating gates, both one-handed eligibility inputs and the five methods'
 register types, decodes all output instructions, rejects duplicate classes,
 and compares every other method body and all non-DEX payload files. It does not
 launch Android or establish phone compatibility.
