@@ -1,3 +1,9 @@
+## [1.0.0-dev.15](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.14...v1.0.0-dev.15) (2026-11-03)
+
+### 🐛 Bug Fixes
+
+* **gboard:** block one-handed mode in the existing layout patch ([f7c1ab8](https://github.com/Mlkem/Morphe/commit/f7c1ab8593ca84be620f27830617efce7b97d9a0))
+
 ## [1.0.0-dev.14](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.13...v1.0.0-dev.14) (2026-11-03)
 
 ### 🐛 Bug Fixes
