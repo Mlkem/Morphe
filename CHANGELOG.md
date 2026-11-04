@@ -1,3 +1,9 @@
+## [1.0.0-dev.19](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.18...v1.0.0-dev.19) (2026-11-04)
+
+### 🐛 Bug Fixes
+
+* **eufy:** initialize cleanup through the active component factory ([c23b3c5](https://github.com/Mlkem/Morphe/commit/c23b3c56d4ace38da3d4b73ba6141c34396b94f7))
+
 ## [1.0.0-dev.18](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.17...v1.0.0-dev.18) (2026-11-03)
 
 ### ✨ New Features
