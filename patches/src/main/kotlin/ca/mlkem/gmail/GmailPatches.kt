@@ -22,7 +22,6 @@ internal const val HOOK = "Lca/mlkem/gmail/AccountVisibility;"
 private const val MAIN = "Lcom/google/android/apps/gmail/libraries/mailactivity/MailActivityGmail;"
 private const val OLD_SETTINGS = "Lcom/google/android/gm/preference/GmailPreferenceActivity;"
 private const val NEW_SETTINGS = "Lcom/google/android/apps/gmail/featurelibraries/settingsv2/impl/activity/HubPreferenceActivity;"
-private const val ACCOUNT = "Lcom/google/android/apps/gmail/libraries/accounts/android/GmailAndroidAccount;"
 
 internal val gmail = Compatibility(
     name = "Gmail", packageName = ORIGINAL, apkFileType = ApkFileType.APKM,
@@ -66,7 +65,10 @@ val gmailAccountVisibility = bytecodePatch(
             list.instructions.any { (it as? ReferenceInstruction)?.reference.toString() == "Lawxw;->h:Lcgzq;" }) {
             "Account menu model differs from the reviewed Gmail build."
         }
-        check(classDefBy(ACCOUNT).fields.any { it.name == "a" && it.type == "Landroid/accounts/Account;" })
+        check(classDefBy("Lawxw;").fields.any { it.name == "g" && it.type == "Lawvm;" })
+        for (name in listOf("d", "f")) check(classDefBy("Lawvm;").methods.any {
+            it.name == name && it.parameterTypes == listOf("Ljava/lang/Object;") && it.returnType == "Ljava/lang/String;"
+        })
         check(classDefBy("Lcgzq;").methods.any { it.name == "i" && it.parameterTypes == listOf("Ljava/util/Collection;") && it.returnType == "Lcgzq;" })
         val create = method(MAIN, "onCreate", listOf("Landroid/os/Bundle;"), "V")
         val headers = method(OLD_SETTINGS, "onBuildHeaders", listOf("Ljava/util/List;"), "V")
@@ -83,12 +85,13 @@ val gmailAccountVisibility = bytecodePatch(
 
         // Keep the host's complete account model intact. Both legacy and Bento UI consumers
         // receive a filtered immutable list; neither AccountManager nor sync providers change.
-        val wrapper = replacement(list, 3, """
+        val wrapper = replacement(list, 4, """
             invoke-virtual {p0}, Lawxw;->mlkemAllAccounts()Lcgzq;
             move-result-object v0
             invoke-virtual {p0}, Lawxw;->a()Ljava/lang/Object;
             move-result-object v1
-            invoke-static {v0, v1}, $HOOK->filter(Ljava/util/List;Ljava/lang/Object;)Ljava/util/List;
+            iget-object v2, p0, Lawxw;->g:Lawvm;
+            invoke-static {v0, v1, v2}, $HOOK->filter(Ljava/util/List;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/List;
             move-result-object v0
             invoke-static {v0}, Lcgzq;->i(Ljava/util/Collection;)Lcgzq;
             move-result-object v0
@@ -96,23 +99,31 @@ val gmailAccountVisibility = bytecodePatch(
         """)
         list.setName("mlkemAllAccounts")
         mutableClassDefBy("Lawxw;").methods.add(wrapper)
-        val bridge = method(HOOK, "account", listOf("Ljava/lang/Object;"), "Landroid/accounts/Account;")
-        val hostBridge = replacement(bridge, 2, """
-            instance-of v0, p0, $ACCOUNT
-            if-eqz v0, :other
-            check-cast p0, $ACCOUNT
-            iget-object v0, p0, $ACCOUNT->a:Landroid/accounts/Account;
-            return-object v0
-            :other
-            instance-of v0, p0, Landroid/accounts/Account;
-            if-eqz v0, :unknown
-            check-cast p0, Landroid/accounts/Account;
-            return-object p0
-            :unknown
-            const/4 v0, 0x0
-            return-object v0
-        """)
-        mutableClassDefBy(HOOK).methods.apply { remove(bridge); add(hostBridge) }
+        // HubAccount and TikTok wrappers are not GmailAndroidAccount. Let the
+        // same converter used by the host model supply its stable ID and email.
+        for ((entry, hostMethod, fallback) in listOf(Triple("accountId", "d", "id"), Triple("accountEmail", "f", "email"))) {
+            val bridge = method(HOOK, entry, listOf("Ljava/lang/Object;", "Ljava/lang/Object;"), "Ljava/lang/String;")
+            val adapter = "Lca/mlkem/gmail/AccountVisibility\$Adapter;"
+            val hostBridge = replacement(bridge, 3, """
+                instance-of v0, p0, Lawvm;
+                if-eqz v0, :adapter
+                check-cast p0, Lawvm;
+                invoke-interface {p0, p1}, Lawvm;->$hostMethod(Ljava/lang/Object;)Ljava/lang/String;
+                move-result-object v0
+                return-object v0
+                :adapter
+                instance-of v0, p0, $adapter
+                if-eqz v0, :unknown
+                check-cast p0, $adapter
+                invoke-interface {p0, p1}, $adapter->$fallback(Ljava/lang/Object;)Ljava/lang/String;
+                move-result-object v0
+                return-object v0
+                :unknown
+                const/4 v0, 0x0
+                return-object v0
+            """)
+            mutableClassDefBy(HOOK).methods.apply { remove(bridge); add(hostBridge) }
+        }
         create.addInstruction(0, "invoke-static/range {p0 .. p0}, $HOOK->initialize(Landroid/app/Activity;)V")
         avatar.addInstruction(0, "invoke-static/range {p0 .. p0}, $HOOK->attach(Landroid/view/View;)V")
         // Header code reuses p0, but p1 remains the List through its final return.

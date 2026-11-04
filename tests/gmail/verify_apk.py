@@ -128,15 +128,18 @@ assert all(n == 1 for n in types.values()), 'Duplicate DEX class definitions'
 assert filter_calls == [('Lawxw;', 'g')], 'Account filter escaped its UI-only scope'
 wrapper = found[('Lawxw;', 'g')]
 assert [op for op, _ in wrapper] == ['invoke-virtual', 'move-result-object', 'invoke-virtual',
-    'move-result-object', 'invoke-static', 'move-result-object', 'invoke-static', 'move-result-object', 'return-object']
+    'move-result-object', 'iget-object', 'invoke-static', 'move-result-object', 'invoke-static', 'move-result-object', 'return-object']
 assert 'mlkemAllAccounts()' in wrapper[0][1]
 assert 'Lawxw;->a()' in wrapper[2][1]
-assert 'Lcgzq;->i(Ljava/util/Collection;)' in wrapper[6][1]
+assert 'Lawxw;->g Lawvm;' in wrapper[4][1]
+assert 'Lcgzq;->i(Ljava/util/Collection;)' in wrapper[7][1]
 for cls, name, hook in [(MAIN, 'onCreate', 'initialize'), (OLD, 'onBuildHeaders', 'addHeader'),
     (OLD, 'onHeaderClick', 'selectHeader'), (NEW, 'onPrepareOptionsMenu', 'addMenu'),
     (NEW, 'onOptionsItemSelected', 'selectMenu'), (AVATAR, 'c', 'attach')]:
     assert sum(HOOK + '->' + hook + '(' in text for _, text in found[(cls, name)]) == 1, (name, hook)
-assert any('GmailAndroidAccount;->a Landroid/accounts/Account;' in text for _, text in found[(HOOK, 'account')])
+for entry, host in [('accountId', 'd'), ('accountEmail', 'f')]:
+    assert any('Lawvm;->' + host + '(Ljava/lang/Object;)Ljava/lang/String;' in text
+               for _, text in found[(HOOK, entry)]), 'Missing real host converter bridge: ' + entry
 original_model = None
 for dex_bytes in original.get_all_dex():
     dex = DEX(dex_bytes)

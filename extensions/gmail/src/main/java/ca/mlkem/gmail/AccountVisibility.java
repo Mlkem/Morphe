@@ -43,8 +43,33 @@ public final class AccountVisibility {
 
     private AccountVisibility() {}
 
-    // Replaced at patch time with a checked GmailAndroidAccount -> Account bridge.
-    public static Account account(Object value) { return value instanceof Account ? (Account) value : null; }
+    /** Adapter fallback also lets tests exercise wrapped host accounts, not just Android Account. */
+    public interface Adapter {
+        String id(Object value);
+        String email(Object value);
+    }
+
+    // Patch-time bridges delegate to the model's own OneGoogle converter (d/f).
+    private static String accountId(Object converter, Object value) {
+        return converter instanceof Adapter ? ((Adapter) converter).id(value) : null;
+    }
+    private static String accountEmail(Object converter, Object value) {
+        return converter instanceof Adapter ? ((Adapter) converter).email(value) : null;
+    }
+
+    static Account account(Object value, Object converter) {
+        if (value instanceof Account) return (Account) value;
+        if (value == null || converter == null) return null;
+        try {
+            String id = accountId(converter, value);
+            String email = accountEmail(converter, value);
+            if (id == null || id.isEmpty() || email == null || email.isEmpty()) return null;
+            // Local UI identity only. Never register this synthetic Account with Android.
+            return new Account(email, "onegoogle:" + id);
+        } catch (RuntimeException unavailable) {
+            return null; // Preserve an unknown/unavailable row rather than hiding or crashing it.
+        }
+    }
 
     public static void initialize(Activity activity) {
         context = activity.getApplicationContext();
@@ -73,12 +98,12 @@ public final class AccountVisibility {
     }
 
     /** Preserve order, identity and unknown account kinds; always keep the selected account. */
-    public static List<?> filter(List<?> source, Object current) {
+    public static List<?> filter(List<?> source, Object current, Object converter) {
         if (source == null) return null;
-        Account active = account(current);
+        Account active = account(current, converter);
         List<Account> known = new ArrayList<>();
         for (Object item : source) {
-            Account a = account(item);
+            Account a = account(item, converter);
             if (a != null && !known.contains(a)) known.add(a);
         }
         accounts = known;
@@ -88,7 +113,7 @@ public final class AccountVisibility {
         if (hidden.isEmpty()) return source;
         List<Object> visible = new ArrayList<>();
         for (Object item : source) {
-            Account a = account(item);
+            Account a = account(item, converter);
             if (a == null || a.equals(active) || !hidden.contains(key(a))) visible.add(item);
         }
         // Stale preferences or account removals must never make the switcher empty.
@@ -180,6 +205,11 @@ public final class AccountVisibility {
     private static void save(Activity activity, Set<String> hidden) {
         if (hidden.equals(hidden())) return;
         prefs().edit().putStringSet(HIDDEN, new HashSet<>(hidden)).putLong("revision", revision() + 1).apply();
-        Toast.makeText(activity, "Saved. Account menu updates when you return to the inbox. Mail sync and notifications stay on.", Toast.LENGTH_LONG).show();
+        Toast.makeText(activity, "Saved. Mail sync and notifications stay on.", Toast.LENGTH_LONG).show();
+        // A dialog opened from the avatar does not pause/resume its inbox Activity.
+        // Refresh after the dialog's dismiss message; settings use the resume callback.
+        if (revisions.containsKey(activity)) activity.getWindow().getDecorView().post(() -> {
+            if (!activity.isFinishing() && !activity.isDestroyed()) resumed(activity);
+        });
     }
 }

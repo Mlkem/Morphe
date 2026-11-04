@@ -4,6 +4,10 @@
 separate no-root Gmail copy. Phone sign-in, mail sync, notifications and the
 Google-controlled account-menu variants still need device testing.
 
+Use **dev.21 or newer**. Dev.20's first identity bridge expected a different
+account object and could leave the list unfiltered; repatch the original APKM to
+replace that build. The corrected bridge uses the menu's own account converter.
+
 ## Original input
 
 - Package: `com.google.android.gm`
@@ -31,7 +35,8 @@ this exact version directly; other requested versions retain normal search.
    visibility**. In the newer settings interface, use its overflow menu. You can
    also **long-press the account avatar** to open the setting.
 4. Checked accounts are shown; unchecked accounts are hidden. Tap **Apply**, then
-   return to the inbox. **Cancel** discards edits; **Show all** restores every
+   return to the inbox. When opened from the avatar, the inbox refreshes immediately.
+   **Cancel** discards edits; **Show all** restores every
    account. Switch to another account before hiding the current one.
 
 This is a display preference, **not an account lock or privacy boundary**. Hidden
@@ -46,6 +51,8 @@ hashes locally; the patch sends no account list to a service.
 The patch filters the OneGoogle menu model's returned account list, preserving
 the original complete model and the order/identity of visible entries. It uses
 Gmail's immutable-list factory rather than casting an ArrayList to a host type.
+The menu's own converter supplies the stable account ID and email for HubAccount
+and TikTok wrappers; it does not assume those objects are GmailAndroidAccount.
 Gmail's account manager and mail database are not filtered. Returning to the inbox
 after a setting change recreates the inbox Activity through Android's lifecycle.
 
