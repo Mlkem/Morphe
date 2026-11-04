@@ -26,6 +26,12 @@ public final class ApkMirrorUrls {
                 + "anker-eufy-6-1-20_31181-android-apk-download/";
         }
 
+        if ("com.google.android.gm".equals(packageName) && "2026.10.26.1012468012.Release".equals(requested)) {
+            return "https://www.apkmirror.com/apk/google-inc/gmail/"
+                + "gmail-2026-10-26-1012468012-release-release/"
+                + "gmail-2026-10-26-1012468012-release-2-android-apk-download/";
+        }
+
         // Package identity distinguishes similarly named apps. Do not add nodpi,
         // CPU architecture or .apk: bundles and multi-density releases are valid.
         // Preserve the full requested version; a different build may not patch.
@@ -41,6 +47,7 @@ public final class ApkMirrorUrls {
 
     private static boolean supported(String packageName) {
         return "com.oceanwing.battery.cam".equals(packageName)
+            || "com.google.android.gm".equals(packageName)
             || "ca.walmart.ecommerceapp".equals(packageName)
             || "com.musicleague.app".equals(packageName)
             || "com.wongnai.android".equals(packageName)

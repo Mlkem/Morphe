@@ -4,10 +4,10 @@ import json, zipfile
 root=Path(__file__).resolve().parents[1]
 patches=json.loads((root/'patches-list.json').read_text())['patches']
 names=[p['name'] for p in patches]
-assert len(patches)==41, f'Expected 41 patches, found {len(patches)}'
+assert len(patches)==42, f'Expected 42 patches, found {len(patches)}'
 assert len(names)==len(set(names)), 'Duplicate patch names'
 packages={c['packageName'] for p in patches for c in (p.get('compatiblePackages') or [])}
-expected={'com.oceanwing.battery.cam','com.google.android.inputmethod.latin','com.songsterr','com.musicleague.app','ca.walmart.ecommerceapp','com.wongnai.android','com.neave.zoomearth','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','com.thaidigitalplatform.tagthai','app.morphe.manager'}
+expected={'com.google.android.gm','com.oceanwing.battery.cam','com.google.android.inputmethod.latin','com.songsterr','com.musicleague.app','ca.walmart.ecommerceapp','com.wongnai.android','com.neave.zoomearth','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','com.thaidigitalplatform.tagthai','app.morphe.manager'}
 assert packages==expected, f'Unexpected app set: {packages}'
 zoom_names={'Enable Zoom Earth Pro features','Remove Zoom Earth ads','100 Zoom Earth favourites','Quiet Zoom Earth prompts','Allow Zoom Earth patched installation','Remove Zoom Earth LiteAPKs promotions'}
 zoom=[p for p in patches if p['name'] in zoom_names]
@@ -26,6 +26,12 @@ for p in eufy:
     assert p['compatiblePackages'][0]['apkFileType']=='APKM'
     assert [t['version'] for t in p['compatiblePackages'][0]['targets']]==['6.1.20_31181']
     assert all(t['isExperimental'] and t['minSdk']==29 for t in p['compatiblePackages'][0]['targets'])
+gmail=next(p for p in patches if p['name']=='Gmail account visibility')
+assert not gmail['default'] and len(gmail['compatiblePackages']) == 1
+gmail_target=gmail['compatiblePackages'][0]
+assert gmail_target['packageName']=='com.google.android.gm' and gmail_target['apkFileType']=='APKM'
+assert [t['version'] for t in gmail_target['targets']]==['2026.10.26.1012468012.Release']
+assert all(t['isExperimental'] and t['minSdk']==29 for t in gmail_target['targets'])
 gboard=next(p for p in patches if p['name']=='Disable Gboard floating and one-handed modes')
 assert not gboard['default'] and len(gboard['compatiblePackages'])==1
 assert gboard['description'].find('original Gboard APK') >= 0
@@ -103,7 +109,7 @@ for p in bundles:
         assert b'Lca/mlkem/openwith/OpenWithProPatch;' in z.read('classes.dex')
         assert 'ca/mlkem/manager/ApkMirrorSearchPatchKt.class' in files
         assert b'Lca/mlkem/manager/ApkMirrorSearchPatchKt;' in z.read('classes.dex')
-        for name in ['extensions/canada.mpe','extensions/pushpress-crossfit-only.mpe','extensions/manager-apkmirror.mpe','extensions/tagthai-text.mpe','extensions/eufy-camera-only.mpe']:
+        for name in ['extensions/gmail-accounts.mpe','extensions/canada.mpe','extensions/pushpress-crossfit-only.mpe','extensions/manager-apkmirror.mpe','extensions/tagthai-text.mpe','extensions/eufy-camera-only.mpe']:
             assert z.read(name).startswith(b'dex\n'), name
             assert b'Lkotlin/' not in z.read(name), f'Unexpected Kotlin runtime in Java extension: {name}'
         assert b'Lca/mlkem/manager/ApkMirrorUrls;' in z.read('extensions/manager-apkmirror.mpe')

@@ -14,14 +14,15 @@ constructs that URL itself and adds `nodpi` to most fallback searches. Walmart
 
 This patch hooks the initial download link, asynchronous resolver and download
 helper fallback. The result is available immediately, without waiting for the
-redirect API. It only overrides the nine app packages in this collection; other
+redirect API. It only overrides the ten app packages in this collection; other
 apps retain Manager's existing resolution, including ABI handling.
 
 | App | Lookup |
 | --- | --- |
 | Walmart Canada `ca.walmart.ecommerceapp` 26.31 | [Verified APKMirror APKM page](https://www.apkmirror.com/apk/walmart/walmart-shopping-made-easy/walmart-grocery-shopping-26-31-release/walmart-grocery-shopping-26-31-android-apk-download/) for build 26310017, four architectures |
 | Anker eufy `com.oceanwing.battery.cam` 6.1.20_31181 | [Verified APKMirror APKM page](https://www.apkmirror.com/apk/anker/anker-eufy/anker-eufy-6-1-20_31181-release/anker-eufy-6-1-20_31181-android-apk-download/) for build 31181, including the asset-pack split |
-| Other Eufy and Walmart versions | Exact package/version Google search restricted to APKMirror |
+| Gmail `com.google.android.gm` 2026.10.26.1012468012.Release | [Verified APKMirror arm64 APKM page](https://www.apkmirror.com/apk/google-inc/gmail/gmail-2026-10-26-1012468012-release-release/gmail-2026-10-26-1012468012-release-2-android-apk-download/) for build 66141086 |
+| Other Eufy, Gmail and Walmart versions | Exact package/version Google search restricted to APKMirror |
 | Music League, Wongnai, Zoom Earth, PushPress Members, Open with, GPS Emulator, TAGTHAi | Exact package/version Google search restricted to APKMirror |
 
 Searches do not require `nodpi`, a particular ABI or an `.apk` filename, which

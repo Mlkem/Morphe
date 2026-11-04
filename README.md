@@ -2,7 +2,7 @@
 
 # mlkemac patches
 
-A single Morphe source for Anker eufy, Music League, Walmart Canada, Wongnai, Zoom Earth,
+A single Morphe source for Gmail, Anker eufy, Music League, Walmart Canada, Wongnai, Zoom Earth,
 PushPress, Open with, GPS Emulator, TAGTHAi, Songsterr, Gboard, an optional Morphe Manager APKMirror search fix, and the XAPK
 merge-only utility.
 
@@ -22,7 +22,7 @@ https://github.com/Mlkem/Morphe/tree/dev
 
 An explicit `dev` source enables prerelease updates from the start. Alternatively,
 use the Add source link above and enable **Pre-release patches**. Enable
-**Experimental app versions** for Walmart Canada, Zoom Earth 6.3.3, PushPress, Open with, GPS Emulator, TAGTHAi, Songsterr, Gboard, Anker eufy, and the Manager patch. Choose
+**Experimental app versions** for Walmart Canada, Zoom Earth 6.3.3, PushPress, Open with, GPS Emulator, TAGTHAi, Songsterr, Gboard, Anker eufy, Gmail, and the Manager patch. Choose
 the original app APK/APKM/XAPK, select patches, then patch and install. Keep your existing Morphe
 APK signing key so future patched apps can update in place.
 
@@ -34,6 +34,7 @@ available from Releases. Disable duplicate local sources for these apps.
 
 | App / utility | Target | Included source | Status |
 | --- | --- | --- | --- |
+| Gmail | `com.google.android.gm` 2026.10.26.1012468012.Release | Account visibility setting; separate GmsCore copy | Experimental; [setup and limits](docs/apps/gmail.md) |
 | Anker eufy | `com.oceanwing.battery.cam` 6.1.20_31181 | Camera-focused tabs and native promotion cleanup | Experimental; [scope and phone checks](docs/apps/eufy.md) |
 | Music League | `com.musicleague.app` 1.4.9 | Recovered patch sources | Combined bundle awaits phone testing |
 | Walmart Canada | `ca.walmart.ecommerceapp` 26.31 | 1.5.0-beta.1; 14 patches | Beta; Patch tools replaces Sparky |
@@ -66,7 +67,7 @@ See [Gboard installation and compatibility](docs/apps/gboard.md).
 
 The [APKMirror search patch](docs/apps/morphe-manager.md) applies to **Morphe
 Manager itself**. Updating this source alone cannot change the stock Manager's
-search. It opens the verified Walmart Canada 26.31 and Anker eufy 6.1.20_31181 APKM pages directly and uses a
+search. It opens the verified Walmart Canada 26.31 and Anker eufy 6.1.20_31181 and Gmail 2026.10.26.1012468012.Release APKM pages directly and uses a
 package/version search restricted to APKMirror for the collection's other apps,
 without a `nodpi` filter. See the setup instructions before replacing Manager.
 

@@ -24,6 +24,11 @@ public final class ApkMirrorUrlsTest {
         check(eufy.endsWith("/anker-eufy-6-1-20_31181-android-apk-download/"), "Eufy exact build");
         check(query("com.oceanwing.battery.cam", "6.1.10_30612").contains("6.1.10_30612"), "other Eufy builds not pinned");
         check(query("com.oceanwing.battery.cam", null).contains("com.oceanwing.battery.cam"), "unspecified Eufy build not pinned");
+        String gmail = ApkMirrorUrls.forApp("com.google.android.gm", "2026.10.26.1012468012.Release");
+        check(new URI(gmail).getHost().equals("www.apkmirror.com"), "Gmail direct APKMirror page");
+        check(gmail.endsWith("/gmail-2026-10-26-1012468012-release-2-android-apk-download/"), "Gmail verified arm64 build");
+        check(query("com.google.android.gm", "2026.08.24").contains("2026.08.24"), "other Gmail builds not pinned");
+        check(query("com.google.android.gm", null).contains("com.google.android.gm"), "unspecified Gmail build not pinned");
         String[][] apps = {
             {"ca.walmart.ecommerceapp", "26.40"}, {"com.musicleague.app", "1.4.9"},
             {"com.wongnai.android", "12.11.0"}, {"com.neave.zoomearth", "6.1"},

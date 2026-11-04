@@ -15,7 +15,7 @@ private val versions = listOf("2.4.0-dev.1", "2.4.0-dev.2", "2.4.0-dev.3", "2.4.
 val apkMirrorSearch = bytecodePatch(
     name = "APKMirror search for collection apps",
     description = "Changes Morphe Manager's download links for this collection's supported apps. " +
-        "Walmart Canada 26.31 and Anker eufy 6.1.20_31181 open verified APKMirror APKM pages; other versions/apps " +
+        "Walmart Canada 26.31, Anker eufy 6.1.20_31181 and Gmail 2026.10.26.1012468012.Release open verified APKMirror APKM pages; other versions/apps " +
         "use a package-and-version Google search restricted to APKMirror, without nodpi. " +
         "Other apps keep Manager's resolver. Does not download files automatically.",
     default = false

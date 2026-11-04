@@ -19,3 +19,14 @@ provided that such references:
 - Are accurate, factual, and non-misleading;
 - Do not suggest authorship by the Morphe project; and
 - Appear only in a secondary or descriptive context, not as part of the product or project name.
+
+Gmail GmsCore compatibility research and adapted fingerprints
+-------------------------------------------------------------
+
+The Gmail patch uses GmsCore conventions and availability-check fingerprints
+from MrHuaweiFan/GmsCore-Patches, a GPL-3.0 De-Vanced/ReVanced derivative:
+https://github.com/MrHuaweiFan/GmsCore-Patches
+https://gitlab.com/ReVanced/revanced-patches/-/blob/main/patches/src/main/kotlin/app/revanced/patches/shared/misc/gms/GmsCoreSupportPatch.kt
+
+This collection's Gmail account UI and full-clone identity changes are separate
+work; upstream authors do not endorse or validate this Gmail build.
