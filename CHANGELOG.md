@@ -1,3 +1,9 @@
+## [1.0.0-dev.21](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.20...v1.0.0-dev.21) (2026-11-04)
+
+### 🐛 Bug Fixes
+
+* **gmail:** filter wrapped accounts through the host menu converter ([57f227f](https://github.com/Mlkem/Morphe/commit/57f227f4e321ad2fee921a1e066d8f7b5c36c606))
+
 ## [1.0.0-dev.20](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.19...v1.0.0-dev.20) (2026-11-04)
 
 ### ✨ New Features
