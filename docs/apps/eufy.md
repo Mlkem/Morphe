@@ -50,15 +50,21 @@ The original full APKM SHA-256 is
 `9e31dffe605d05b07452a8d53bf926c57513b442fe5e713d468a97e3d6131ca5`.
 
 This app stores most of its main code in an encrypted runtime payload. The patch
-adds narrowly checked calls after the loader invokes the real Application's
-`onCreate`; the encrypted payload is not decrypted, replaced or bypassed. A
-Java-only extension registers UI lifecycle callbacks without new permissions,
-providers, network clients or persistent storage.
+hooks both creation paths of the existing Activity factory and registers callbacks
+on each created Activity before Context attachment, using the public Android 10
+API. The encrypted payload is not decrypted, replaced or bypassed. There are no
+new permissions, providers, network clients or persistent storage.
+
+**Correction to dev.18:** its shell Application hook is bypassed by Eufy's modern
+component factory, leaving the tabs and promotions untouched. The replacement
+hook covers both the delegated and framework Activity creation paths. Repatch
+the original APKM with the newer bundle and reinstall; refreshing the source
+alone cannot change an already installed APK.
 
 Automated validation covers compilation, metadata, complete split merging,
-patch application, loader-call placement, unchanged original assets/native
-libraries, Android view behavior, and rejection of already patched, wrong-version
-and unexpected-loader inputs. See [reproduction steps](../../tests/eufy/README.md).
+patch application, Activity factory control flow, unchanged original assets/native
+libraries, startup-to-view lifecycle behavior, and rejection of already patched,
+wrong-version and unexpected-loader inputs. See [reproduction steps](../../tests/eufy/README.md).
 
 **Not yet established:** launch after re-signing, login, live video/audio, event
 playback, background camera alerts, and complete promotional coverage on a real

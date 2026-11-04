@@ -52,27 +52,48 @@ for cls in original.get_classes():
     for k, method in expected_methods.items():
         patched = actual_methods[k]
         assert method.get_access_flags() == patched.get_access_flags()
-        if cls.get_name() == 'Ls/h/e/l/l/S;' and k == ('onCreate', '()V'):
+        if cls.get_name() == 'Ls/h/e/l/l/A;' and method.get_name() == 'instantiateActivity':
             ins = code(patched)
             hooks = [(i, text) for i, (op, text) in enumerate(ins) if 'Lca/mlkem/eufy/CameraOnly;' in text]
-            assert len(hooks) == 2
-            assert {('enableNavigation' if 'enableNavigation' in s else 'enablePromotions' if 'enablePromotions' in s else '?') for _, s in hooks} == {'enableNavigation', 'enablePromotions'}
-            assert all('v0,' in s for _, s in hooks)
-            call = next(i for i,(op,s) in enumerate(ins) if op == 'invoke-virtual' and 'Landroid/app/Application;->onCreate()V' in s)
-            assert [i for i,_ in hooks] == [call+1, call+2]
-            assert ins[call-1][0] == 'sget-object' and 'Ls/h/e/l/l/S;->n' in ins[call-1][1]
-            assert ins[call+3][0] == 'invoke-super'
-            assert patched.get_code().get_registers_size() == method.get_code().get_registers_size() == 6
-            # Branch offsets change around insertions; every other non-branch
-            # operation remains in order, including the original loader calls.
-            def semantic(instructions):
-                return [(op,s) for op,s in instructions if not op.startswith(('if-', 'goto')) and 'Lca/mlkem/eufy/CameraOnly;' not in s]
-            assert semantic(ins) == semantic(code(method))
+            assert len(hooks) == 4, 'both options must cover BOTH factory paths'
+            calls = [i for i,(op,s) in enumerate(ins) if op in ('invoke-virtual', 'invoke-super')
+                     and 'Landroid/app/AppComponentFactory;->instantiateActivity' in s]
+            assert len(calls) == 2
+            for call in calls:
+                assert ins[call+1] == ('move-result-object', 'v0')
+                entries = ins[call+2:call+4]
+                assert {text.split('->')[1].split('(')[0] for _,text in entries} == {'enableNavigation', 'enablePromotions'}
+                assert all(op == 'invoke-static' and text.startswith('v0, ') and
+                           '(Landroid/app/Activity;)V' in text for op,text in entries)
+            assert [i for i,_ in hooks] == [c+j for c in calls for j in (2,3)]
+            assert patched.get_code().get_registers_size() == method.get_code().get_registers_size() == 5
+            # Match all original instructions, including exact control-flow
+            # destinations, after excluding hooks and resolving byte offsets.
+            def control_flow(m):
+                instructions = list(m.get_instructions())
+                offsets, offset = {}, 0
+                retained = [i for i,x in enumerate(instructions) if 'Lca/mlkem/eufy/CameraOnly;' not in x.get_output()]
+                for i,x in enumerate(instructions):
+                    offsets[offset] = i
+                    offset += x.get_length()
+                position = {i:n for n,i in enumerate(retained)}
+                result, offset = [], 0
+                for i,x in enumerate(instructions):
+                    if i in position:
+                        op, text = x.get_name(), x.get_output()
+                        if op.startswith(('if-', 'goto')):
+                            target = offsets[offset + x.get_ref_off()*2]
+                            assert target in position, 'original branch must retain its original destination'
+                            text = (text.split(',')[0] if op.startswith('if-') else '', position[target])
+                        result.append((op, text))
+                    offset += x.get_length()
+                return result
+            assert control_flow(patched) == control_flow(method), 'original factory flow changed'
         else:
             assert code(method) == code(patched), f'unrelated loader method changed: {k}'
 
 assert 'Lca/mlkem/eufy/CameraOnly;' in classes
-print(f'PASS: two correctly typed startup hooks; other loader methods unchanged; '
+print(f'PASS: both Activity factory paths hooked with both options; original branch targets preserved; other loader methods unchanged; '
       f'{len(assets)} assets/arm64 libraries preserved; no duplicate classes; '
       'encrypted payload and secondary DEX files byte-identical.')
 print('APK SHA-256:', hashlib.file_digest(Path(sys.argv[2]).open('rb'), 'sha256').hexdigest())

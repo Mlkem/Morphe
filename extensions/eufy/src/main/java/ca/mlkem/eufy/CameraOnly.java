@@ -32,24 +32,26 @@ public final class CameraOnly implements Application.ActivityLifecycleCallbacks 
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Map<Activity, Observer> active = new IdentityHashMap<>();
+    private final WeakHashMap<Activity, Boolean> registered = new WeakHashMap<>();
     private final WeakHashMap<View, HiddenState> hidden = new WeakHashMap<>();
     private int flags;
     private boolean applying;
 
-    public static void enableNavigation(Application app) { enable(app, NAV); }
-    public static void enablePromotions(Application app) { enable(app, PROMOTIONS); }
+    public static void enableNavigation(Activity activity) { enable(activity, NAV); }
+    public static void enablePromotions(Activity activity) { enable(activity, PROMOTIONS); }
 
-    private static void enable(final Application app, final int flag) {
-        if (app == null || !PACKAGE.equals(app.getPackageName())) return;
-        if (Looper.myLooper() != Looper.getMainLooper()) {
-            new Handler(Looper.getMainLooper()).post(() -> enable(app, flag));
-            return;
-        }
-        if (instance == null) {
-            instance = new CameraOnly();
-            app.registerActivityLifecycleCallbacks(instance);
-        }
+    private static void enable(Activity activity, int flag) {
+        if (activity == null) return;
+        // AppComponentFactory returns an unattached Activity. Registration is
+        // explicitly supported before onCreate (API 29); Context APIs are not.
+        // The protected loader bypasses shell Application.onCreate entirely on
+        // its modern path. Register on the actual Activity on BOTH factory paths.
+        if (instance == null) instance = new CameraOnly();
         instance.flags |= flag;
+        if (!instance.registered.containsKey(activity)) {
+            activity.registerActivityLifecycleCallbacks(instance);
+            instance.registered.put(activity, Boolean.TRUE);
+        }
     }
 
     // Layout callbacks handle dynamic/rebound activity views before painting. A single
@@ -241,7 +243,11 @@ public final class CameraOnly implements Application.ActivityLifecycleCallbacks 
         if (observer != null) observer.detach();
         if (active.isEmpty()) handler.removeCallbacks(windows);
     }
-    @Override public void onActivityDestroyed(Activity activity) { onActivityPaused(activity); }
+    @Override public void onActivityDestroyed(Activity activity) {
+        onActivityPaused(activity);
+        registered.remove(activity);
+        activity.unregisterActivityLifecycleCallbacks(this);
+    }
     @Override public void onActivityStopped(Activity activity) { onActivityPaused(activity); }
     @Override public void onActivityCreated(Activity activity, Bundle state) {}
     @Override public void onActivityStarted(Activity activity) {}

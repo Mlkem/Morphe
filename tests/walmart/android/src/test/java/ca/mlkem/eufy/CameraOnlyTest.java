@@ -2,6 +2,11 @@ package ca.mlkem.eufy;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Application;
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.res.Configuration;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -11,12 +16,93 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 35, manifest = Config.NONE)
+@Config(sdk = 35, manifest = Config.NONE, application = CameraOnlyTest.TestApplication.class)
 public class CameraOnlyTest {
+    // Plain-JVM Robolectric has no compiled app resources and otherwise gives
+    // DecorContext the synthetic org.robolectric.default package. Supply the
+    // target package for window contexts without mocking lifecycle dispatch.
+    public static class TestApplication extends Application {
+        @Override public Context createConfigurationContext(Configuration config) {
+            return new ContextWrapper(super.createConfigurationContext(config)) {
+                @Override public String getPackageName() { return "com.oceanwing.battery.cam"; }
+            };
+        }
+    }
+    // The factory supplies an Activity before Context attachment. Exercise the
+    // same public entry points then let Android dispatch lifecycle callbacks;
+    // never call cleaner.apply() in these startup regressions.
+    public static class FactoryActivity extends Activity {
+        LinearLayout root, strip;
+        TextView banner;
+        boolean registeredBeforeAttach;
+        int homeClicks;
+        public FactoryActivity() {
+            registeredBeforeAttach = getBaseContext() == null;
+            CameraOnly.enableNavigation(this);
+            CameraOnly.enablePromotions(this);
+            CameraOnly.enableNavigation(this); // Two options must not double-register.
+        }
+        @Override public String getPackageName() { return "com.oceanwing.battery.cam"; }
+        @Override protected void onCreate(Bundle state) {
+            super.onCreate(state);
+            root = new LinearLayout(this);
+            strip = new LinearLayout(this);
+            LinearLayout bar = new LinearLayout(this);
+            bar.setId(CameraOnly.MAIN_TABS); bar.addView(strip); root.addView(bar);
+            for (String name : new String[]{"Home", "Events", "Discover", "Smart", "Shop"}) {
+                TextView tab = new TextView(this); tab.setText(name);
+                tab.setLayoutParams(new LinearLayout.LayoutParams(0, 56, 1));
+                strip.addView(tab);
+            }
+            strip.getChildAt(4).setSelected(true);
+            strip.getChildAt(0).setOnClickListener(v -> {
+                homeClicks++;
+                strip.getChildAt(4).setSelected(false);
+            });
+            banner = new TextView(this); banner.setId(CameraOnly.HOME_BANNER);
+            root.addView(banner); setContentView(root);
+        }
+    }
+
+    @Test public void factoryRegistrationBeforeAttachCleansUiThroughRealLifecycle() {
+        try (ActivityController<FactoryActivity> controller = Robolectric.buildActivity(FactoryActivity.class)) {
+            FactoryActivity a = controller.setup().get();
+            assertTrue(a.registeredBeforeAttach);
+            assertEquals("com.oceanwing.battery.cam", a.getWindow().getDecorView().getContext().getPackageName());
+            assertEquals(1, a.homeClicks);
+            assertEquals(View.VISIBLE, a.strip.getChildAt(0).getVisibility());
+            assertEquals(View.VISIBLE, a.strip.getChildAt(1).getVisibility());
+            for (int i : new int[]{2, 3, 4}) assertEquals(View.GONE, a.strip.getChildAt(i).getVisibility());
+            assertEquals(View.GONE, a.banner.getVisibility());
+            // Eufy can rebind views after resume. The installed layout listener
+            // must reapply the cleanup without another lifecycle registration.
+            a.strip.getChildAt(4).setVisibility(View.VISIBLE);
+            a.banner.setVisibility(View.VISIBLE);
+            a.root.getViewTreeObserver().dispatchOnGlobalLayout();
+            assertEquals(View.GONE, a.strip.getChildAt(4).getVisibility());
+            assertEquals(View.GONE, a.banner.getVisibility());
+        }
+    }
+
+    @Test public void lifecycleDetachesOnPauseAndResumesForEveryNewActivity() {
+        for (int n = 0; n < 2; n++) {
+            try (ActivityController<FactoryActivity> controller = Robolectric.buildActivity(FactoryActivity.class)) {
+                FactoryActivity a = controller.setup().get();
+                controller.pause();
+                a.banner.setVisibility(View.VISIBLE);
+                a.root.getViewTreeObserver().dispatchOnGlobalLayout();
+                assertEquals(View.VISIBLE, a.banner.getVisibility());
+                controller.resume();
+                assertEquals(View.GONE, a.banner.getVisibility());
+            }
+        }
+    }
+
     private Activity activity() { return Robolectric.buildActivity(Activity.class).setup().get(); }
     private TextView text(Activity a, String title, int id) {
         TextView view = new TextView(a); view.setText(title); view.setId(id); return view;

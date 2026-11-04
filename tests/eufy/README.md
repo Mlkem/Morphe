@@ -15,13 +15,16 @@ ANDROID_JAR="$ANDROID_JAR" ./gradlew -p tests/walmart/android test \
   --tests ca.mlkem.eufy.CameraOnlyTest --no-daemon
 ```
 
-The Python verifier requires `androguard` 4.x. It checks the two emitted calls
-use the actual Application register after its initialization, other loader
-methods remain unchanged, all original assets and ARM64 libraries survive, the
+The Python verifier requires `androguard` 4.x. It checks that both factory
+branches call both options with the returned Activity register, original branch
+destinations and all other loader methods remain unchanged, all original assets
+and ARM64 libraries survive, the
 encrypted payload and secondary DEX files remain byte-identical, and class
 definitions are unique. It does not run encrypted code.
 
-Android tests cover tab indexing, a restored hidden selection, localization,
+Android tests cover registration before Activity attachment, automatic cleanup
+through Android lifecycle callbacks, pause/resume/recreation, tab indexing,
+a restored hidden selection, localization,
 tab reordering/reuse, warning preservation, independent patch selection, popup
 reopening, and unrelated/partial popup signatures. Existing CI runs these with
 the rest of the Android regression suite.
@@ -30,8 +33,10 @@ Negative checks must fail without writing an output APK:
 
 - Reapply either Eufy patch to the patched output.
 - With `--force`, use a diagnostic copy whose manifest version differs.
-- Use a diagnostic copy where the loader's real Application onCreate invocation
-  no longer matches the reviewed instruction shape.
+- Use a diagnostic copy where an Activity factory invocation no longer matches
+  the reviewed instruction shape.
+- Verify the old dev.18 patched output is rejected too; the old shell hook must
+  never be stacked with the replacement factory hook.
 
 Also apply **APKMirror search for collection apps** to the original official
 Manager 2.4.0-dev.4 APK, and run `scripts/test_manager_urls.py`. The URL test must
