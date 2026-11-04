@@ -1,3 +1,9 @@
+## [1.0.0-dev.20](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.19...v1.0.0-dev.20) (2026-11-04)
+
+### ✨ New Features
+
+* **gmail:** add account visibility settings in an experimental GmsCore copy ([0d8891b](https://github.com/Mlkem/Morphe/commit/0d8891bc4e9534341e1996a2955ac9988b45814e))
+
 ## [1.0.0-dev.19](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.18...v1.0.0-dev.19) (2026-11-04)
 
 ### 🐛 Bug Fixes

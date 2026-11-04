@@ -93,7 +93,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.19](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.19)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;41 patches total
+> **[v1.0.0-dev.20](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.20)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;42 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -130,7 +130,7 @@ provide privacy.
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [APKMirror search for collection apps](#apkmirror-search-for-collection-apps) | Changes Morphe Manager's download links for this collection's supported apps. Walmart Canada 26.31 and Anker eufy 6.1.20_31181 open verified APKMirror APKM pages; other versions/apps use a package-and-version Google search restricted to APKMirror, without nodpi. Other apps keep Manager's resolver. Does not download files automatically. |  |
+| [APKMirror search for collection apps](#apkmirror-search-for-collection-apps) | Changes Morphe Manager's download links for this collection's supported apps. Walmart Canada 26.31, Anker eufy 6.1.20_31181 and Gmail 2026.10.26.1012468012.Release open verified APKMirror APKM pages; other versions/apps use a package-and-version Google search restricted to APKMirror, without nodpi. Other apps keep Manager's resolver. Does not download files automatically. |  |
 
 </details>
 
@@ -290,6 +290,23 @@ provide privacy.
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
 | [Enable Songsterr premium features](#enable-songsterr-premium-features) | Songsterr 7.1.6 (2012282388): selects the highest local access tier for player controls, premium UI and ad gating. Does not grant a server subscription, AI quota or unavailable content. Requires the verified original split bundle; phone testing pending. |  |
+
+</details>
+
+<details>
+<summary>📦 Gmail&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
+
+**Package name:** `com.google.android.gm`
+
+**🎯 Supported versions:**
+
+| 🧪&nbsp;2026.10.26.1012468012.Release |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Gmail account visibility](#gmail-account-visibility) | Adds Account visibility to Gmail settings and a long press on the account avatar. Hide or show individual switcher accounts, with Show all recovery. Keeps the current account visible. Does not hide mail, All inboxes, notifications or Android accounts. Creates a separate GmsCore copy; phone testing pending. |  |
 
 </details>
 
