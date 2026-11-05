@@ -3,11 +3,19 @@
 Run `scripts/test_walmart_logic.py` with `ANDROID_JAR` set, and the Gradle test
 project under `tests/walmart/android`. The latter includes the 26.41.2 deferred
 sponsored-card binding, recycling and history-order regressions.
+`StockToolsTest` checks fulfilment counts versus order limits, missing/zero
+values, store changes, seller separation, bounded session storage, search links,
+Back navigation and light/dark rendering. PNGs in the ignored
+`android/build/ui-review` directory are synthetic UI review fixtures.
+The native DEX verifier also checks the product-response adapter hook and all
+quantity/store field contracts; these do not prove that a live Canadian response
+contains numeric inventory.
 
 For real-APK verification, build the collection, then use Morphe Desktop to patch
 the original complete XAPK with `--validate --bytecode-mode=FULL --unsigned`.
 Test all fourteen Walmart patches together, then a separate `--exclusive` run
-with only ads and personal price history enabled. The tools and compatibility
+with only Stock Availability enabled for the stock change (or ads and personal
+price history for changes to those features). The tools and compatibility
 dependencies must be included automatically. Do not use `--force` or accept a
 run with failed patches.
 

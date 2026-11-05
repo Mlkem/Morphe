@@ -2,6 +2,45 @@
 
 Supports **26.41.2 (26410201)** and the existing **26.31** target, package `ca.walmart.ecommerceapp`. Both remain experimental. Enable **Experimental app versions** in Morphe, update the **mlkemac patches** beta source, select the original app bundle, and choose the desired patches. Retain the existing Morphe APK signing key for an in-place update that keeps local price history.
 
+## Stock checker and menu update
+
+Patch tools now opens a card menu with **Stock checker**, **Scan barcode** and
+**Price history** first. Shopping tools, Settings, Backup & export and Help &
+diagnostics have their own pages. Back returns within the same dialog; Close
+returns to Walmart. The menu supports light/dark themes, larger text and labelled
+touch targets. There is no watchlist shortcut or stock-alert feature. Existing
+price-history favourites and targets remain available inside Price history.
+
+On **26.41.2**, select **Stock Availability — Canada** (which includes Patch Tools).
+Open Stock checker, search or scan an item, open its Walmart product details,
+then return to the checker. It displays `availableQuantity` from the native
+product-detail response, separately for pickup, delivery and shipping. Store
+name/address are shown when supplied. Change the store in Walmart and reopen the
+product to check another location; this is not an automatic nearby-store sweep.
+
+**These are fulfilment quantities, not verified physical on-hand shelf counts.**
+The reviewed primary in-store option has no quantity field. Missing, negative or
+non-finite values display **Not provided**, never zero. A supplied zero remains
+zero. Order limits and maximum purchase quantities are never treated as stock.
+Weight-based/unspecified quantities retain a quantity label rather than being
+called units. Store-unknown responses are explicitly labelled.
+
+The checker reads data Walmart already loads; it makes no extra inventory or
+cart requests and does not poll, notify or maintain a watchlist. Up to 24 product
+and seller/offer contexts are held in memory for at most 30 minutes. Each response
+replaces that offer's previous store/quantity snapshot, including missing values.
+The timestamp says when the response was read, not when Walmart last counted
+inventory; cached server responses remain possible. Reopen the product to ask
+Walmart to load its details again. Exact quantities on Canadian servers still
+need phone verification and may not be supplied. The existing 26.31 availability
+labels remain supported; numeric capture is enabled only on reviewed 26.41.2.
+
+Automated validation for this update: all 14 patches and Stock Availability alone
+rebuilt successfully. The 82-test Android UI suite passed, including 14 stock/menu
+checks; 54 injected calls and 58 arguments passed real-DEX type checks. Light and
+dark layouts were rendered and reviewed with synthetic product data. See the
+[validation record](walmart-validation/26.41.2/stock-menu/validation.json).
+
 ## 26.41.2 update
 
 The inspected input is the original **ARM64 APKPure XAPK**, with English and mdpi splits. It is 289,608,704 bytes. Its SHA-256 and validation results are recorded in [the version-specific validation record](walmart-validation/26.41.2/verification.json). Select the whole XAPK; do not install or patch the extracted base APK by itself. This update does not require the older 26.31 input.
@@ -10,15 +49,15 @@ All fourteen features are retained, with separate mappings for the new navigatio
 
 The new product-card and collected-item binders reuse parameter registers. Their hooks capture the original objects at entry and post UI work until native binding finishes. Sponsored cleanup now reads the native sponsored section from the card model, discards stale posted binds on recycled cards, and prevents a hidden sponsored card from being recorded in price history even when history's callback is queued first. Organic cards restore normally. Diagnostics display the actual patched target version.
 
-Validation: all fourteen patches applied with unique fingerprint checks and rebuilt successfully; 53 injected calls, 57 arguments and 57 hook/return paths passed static type and control-flow analysis. All 18 ARM64 libraries remained byte-for-byte identical. The JVM suite passed 99 Walmart logic checks, and Robolectric passed 40 Walmart UI tests (including four new binding-order/recycling regressions). These are automated checks, not a launch, login, cart or checkout test on a physical phone. **26.41.2 remains a phone-untested beta.**
+Initial dev.22 migration validation: all fourteen patches applied with unique fingerprint checks and rebuilt successfully; 53 injected calls, 57 arguments and 57 hook/return paths passed static type and control-flow analysis. All 18 ARM64 libraries remained byte-for-byte identical. The JVM suite passed 99 Walmart logic checks, and Robolectric passed 40 Walmart UI tests (including four new binding-order/recycling regressions). These are automated checks, not a launch, login, cart or checkout test on a physical phone. **26.41.2 remains a phone-untested beta.**
 
-The unchanged feature guide and the earlier crash-recovery history follow. References to 26.31 in those historical notes describe that earlier validation input.
+The feature guide and the earlier crash-recovery history follow. References to 26.31 in those historical notes describe that earlier validation input.
 
 ## Historical 26.31 input
 
 The earlier input is **26.31 (26310017), four-architecture APKM**. Retain `arm64-v8a` on an ARM64 phone. The feature implementation was originally imported from the standalone 1.5.0-beta.1 pack.
 
-## New in 1.5: Patch tools replaces Sparky
+## Patch tools replaces Sparky
 
 The existing **Sparky bottom-navigation slot** now says **Patch tools**, uses a tools icon and opens the local control panel. Its click no longer calls the Sparky launcher. The old Patch tools toolbar button is removed. The inspected Sparky FAB is redirected too, and the two tab callout/nudge views are suppressed. Other server-provided AI content is not claimed to be universally removed; no server-side Sparky setting is changed. The replacement uses the existing tab slot, so it requires the native navigation configuration to include that slot.
 
@@ -29,7 +68,7 @@ The existing **Sparky bottom-navigation slot** now says **Patch tools**, uses a 
 | Search and sort history | Search product/store/seller; sort by recent observation, name, biggest drop or current price. |
 | Filters | Favourites, observed price drops and targets met. |
 | Trends | Latest, lowest, highest and previous different price; dated observations and a chart using actual observation times. |
-| Watchlist | Favourite products and set/remove target prices in CAD. Targets compare the latest saved observation; no background polling or notifications. |
+| Price-history favourites | Favourite products and set/remove target prices in CAD. Targets compare the latest saved observation; no background polling or notifications. |
 | History export | Copy/share CSV containing dated observations and store/offer context. Text fields are escaped for spreadsheet use. |
 | Backup and restore | Copy/share JSON including favourites and targets. Paste to validate and merge; existing points win timestamp conflicts. Invalid input is rejected before any writes. |
 | Native scanner | Open Walmart's barcode scanner from the panel, using its normal permission flow. |
@@ -41,7 +80,7 @@ The existing **Sparky bottom-navigation slot** now says **Patch tools**, uses a 
 | Data management | Delete one history or all histories after confirmation; restore tool preferences without deleting histories. |
 | Feature guide | Explains scope, usage and unsupported functions. |
 
-The control panel is in English and uses Android's native dialog theme. Ad/history/shopping switches are shown only when their corresponding patches are installed. Selecting Patch Tools alone gives the scanner, calculators, saved-history management and diagnostics; it does not silently install the other patches. Import the MPP and repatch the original **26.31 APKM** with your desired features.
+The control panel is in English with explicit light/dark Android dialog themes. Ad/history/shopping switches are shown only when their corresponding patches are installed. Selecting Patch Tools alone gives the scanner, calculators, saved-history management and diagnostics; it does not silently install the other patches. Refresh the beta source and repatch the original supported app bundle with your desired features.
 
 Price history has no pre-install archive. All numbers come from prices you viewed or explicitly restored from your backup. Keep exports yourself before uninstalling/clearing data. Backups are limited to 128 histories, 30 observations per history and 512 KiB. Import refuses a merge that would exceed the history limit rather than deleting existing histories. Exports use Android's clipboard/share sheet; nothing is sent automatically.
 
@@ -69,7 +108,7 @@ Ad cleanup previously affected only the shopping-list deals banner. A separate *
 |---|---|---|
 | Default Lists Tab — Canada | On | Opens Lists from My Items when the pager is at its default first tab and has more than one page. |
 | Find Item for Linked Items — Canada | On | Restores the native Find item action for linked products, using Canada's action enum and resource IDs. |
-| Stock Availability — Canada | On | Adds the availability status and message already supplied by Walmart to shopping-list item titles. It does not obtain privileged inventory data or infer physical inventory counts from purchase limits. Unknown status is explicitly shown as unknown. English and French labels. |
+| Stock Availability — Canada | On | Adds supplied availability to shopping-list titles. On 26.41.2, Stock checker reads labelled fulfilment quantities from product details. Missing counts stay unknown; order limits are not inventory. No physical shelf-count guarantee. Includes Patch Tools. |
 | Remove Shop — Canada | Off | Removes Shop from the navigation map when My Items exists and redirects the default Shop tab to My Items. Other tab selections remain intact. Enable this for the closest match to the original bundle. |
 | Personal Price History — Canada | On | Records exact prices from list cards and shared search/browse product cards. List cards get a History button with the saved price/count; all saved items are accessible through Patch tools. Records start after installation. |
 | Shopping Mode — Canada | On | Adds checklist switches for screen-awake mode and showing collected items. Enlarges checkboxes while enabled. Collected rows collapse by default, and can be restored with the switch. |

@@ -42,7 +42,7 @@ private val canada = Compatibility(name="Walmart Canada", packageName="ca.walmar
     targets=listOf(AppTarget(version="26.41.2", isExperimental=true), AppTarget(version="26.31", isExperimental=true)))
 
 val patchTools = bytecodePatch(name="Patch Tools — Canada",
-    description="Replace Sparky's bottom tab with Patch tools: live ad/recording controls, searchable price trends, watchlists and targets, CSV/JSON export and restore, scanner, shopping calculators and diagnostics.", default=true) {
+    description="Replace Sparky with a card-based tools menu: stock checker, barcode scanner, price history, shopping calculators, settings and backups. Includes Back navigation and dark-mode support.", default=true) {
     compatibleWith(canada); dependsOn(walmartCompatibility)
     execute {
         // CH.b is SparkyBottomTabInfo (implements v51.c). Preserve the internal
@@ -86,9 +86,10 @@ val defaultLists = bytecodePatch(name="Default Lists Tab — Canada",
     }
 }
 val stock = bytecodePatch(name="Stock Availability — Canada",
-    description="Show Walmart's supplied availability and message below list item names. Unknown stays unknown; purchase limits are never treated as inventory counts.", default=true) {
-    compatibleWith(canada); dependsOn(walmartCompatibility)
+    description="Show list availability. On 26.41.2, read product-detail quantities into Patch tools → Stock checker with separate pickup, delivery and shipping labels. Missing numbers stay unknown; no watchlist or order-limit guesses.", default=true) {
+    compatibleWith(canada); dependsOn(walmartCompatibility, patchTools)
     execute {
+        if (isWalmart26412()) installStockCapture()
         val report=canadaFingerprint(definingClass="Lcom/walmart/glass/integration/root/RootActivity;",name="onCreate",parameters=listOf("Landroid/os/Bundle;"),returnType="V").method
         report.addInstructions(0,"invoke-static {}, Lapp/canada/walmart/PatchStatus;->stock()V")
         val method=canadaFingerprint(definingClass="Lcom/walmart/glass/lists/view/lists/h;",name="H",
@@ -97,6 +98,39 @@ val stock = bytecodePatch(name="Stock Availability — Canada",
             method.insertAtTarget(it,"invoke-static/range {p0 .. p1}, Lapp/canada/walmart/TileHooks;->stock(Ljava/lang/Object;Ljava/lang/Object;)V")
         }
     }
+}
+
+/** The native response retains semantic field names; reject an unexpected schema. */
+context(context: BytecodePatchContext)
+private fun installStockCapture() {
+    val base="Lcom/walmart/glass/featureitem/orchestration/graphql/generated/fragment/"
+    val required=mapOf(
+        "FullProductFragment" to mapOf("usItemId" to "Ljava/lang/String;", "name" to "Ljava/lang/String;",
+            "availableQuantity" to "Ljava/lang/Double;", "fulfillmentOptions" to "Ljava/util/List;"),
+        "FullProductFragment\$FulfillmentOption" to mapOf("fulfillmentOptionV2Fragment" to "${base}FulfillmentOptionV2Fragment;"),
+        "FulfillmentOptionV2Fragment" to listOf("Pickup", "Delivery", "Shipping", "InStorePurchase", "HOTDelivery").associate {
+            "on${it}OptionV2" to "${base}FulfillmentOptionV2Fragment\$On${it}OptionV2;"
+        },
+        "FulfillmentOptionV2Fragment\$OnPickupOptionV2" to mapOf("availableQuantity" to "Ljava/lang/Double;", "storeName" to "Ljava/lang/String;", "addressLine" to "Ljava/lang/String;"),
+        "FulfillmentOptionV2Fragment\$OnDeliveryOptionV2" to mapOf("availableQuantity" to "Ljava/lang/Double;"),
+        "FulfillmentOptionV2Fragment\$OnShippingOptionV2" to mapOf("availableQuantity" to "Ljava/lang/Double;")
+    )
+    for ((name,fields) in required) {
+        val actual=context.classDefBy("$base$name;").fields.associate { it.name to it.type }
+        check(fields.all { (field,type) -> actual[field]==type }) { "Unreviewed stock schema: $name" }
+    }
+    val adapter=canadaFingerprint(definingClass="${base}FullProductFragmentImpl_ResponseAdapter\$FullProductFragment;",
+        name="fromJson",parameters=listOf("Lcom/apollographql/apollo3/api/json/JsonReader;","Lcom/apollographql/apollo3/api/CustomScalarAdapters;"),
+        returnType="${base}FullProductFragment;").method
+    val returns=adapter.instructions.withIndex().filter { it.value.opcode==Opcode.RETURN_OBJECT }.map { it.index }
+    check(returns.isNotEmpty()) { "Stock adapter has no result" }
+    for (index in returns.reversed()) {
+        val r=(adapter.instructions[index] as OneRegisterInstruction).registerA
+        adapter.insertAtTarget(index,"invoke-static/range {v$r .. v$r}, Lapp/canada/walmart/StockCapture;->product(Ljava/lang/Object;)V")
+    }
+    val supported=canadaFingerprint(definingClass="Lapp/canada/walmart/StockCapture;",name="supported",parameters=emptyList(),returnType="Z").method
+    supported.removeInstructions(0,supported.instructions.size)
+    supported.addInstructions(0,"const/4 v0, 0x1\nreturn v0")
 }
 val findItem = bytecodePatch(name="Find Item for Linked Items — Canada",
     description="Restore Find item on linked shopping-list products so they can be linked to a different product.", default=true) {

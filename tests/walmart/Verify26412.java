@@ -31,6 +31,8 @@ public class Verify26412 {
    throw new AssertionError("Getter does not read expected field: "+owner+"->"+name+" / "+target);
  }
  public static void main(String[]args)throws Exception{
+   String stockBase="Lcom/walmart/glass/featureitem/orchestration/graphql/generated/fragment/";
+   for(String type:Arrays.asList("FullProductFragment","FullProductFragment$FulfillmentOption","FullProductFragmentImpl_ResponseAdapter$FullProductFragment","FulfillmentOptionV2Fragment","PickupOptionLocationAddressFragment","FulfillmentOptionV2Fragment$LocationAddress","FulfillmentOptionV2Fragment$OnPickupOptionV2","FulfillmentOptionV2Fragment$OnDeliveryOptionV2","FulfillmentOptionV2Fragment$OnShippingOptionV2","FulfillmentOptionV2Fragment$OnInStorePurchaseOptionV2","FulfillmentOptionV2Fragment$OnHOTDeliveryOptionV2"))wanted.add(stockBase+type+";");
    wanted.add("Lcom/walmart/glass/lists/domain/PriceInfo;");
    wanted.add("Lcom/walmart/glass/lists/view/lists/b;");
    wanted.add("Lcom/walmart/glass/lists/view/lists/d;");
@@ -65,6 +67,27 @@ public class Verify26412 {
      }
    }
    require(classes.keySet().containsAll(wanted),"Missing expected original classes");
+   String product=stockBase+"FullProductFragment;";
+   for(String n:Arrays.asList("usItemId","id","name","upc","sellerId","sellerName","offerId","canonicalUrl"))field(product,n,"Ljava/lang/String;");
+   field(product,"fulfillmentOptions","Ljava/util/List;");field(product,"availableQuantity","Ljava/lang/Double;");
+   field(product,"salesUnitType","Lcom/walmart/glass/orchestrationschema/orchestration/graphql/generated/type/ProductSalesUnit;");
+   field(stockBase+"FullProductFragment$FulfillmentOption;","fulfillmentOptionV2Fragment",stockBase+"FulfillmentOptionV2Fragment;");
+   for(String mode:Arrays.asList("Pickup","Delivery","Shipping","HOTDelivery","InStorePurchase")){
+     String option=stockBase+"FulfillmentOptionV2Fragment$On"+mode+"OptionV2;";
+     field(stockBase+"FulfillmentOptionV2Fragment;","on"+mode+"OptionV2",option);
+     field(option,"availabilityStatus","Lcom/walmart/glass/orchestrationschema/orchestration/graphql/generated/type/AvailabilityStatus;");
+     field(option,"locationText","Ljava/lang/String;");
+     if(!mode.equals("InStorePurchase")){field(option,"availableQuantity","Ljava/lang/Double;");field(option,"selected","Ljava/lang/Boolean;");}
+   }
+   for(String n:Arrays.asList("storeName","addressLine"))field(stockBase+"FulfillmentOptionV2Fragment$OnPickupOptionV2;",n,"Ljava/lang/String;");
+   field(stockBase+"FulfillmentOptionV2Fragment$OnPickupOptionV2;","locationAddress",stockBase+"FulfillmentOptionV2Fragment$LocationAddress;");
+   field(stockBase+"FulfillmentOptionV2Fragment$LocationAddress;","pickupOptionLocationAddressFragment",stockBase+"PickupOptionLocationAddressFragment;");
+   for(String n:Arrays.asList("addressLine1","city"))field(stockBase+"PickupOptionLocationAddressFragment;",n,"Ljava/lang/String;");
+   require(calls.getOrDefault("product",0)==1,"Missing / duplicated product-response stock hook");
+   boolean supported=false;
+   for(Method m:classes.get("Lapp/canada/walmart/StockCapture;").getMethods())if(m.getName().equals("supported"))for(Instruction i:m.getImplementation().getInstructions())if(i instanceof NarrowLiteralInstruction)supported|=((NarrowLiteralInstruction)i).getNarrowLiteral()==1;
+   require(supported,"Stock checker capability was not enabled");
+   System.out.println("Product-response stock hook and quantity/store fields verified; separate order-limit fields are not used.");
    String p="Lcom/walmart/glass/lists/domain/ListItemProduct;";
    field(p,"e","LM50/e;");field(p,"f","Ljava/lang/String;");
    field(p,"A","Lcom/walmart/glass/lists/domain/PriceInfo;");

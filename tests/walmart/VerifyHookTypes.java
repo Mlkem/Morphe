@@ -46,6 +46,7 @@ public final class VerifyHookTypes {
  }
  static String semanticType(MethodReference ref,int index,String declared) {
   String owner=ref.getDefiningClass();
+  if(owner.equals(EXT+"StockCapture;")&&ref.getName().equals("product"))return "Lcom/walmart/glass/featureitem/orchestration/graphql/generated/fragment/FullProductFragment;";
   if(owner.equals(EXT+"TileHooks;"))return index==0?(modern?"Lcom/walmart/glass/lists/view/lists/i;":"Lcom/walmart/glass/lists/view/lists/h;"):"Lcom/walmart/glass/lists/domain/ListItem$ListDetailItem;";
   if(owner.equals(EXT+"ListEnhancements;")&&ref.getName().equals("bindBrowse")&&index==1)return modern?"LY11/L0;":"LFW0/I0;";
   if(owner.equals(EXT+"AdCleaner;")&&ref.getName().equals("sponsored")&&index==1)return "LfX0/L0;";

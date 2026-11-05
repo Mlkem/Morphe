@@ -2,19 +2,21 @@ package app.canada.walmart;
 import android.app.*;import android.content.*;import android.os.Build;import android.view.*;import android.widget.*;import java.util.*;import java.math.*;
 
 final class ToolsPanel {
- static final String VERSION="1.5.0-beta.1";
+ static final String VERSION="1.6.0-beta.1";
  static void show(Context c){
-  LinearLayout box=ToolUi.column(c);int watched=0,met=0;for(String k:HistoryStore.keys(c)){if(HistoryStore.meta(c).getBoolean(k+"_favorite",false))watched++;if(HistoryTools.targetMet(c,k))met++;}
-  ToolUi.text(box,"Walmart Canada · "+VERSION,16);ToolUi.text(box,HistoryStore.keys(c).size()+" saved histories · "+watched+" favourites · "+met+" targets met",14);
-  ToolUi.button(box,"Price history · search, trends and drops",()->HistoryTools.browse(c,false));
-  ToolUi.button(box,"Watchlist · favourites and target prices",()->HistoryTools.browse(c,true));
-  ToolUi.button(box,"Patch controls",()->controls(c));
-  ToolUi.button(box,"Shopping tools",()->shopping(c));
-  ToolUi.button(box,"Export, backup and restore",()->backups(c));
-  ToolUi.button(box,"Diagnostics and installed patches",()->diagnostics(c));
-  ToolUi.button(box,"Feature guide",()->ToolUi.message(c,"Feature guide","Ads: hides supported native banners and sponsored cards; some empty slots may remain.\n\nHistory: records exact prices you view. No older archive or background monitoring. Favourites, targets, trends and exports use only saved observations. Store/offer contexts remain separate.\n\nShopping: checklist controls and exports need a loaded checklist. Calculators use amounts you enter, not checkout totals.\n\nPatch controls apply only to patches selected when the APK was built. Reopen product screens after changing recording settings.\n\nShelf-tag flashing and native floor-plan routing are unavailable in this Canada build.\n\nBack up histories before uninstalling or clearing app data."));
-  ToolUi.dialog(c,"Patch tools",box);
+  LinearLayout box=ToolUi.column(c);
+  ToolUi.note(box,"Walmart Canada · Your shopping tools");
+  ToolUi.action(box,"Stock checker","See supplied quantities by fulfilment option",android.R.drawable.ic_menu_search,()->StockPanel.show(c));
+  ToolUi.action(box,"Scan barcode","Open Walmart’s product scanner",android.R.drawable.ic_menu_camera,()->{scan(c);ToolUi.close(c);});
+  ToolUi.action(box,"Price history",HistoryStore.keys(c).size()+" saved products · prices and trends",android.R.drawable.ic_menu_recent_history,()->HistoryTools.browse(c,false));
+  ToolUi.section(box,"More tools");
+  ToolUi.action(box,"Shopping tools","Unit prices, basket calculator and checklist export",android.R.drawable.ic_menu_sort_by_size,()->shopping(c));
+  ToolUi.action(box,"Settings","Ads, price recording and checklist preferences",android.R.drawable.ic_menu_preferences,()->controls(c));
+  ToolUi.action(box,"Backup & export","Save, restore or manage your price history",android.R.drawable.ic_menu_save,()->backups(c));
+  ToolUi.action(box,"Help & diagnostics","Feature guide and installed patches",android.R.drawable.ic_menu_help,()->help(c));
+  ToolUi.home(c,"Patch tools",box);
  }
+ static void help(Context c){LinearLayout box=ToolUi.column(c);ToolUi.note(box,"Walmart "+RuntimeCompatibility.appVersion()+" · tools "+VERSION);ToolUi.button(box,"Feature guide",()->ToolUi.message(c,"Feature guide","Stock checker: open a product through Walmart search or its scanner, then return to see supplied quantities. Store, pickup, delivery and shipping are labelled separately. Counts are read from product responses and may be absent or cached. Order limits are never used as stock. No watchlist or alerts.\n\nPrice history: records exact prices you view. No older archive or background monitoring. Existing favourites and target prices remain inside Price history.\n\nShopping: checklist exports need a loaded checklist. Calculators use amounts you enter.\n\nSettings apply only to patches selected when the APK was built. Back up histories before uninstalling or clearing app data."));ToolUi.button(box,"Diagnostics and installed patches",()->diagnostics(c));ToolUi.dialog(c,"Help & diagnostics",box);}
  static void toggle(LinearLayout box,String label,boolean value,android.widget.CompoundButton.OnCheckedChangeListener action){Switch s=new Switch(box.getContext());s.setText(label);s.setTextSize(16);s.setMinHeight(ToolUi.dp(s.getContext(),52));s.setChecked(value);box.addView(s,new LinearLayout.LayoutParams(-1,-2));s.setOnCheckedChangeListener((b,on)->{try{action.onCheckedChanged(b,on);}catch(Exception e){RuntimeStats.error(label,e);ToolUi.message(box.getContext(),"Control unavailable","The setting could not be fully applied. Reopen the screen and check diagnostics.");}});}
  static void setting(LinearLayout box,String label,String key,boolean ads){Context c=box.getContext();toggle(box,label,ToolSettings.enabled(c,key),(b,on)->{ToolSettings.set(c,key,on);if(ads)AdCleaner.refresh();});}
  static Activity activity(Context c){for(int i=0;i<10&&c!=null;i++){if(c instanceof Activity)return(Activity)c;if(!(c instanceof ContextWrapper))break;Context next=((ContextWrapper)c).getBaseContext();if(next==c)break;c=next;}return null;}

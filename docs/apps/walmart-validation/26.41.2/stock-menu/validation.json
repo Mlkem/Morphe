@@ -1,0 +1,41 @@
+{
+  "target_version": "26.41.2",
+  "version_code": 26410201,
+  "stock_scope": "Native product-detail availableQuantity, separated by fulfilment option; no physical shelf-count claim",
+  "all_patches": {
+    "count": 14,
+    "patching": "passed",
+    "full_dex_rebuild": "passed",
+    "hook_calls": 54,
+    "hook_arguments": 58,
+    "modified_methods": 25,
+    "return_path_requirements": 58,
+    "failures": 0
+  },
+  "stock_only": {
+    "requested": [
+      "Stock Availability \u2014 Canada"
+    ],
+    "patch_tools_dependency": "verified through native tab/FAB hooks",
+    "patching": "passed",
+    "full_dex_rebuild": "passed",
+    "hook_calls": 7,
+    "arguments": 7,
+    "return_paths": 7,
+    "failures": 0
+  },
+  "native_arm64_libraries_preserved": 18,
+  "tests": {
+    "walmart_logic_checks": 99,
+    "manager_url_checks": 73,
+    "android_ui_full_suite": 82,
+    "new_stock_menu_regressions": 14,
+    "light_dark_render_review": "passed using synthetic fixtures"
+  },
+  "limitations": [
+    "No physical device launch, login or checkout test",
+    "No live Canadian server response tested; numeric counts may be absent",
+    "Native search deep link routing still needs phone verification",
+    "Legacy 26.31 retains availability labels; quantity capture is 26.41.2 only"
+  ]
+}
