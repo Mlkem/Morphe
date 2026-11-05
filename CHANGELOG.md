@@ -1,3 +1,9 @@
+## [1.0.0-dev.22](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.21...v1.0.0-dev.22) (2026-11-05)
+
+### 🐛 Bug Fixes
+
+* **walmart:** support Canada 26.41.2 with safe binder hooks ([114640d](https://github.com/Mlkem/Morphe/commit/114640dfc2d1040a624b1fafe4b09264041ac050))
+
 ## [1.0.0-dev.21](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.20...v1.0.0-dev.21) (2026-11-04)
 
 ### 🐛 Bug Fixes

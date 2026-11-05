@@ -94,7 +94,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.21](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.21)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;42 patches total
+> **[v1.0.0-dev.22](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.22)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;42 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -143,14 +143,14 @@ provide privacy.
 
 **🎯 Supported versions:**
 
-| 🧪&nbsp;26.31 |
-| :---: |
+| 🧪&nbsp;26.41.2 | 🧪&nbsp;26.31 |
+| :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
 | [Aisle-Sorted Checklist — Canada](#aisle-sorted-checklist-canada) | Group remaining checklist items by supplied aisle, in natural order (A2 before A10). Unknown locations last. No floor-plan routing. |  |
 | [Clearer Unit Prices — Canada](#clearer-unit-prices-canada) | Show Walmart's supplied price-per-unit in larger bold text on list items, including the shopping checklist. No guessed conversions. |  |
-| [Default Lists Tab — Canada](#default-lists-tab-canada) | Open Lists when entering My Items. Walmart Canada 26.31. |  |
+| [Default Lists Tab — Canada](#default-lists-tab-canada) | Open Lists when entering My Items. Walmart Canada 26.31 and 26.41.2. |  |
 | [Find Item for Linked Items — Canada](#find-item-for-linked-items-canada) | Restore Find item on linked shopping-list products so they can be linked to a different product. |  |
 | [Hide Ads and Sponsored Content — Canada](#hide-ads-and-sponsored-content-canada) | Collapse native ad containers and entire sponsored grid/list product cards, restoring organic cards when recycled. Includes display ads and sponsored carousels. Does not block network requests; some layouts may retain empty slots. |  |
 | [Patch Tools — Canada](#patch-tools-canada) | Replace Sparky's bottom tab with Patch tools: live ad/recording controls, searchable price trends, watchlists and targets, CSV/JSON export and restore, scanner, shopping calculators and diagnostics. |  |
