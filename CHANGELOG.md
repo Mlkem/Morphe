@@ -1,3 +1,9 @@
+## [1.0.0-dev.24](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.23...v1.0.0-dev.24) (2026-11-05)
+
+### ✨ New Features
+
+* **updates:** Check public app releases when patched apps open ([598ae94](https://github.com/Mlkem/Morphe/commit/598ae940f76a6d651c946640160344bd4e01c9b0))
+
 ## [1.0.0-dev.23](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.22...v1.0.0-dev.23) (2026-11-05)
 
 ### ✨ New Features
