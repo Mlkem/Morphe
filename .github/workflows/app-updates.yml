@@ -13,7 +13,7 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: release-dev
+  group: release-refs/heads/dev
   cancel-in-progress: false
 jobs:
   refresh:
