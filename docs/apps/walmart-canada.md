@@ -1,8 +1,22 @@
-# Walmart Canada Patch Pack — 1.5.0-beta.1
+# Walmart Canada patches
 
-Targets **Walmart Canada 26.31**, package `ca.walmart.ecommerceapp`. Requires a Morphe release supporting Patcher 2.1.0. Import the MPP as a local patch source in Morphe Manager, select the original Canadian 26.31 APKM, and select the patches you want. This file is a patch bundle, not an installable APK. Use a consistent Morphe signing key for subsequent patched updates.
+Supports **26.41.2 (26410201)** and the existing **26.31** target, package `ca.walmart.ecommerceapp`. Both remain experimental. Enable **Experimental app versions** in Morphe, update the **mlkemac patches** beta source, select the original app bundle, and choose the desired patches. Retain the existing Morphe APK signing key for an in-place update that keeps local price history.
 
-Use the uploaded **26.31 (26310017) four-architecture APKM**. It contains ARM64 libraries. On an ARM64 phone, keep `arm64-v8a` when Morphe offers an architecture selection. This version replaces the earlier 26.40-targeted pack; do not use that pack for 26.31.
+## 26.41.2 update
+
+The inspected input is the original **ARM64 APKPure XAPK**, with English and mdpi splits. It is 289,608,704 bytes. Its SHA-256 and validation results are recorded in [the version-specific validation record](walmart-validation/26.41.2/verification.json). Select the whole XAPK; do not install or patch the extracted base APK by itself. This update does not require the older 26.31 input.
+
+All fourteen features are retained, with separate mappings for the new navigation classes, shopping-list row binder, checklist adapters, product-card binders and reflective model accessors. The original 26.31 mappings remain available. The runtime compatibility helper is automatically included even when selecting only one feature. Unknown app versions, and other 26.41.2 version codes, are rejected.
+
+The new product-card and collected-item binders reuse parameter registers. Their hooks capture the original objects at entry and post UI work until native binding finishes. Sponsored cleanup now reads the native sponsored section from the card model, discards stale posted binds on recycled cards, and prevents a hidden sponsored card from being recorded in price history even when history's callback is queued first. Organic cards restore normally. Diagnostics display the actual patched target version.
+
+Validation: all fourteen patches applied with unique fingerprint checks and rebuilt successfully; 53 injected calls, 57 arguments and 57 hook/return paths passed static type and control-flow analysis. All 18 ARM64 libraries remained byte-for-byte identical. The JVM suite passed 99 Walmart logic checks, and Robolectric passed 40 Walmart UI tests (including four new binding-order/recycling regressions). These are automated checks, not a launch, login, cart or checkout test on a physical phone. **26.41.2 remains a phone-untested beta.**
+
+The unchanged feature guide and the earlier crash-recovery history follow. References to 26.31 in those historical notes describe that earlier validation input.
+
+## Historical 26.31 input
+
+The earlier input is **26.31 (26310017), four-architecture APKM**. Retain `arm64-v8a` on an ARM64 phone. The feature implementation was originally imported from the standalone 1.5.0-beta.1 pack.
 
 ## New in 1.5: Patch tools replaces Sparky
 

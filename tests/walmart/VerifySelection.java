@@ -14,7 +14,7 @@ public class VerifySelection {
     for(Method m:c.getMethods())if(m.getImplementation()!=null)for(Instruction i:m.getImplementation().getInstructions())if(i instanceof ReferenceInstruction){Reference r=((ReferenceInstruction)i).getReference();if(r instanceof MethodReference){MethodReference mr=(MethodReference)r;if(mr.getDefiningClass().startsWith("Lapp/canada/walmart/"))calls.add(mr.getDefiningClass()+"->"+mr.getName());}}
    }
   }}
-  for(String s:Arrays.asList("PatchStatus;->open","SparkyReplacement;->fab","SparkyReplacement;->suppress","PatchStatus;->history","PatchStatus;->ads","TileHooks;->history","ListEnhancements;->bindBrowse","AdCleaner;->dedicated","AdCleaner;->sponsored"))if(!calls.contains("Lapp/canada/walmart/"+s))throw new AssertionError("Missing selected/dependency hook: "+s);
-  System.out.println("Independent ads/history selection includes the Sparky replacement dependency and all nine required hook targets.");
+  for(String s:Arrays.asList("PatchStatus;->open","SparkyReplacement;->fab","SparkyReplacement;->suppress","PatchStatus;->history","PatchStatus;->ads","TileHooks;->history","ListEnhancements;->bindBrowse","AdCleaner;->dedicated",args.length>1&&args[1].equals("26.41.2")?"AdCleaner;->browse":"AdCleaner;->sponsored"))if(!calls.contains("Lapp/canada/walmart/"+s))throw new AssertionError("Missing selected/dependency hook: "+s);
+  System.out.println("Independent ads/history selection includes the Sparky replacement dependency and all required hook targets.");
  }
 }

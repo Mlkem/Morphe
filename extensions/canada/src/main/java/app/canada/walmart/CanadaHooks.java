@@ -64,7 +64,7 @@ public final class CanadaHooks {
     }
     public static void stock(final View tile, Object detail) {
         try {
-            Object product=detail.getClass().getMethod("t").invoke(detail);
+            Object product=detail.getClass().getMethod(RuntimeCompatibility.productGetter()).invoke(detail);
             Field sf=product.getClass().getDeclaredField("e"); sf.setAccessible(true);
             Object status=sf.get(product);
             Field mf=product.getClass().getDeclaredField("f"); mf.setAccessible(true);

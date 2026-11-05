@@ -85,7 +85,8 @@ public final class ListEnhancements {
         final HistoryValue price=extracted;
         tile.post(()->{if(tile.getTag(HISTORY_BIND)!=token)return;try{
             if(price==null){RuntimeStats.hit("Browse prices skipped: no exact displayed price");return;}
-            if(!tile.isShown()||!ToolSettings.record(tile.getContext(),true))return;
+            // Entry hooks can queue history before ad cleanup; use the captured classification.
+            if(!tile.isShown()||AdCleaner.hidesBrowse(tile)||!ToolSettings.record(tile.getContext(),true))return;
             String name=text(id(tile,"product_tile_title"));if(name.isEmpty())name=price.name;
             String key=digest("browse\n"+price.id+"\n"+price.offer+"\n"+price.seller+"\n"+price.unit+"\n"+price.scope);
             HistoryStore.record(tile.getContext(),key,name,price.scope,price.seller,price.cents);

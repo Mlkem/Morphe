@@ -4,8 +4,8 @@ import java.util.*;
 final class ChecklistExport {
  static String render(List<Object> items,boolean csv)throws Exception {
   Set<String> ids=new HashSet<>();StringBuilder b=new StringBuilder(csv?"name,quantity,collected,line_price_cad\r\n":"Loaded Walmart checklist\nEstimated CAD before tax/fees\n\n");ListMath.Total total=new ListMath.Total();
-  for(Object item:items){Object d=item.getClass().getMethod("e").invoke(item);Object rawId=d.getClass().getMethod("n").invoke(d);if(rawId!=null&&!rawId.toString().isEmpty()&&!ids.add(rawId.toString()))continue;
-   boolean checked=Boolean.TRUE.equals(item.getClass().getMethod("f").invoke(item));Object product=d.getClass().getMethod("t").invoke(d);String name="";
+  for(Object item:items){Object d=item.getClass().getMethod(RuntimeCompatibility.checklistItemGetter()).invoke(item);Object rawId=d.getClass().getMethod("n").invoke(d);if(rawId!=null&&!rawId.toString().isEmpty()&&!ids.add(rawId.toString()))continue;
+   boolean checked=Boolean.TRUE.equals(item.getClass().getMethod(RuntimeCompatibility.checkedGetter()).invoke(item));Object product=d.getClass().getMethod(RuntimeCompatibility.productGetter()).invoke(d);String name="";
    if(product!=null){Object supplied=ModelAccess.field(product,"o");if(supplied instanceof String)name=(String)supplied;}
    if(name.trim().isEmpty()){Object supplied=d.getClass().getMethod("k").invoke(d);name=supplied instanceof String?(String)supplied:"Unnamed list item";}
    Object q=d.getClass().getMethod("x").invoke(d);String qty=q==null?"unknown":q.toString();Long cents;try{cents=ModelAccess.price(d);}catch(Exception missing){cents=null;}total.add(cents,checked);

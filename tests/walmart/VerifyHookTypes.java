@@ -13,6 +13,7 @@ import java.util.*;import java.util.zip.*;import java.io.*;
  * This is a focused static regression check, not Android ART or an app launch test.
  */
 public final class VerifyHookTypes {
+ static boolean modern;
  static final String EXT="Lapp/canada/walmart/";
  static final Map<String,ClassDef> classes=new HashMap<>();
  static ZipFile framework;
@@ -45,9 +46,11 @@ public final class VerifyHookTypes {
  }
  static String semanticType(MethodReference ref,int index,String declared) {
   String owner=ref.getDefiningClass();
-  if(owner.equals(EXT+"TileHooks;"))return index==0?"Lcom/walmart/glass/lists/view/lists/h;":"Lcom/walmart/glass/lists/domain/ListItem$ListDetailItem;";
-  if(owner.equals(EXT+"ListEnhancements;")&&ref.getName().equals("bindBrowse")&&index==1)return "LFW0/I0;";
+  if(owner.equals(EXT+"TileHooks;"))return index==0?(modern?"Lcom/walmart/glass/lists/view/lists/i;":"Lcom/walmart/glass/lists/view/lists/h;"):"Lcom/walmart/glass/lists/domain/ListItem$ListDetailItem;";
+  if(owner.equals(EXT+"ListEnhancements;")&&ref.getName().equals("bindBrowse")&&index==1)return modern?"LY11/L0;":"LFW0/I0;";
   if(owner.equals(EXT+"AdCleaner;")&&ref.getName().equals("sponsored")&&index==1)return "LfX0/L0;";
+  if(owner.equals(EXT+"AdCleaner;")&&ref.getName().equals("browse")&&index==1)return "LY11/L0;";
+  if(owner.equals(EXT+"ShoppingMode;")&&(ref.getName().equals("beforeBind")||ref.getName().equals("afterBindDeferred")))return "Landroidx/recyclerview/widget/RecyclerView$A;";
   return declared;
  }
  static boolean bypassesHook(AnalyzedInstruction exit,String required) {
@@ -61,6 +64,7 @@ public final class VerifyHookTypes {
   return false;
  }
  public static void main(String[]args)throws Exception {
+  modern=args.length>2&&args[2].equals("26.41.2");
   framework=new ZipFile(args[1]);List<Method> modified=new ArrayList<>();
   try(ZipFile z=new ZipFile(args[0])){for(Enumeration<? extends ZipEntry> entries=z.entries();entries.hasMoreElements();){
    ZipEntry e=entries.nextElement();if(!e.getName().matches("classes[0-9]*\\.dex"))continue;

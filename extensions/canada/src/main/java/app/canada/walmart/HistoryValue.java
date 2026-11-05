@@ -6,7 +6,7 @@ public final class HistoryValue {
     HistoryValue(String id,String offer,String seller,String unit,String name,String scope,long cents){this.id=id;this.offer=offer;this.seller=seller;this.unit=unit;this.name=name;this.scope=scope;this.cents=cents;}
     static String string(Object o){return o==null?"":o.toString();}
     public static HistoryValue list(Object detail)throws Exception {
-        Object p=detail.getClass().getMethod("t").invoke(detail),info=ModelAccess.field(p,"A");
+        Object p=detail.getClass().getMethod(RuntimeCompatibility.productGetter()).invoke(detail),info=ModelAccess.field(p,"A");
         if(info==null||Boolean.TRUE.equals(ModelAccess.field(p,"h"))||Boolean.TRUE.equals(ModelAccess.field(p,"i")))return null;
         Long cents=PriceLedger.cents((Double)ModelAccess.field(info,"f"));String id=string(ModelAccess.field(p,"n"));
         if(cents==null||id.isEmpty())return null;
@@ -14,7 +14,7 @@ public final class HistoryValue {
     }
     static Object call(Object o,String name)throws Exception {java.lang.reflect.Method m=o.getClass().getMethod(name);m.setAccessible(true);return m.invoke(o);}
     public static HistoryValue browse(Object model)throws Exception {
-        Object p=call(model,"getData"),price=call(model,"U");if(p==null||price==null)return null;
+        Object p=call(model,"getData"),price=call(model,RuntimeCompatibility.browsePriceGetter());if(p==null||price==null)return null;
         if(Boolean.TRUE.equals(ModelAccess.field(price,"o")))return null; // Native see-price-in-cart flag.
         Long cents=PriceLedger.cents((Double)ModelAccess.field(price,"b"));if(cents==null||!exactDisplay(string(ModelAccess.field(price,"a")),cents))return null;
         String id=string(ModelAccess.field(p,"j"));if(id.isEmpty())id=string(ModelAccess.field(p,"i"));if(id.isEmpty())return null;

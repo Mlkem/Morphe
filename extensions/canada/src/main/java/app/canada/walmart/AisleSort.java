@@ -6,7 +6,7 @@ import java.lang.reflect.*;
 public final class AisleSort {
     private static final String CHECK="com.walmart.glass.lists.domain.ListItem$ChecklistItem",HEADER="com.walmart.glass.lists.domain.ListItem$AisleHeader";
     public static List<?> sortAisles(Object adapter,List<?> input) {
-        if(adapter==null||!adapter.getClass().getName().equals("com.walmart.glass.lists.view.lists.a")||input==null||input.isEmpty())return input;
+        if(adapter==null||!adapter.getClass().getName().equals(RuntimeCompatibility.checklistAdapter())||input==null||input.isEmpty())return input;
         try {
             Map<String,List<Object>> groups=new TreeMap<>(ListMath::natural);
             List<Object> unknown=new ArrayList<>();
@@ -14,8 +14,8 @@ public final class AisleSort {
                 if(item==null)return input;
                 if(item.getClass().getName().equals(HEADER))continue;
                 if(!item.getClass().getName().equals(CHECK))return input;
-                Object detail=item.getClass().getMethod("e").invoke(item);
-                Object product=detail.getClass().getMethod("t").invoke(detail);
+                Object detail=item.getClass().getMethod(RuntimeCompatibility.checklistItemGetter()).invoke(item);
+                Object product=detail.getClass().getMethod(RuntimeCompatibility.productGetter()).invoke(detail);
                 Object location=ModelAccess.field(product,"z");String key="";
                 if(location!=null) {
                     Object aisle=ModelAccess.field(location,"e");

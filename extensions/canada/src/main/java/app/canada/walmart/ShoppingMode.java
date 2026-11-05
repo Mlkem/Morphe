@@ -61,6 +61,10 @@ public final class ShoppingMode {
         try {View row=itemView(holder);if(row!=null && row.getTag(ROW) instanceof RowState)((RowState)row.getTag(ROW)).restore();}
         catch(Exception e){android.util.Log.w("WalmartCanadaMorphe","Row reset unavailable",e);}
     }
+    public static void afterBindDeferred(final Object holder) {
+        try {View row=itemView(holder);if(row!=null)row.post(()->afterBind(holder));}
+        catch(Exception e){RuntimeStats.error("Checklist bind",e);}
+    }
     public static void afterBind(Object holder) {
         try {
             View row=itemView(holder);if(row==null)return;

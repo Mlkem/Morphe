@@ -361,7 +361,7 @@ public class WalmartFindItemButton {
             ClassLoader cl = tileView.getContext().getClassLoader();
             Class<?> enumClass = null;
             try {
-                enumClass = cl.loadClass("b40.p");
+                enumClass = cl.loadClass(RuntimeCompatibility.actionEnum());
             } catch (Throwable ignored) {}
             if (enumClass == null) {
                 Object action = tileView.getTag(TAG_KEY_ACTION);

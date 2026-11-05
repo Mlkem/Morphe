@@ -26,9 +26,9 @@ public final class ChecklistTools {
     static void rows(Object adapter,List<Object> out)throws Exception {
         if(adapter==null)return;String name=adapter.getClass().getName();
         if(name.equals("androidx.recyclerview.widget.h")) {
-            for(Object child:(List<?>)invoke(adapter,"u"))rows(child,out);
-        }else if(name.equals("com.walmart.glass.lists.view.lists.a")||name.equals("e40.e0")) {
-            int n=(Integer)invoke(adapter,"getItemCount");Method get=adapter.getClass().getMethod("u",int.class);
+            for(Object child:(List<?>)invoke(adapter,RuntimeCompatibility.childAdaptersGetter()))rows(child,out);
+        }else if(name.equals(RuntimeCompatibility.checklistAdapter())||name.equals(RuntimeCompatibility.collectedAdapter())) {
+            int n=(Integer)invoke(adapter,"getItemCount");Method get=adapter.getClass().getMethod(RuntimeCompatibility.adapterItemGetter(),int.class);
             for(int i=0;i<n;i++) {Object row=get.invoke(adapter,i);if(row.getClass().getName().equals("com.walmart.glass.lists.domain.ListItem$ChecklistItem"))out.add(row);}
         }else throw new IllegalStateException("Unrecognized checklist adapter "+name);
     }
@@ -46,10 +46,10 @@ public final class ChecklistTools {
                 if(adapter==null){set(fr?"Total : chargement…":"Total: loading…");return;}
                 List<Object> items=new ArrayList<>();rows(adapter,items);Set<String> seen=new HashSet<>();ListMath.Total sum=new ListMath.Total();
                 for(Object item:items) {
-                    Object detail=invoke(item,"e");String id=String.valueOf(invoke(detail,"n"));
+                    Object detail=invoke(item,RuntimeCompatibility.checklistItemGetter());String id=String.valueOf(invoke(detail,"n"));
                     if(!id.equals("null")&&!id.isEmpty()&&!seen.add(id))continue;
                     Long cents;try{cents=ModelAccess.price(detail);}catch(Exception e){cents=null;}
-                    sum.add(cents,Boolean.TRUE.equals(invoke(item,"f")));
+                    sum.add(cents,Boolean.TRUE.equals(invoke(item,RuntimeCompatibility.checkedGetter())));
                 }
                 String value=(fr?"Sous-total estimé : ":"Estimated subtotal: ")+ListEnhancements.money(sum.remaining+sum.collected,fr);
                 value+="\n"+(fr?"À prendre : ":"Remaining: ")+ListEnhancements.money(sum.remaining,fr)+(fr?"  ·  Cochés : ":"  ·  Collected: ")+ListEnhancements.money(sum.collected,fr);

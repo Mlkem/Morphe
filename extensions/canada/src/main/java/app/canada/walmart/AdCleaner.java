@@ -6,6 +6,15 @@ import android.view.*;
 public final class AdCleaner {
     static final java.util.Map<View,Boolean> candidates=new java.util.WeakHashMap<>();
     static final int STATE=0x7e010040;
+    private static final int BIND=0x7e010041;
+    private static final class Pending {
+        final boolean sponsored;
+        Pending(boolean value){sponsored=value;}
+    }
+    static boolean hidesBrowse(View tile) {
+        Object pending=tile.getTag(BIND);
+        return pending instanceof Pending && ((Pending)pending).sponsored && ToolSettings.enabled(tile.getContext(),"hide_sponsored");
+    }
     static final class Hidden implements View.OnAttachStateChangeListener,ViewTreeObserver.OnPreDrawListener {
         final View view;final int visibility,minHeight,minWidth;int height,width;boolean capturedLayout;ViewTreeObserver observer;
         Hidden(View v){view=v;visibility=v.getVisibility();minHeight=v.getMinimumHeight();minWidth=v.getMinimumWidth();ViewGroup.LayoutParams lp=v.getLayoutParams();capturedLayout=lp!=null;height=lp==null?-2:lp.height;width=lp==null?-1:lp.width;}
@@ -22,8 +31,18 @@ public final class AdCleaner {
     static void apply(View v,boolean dedicated){if(ToolSettings.enabled(v.getContext(),dedicated?"hide_ads":"hide_sponsored"))hide(v);else restore(v);}
     static void refresh(){for(java.util.Map.Entry<View,Boolean> e:new java.util.ArrayList<>(candidates.entrySet()))if(e.getKey()!=null)try{apply(e.getKey(),e.getValue());}catch(Exception failure){RuntimeStats.error("Ad control",failure);}}
     public static void dedicated(View v){try{if(v==null)return;candidates.put(v,true);apply(v,true);}catch(Exception e){RuntimeStats.error("Ad container",e);}}
+    public static void browse(final View tile,Object model) {
+        try {
+            final Pending token=new Pending(AdRules.sponsored(HistoryValue.call(model,"n")));tile.setTag(BIND,token);
+            tile.post(()->{if(tile.getTag(BIND)==token)applySponsored(tile,token.sponsored);});
+        } catch(Exception e){RuntimeStats.error("Sponsored model",e);}
+    }
+    private static void applySponsored(View tile,boolean sponsored) {
+        try{RuntimeStats.hit("Sponsored cards checked");if(sponsored){candidates.put(tile,false);apply(tile,false);}else{candidates.remove(tile);restore(tile);}}
+        catch(Exception e){RuntimeStats.error("Sponsored card",e);}
+    }
     public static void sponsored(View tile,Object section){
-        try{RuntimeStats.hit("Sponsored cards checked");if(AdRules.sponsored(section)){candidates.put(tile,false);apply(tile,false);}else{candidates.remove(tile);restore(tile);}}
+        try{applySponsored(tile,AdRules.sponsored(section));}
         catch(Exception e){RuntimeStats.error("Sponsored card",e);}
     }
 }
