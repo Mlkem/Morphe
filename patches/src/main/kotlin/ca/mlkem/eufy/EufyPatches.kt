@@ -82,6 +82,7 @@ val hideEufyNavigation = bytecodePatch(
         "Restored hidden tabs return to Home. Other Smart controls, cameras, events and Profile are preserved. Phone testing pending.",
     default = false
 ) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(eufy)
     dependsOn(eufyExtension)
     execute { install("enableNavigation") }
@@ -94,6 +95,7 @@ val hideEufyPromotions = bytecodePatch(
         "No network blocking or notification filtering; remote/React Native offers may remain. Phone testing pending.",
     default = false
 ) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(eufy)
     dependsOn(eufyExtension)
     execute { install("enablePromotions") }

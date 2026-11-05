@@ -72,6 +72,7 @@ val hermesHideAdPromoSurfacesPatch = resourcePatch(
     description = "Experimental Hermes bytecode edit: makes ad-card components return null. May prevent startup; opt in only for testing.",
     default = false,
 ) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(MUSIC_LEAGUE)
 
     execute {

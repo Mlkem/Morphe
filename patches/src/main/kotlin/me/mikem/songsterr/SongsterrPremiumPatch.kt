@@ -26,6 +26,7 @@ val enableSongsterrPremium = rawResourcePatch(
         "Requires the verified original split bundle; phone testing pending.",
     default = false
 ) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(Compatibility(
         name = "Songsterr", packageName = "com.songsterr", apkFileType = ApkFileType.APKM,
         description = "Original 7.1.6 (2012282388) split bundle, or its merged APK. Keep all native/resource splits.",

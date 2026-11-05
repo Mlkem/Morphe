@@ -79,6 +79,7 @@ val neutralizePremiumPromptsPatch = resourcePatch(
     description = "Force-removes the remaining premium/reward banner strings from the bundled Hermes asset.",
     default = true,
 ) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(MUSIC_LEAGUE)
 
     execute {

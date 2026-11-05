@@ -43,6 +43,7 @@ val allowAccessibility = bytecodePatch(
         "restrictions and server Play Integrity checks are not bypassed. Phone testing pending.",
     default = false
 ) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(target)
     execute {
         requireOriginalVersion()
@@ -73,6 +74,7 @@ val allowScreenshots = bytecodePatch(
         "and protected third-party screens are not changed. Phone testing pending.",
     default = false
 ) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(target)
     execute {
         requireOriginalVersion()
@@ -120,6 +122,7 @@ val selectText = bytecodePatch(
         "service is needed. Does not add inline selection or OCR. Phone testing pending.",
     default = false
 ) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(target)
     extendWith("extensions/tagthai-text.mpe")
     execute {

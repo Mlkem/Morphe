@@ -28,6 +28,7 @@ val disableExpoUpdatesPatch = resourcePatch(
     description = "Forces the app to use the bundled local Hermes asset instead of cached Expo OTA updates or restored app data.",
     default = true,
 ) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(MUSIC_LEAGUE)
 
     execute {

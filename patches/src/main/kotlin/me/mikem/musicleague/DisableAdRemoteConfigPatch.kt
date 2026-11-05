@@ -77,6 +77,7 @@ val disableAdRemoteConfigPatch = resourcePatch(
     description = "Blackholes ad/paywall/reward feature-flag keys and remote promo payload keys so the app cannot enable ad or upsell surfaces from remote config.",
     default = true,
 ) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(MUSIC_LEAGUE)
 
     execute {

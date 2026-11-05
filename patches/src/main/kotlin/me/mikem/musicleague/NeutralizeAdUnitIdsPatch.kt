@@ -128,6 +128,7 @@ val neutralizeAdUnitIdsPatch = resourcePatch(
     description = "Replaces bundled ad unit IDs and premium/reward banner copy in the Hermes bundle with same-length non-serving/blank values while leaving the AdMob app ID intact.",
     default = true,
 ) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(MUSIC_LEAGUE)
 
     execute {

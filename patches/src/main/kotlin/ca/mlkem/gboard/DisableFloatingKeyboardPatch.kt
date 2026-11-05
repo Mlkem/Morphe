@@ -26,6 +26,7 @@ val disableGboardFloatingKeyboard = bytecodePatch(
         "Preserves normal and split modes. Phone testing pending.",
     default = false
 ) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(Compatibility(
         name = "Gboard", packageName = PACKAGE, apkFileType = ApkFileType.APK,
         description = "Optional add-on for stock Gboard 18.5.4 arm64. Can be selected with " +

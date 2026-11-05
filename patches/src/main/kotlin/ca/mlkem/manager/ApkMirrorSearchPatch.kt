@@ -20,6 +20,7 @@ val apkMirrorSearch = bytecodePatch(
         "Other apps keep Manager's resolver. Does not download files automatically.",
     default = false
 ) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(Compatibility(
         packageName = "app.morphe.manager", name = "Morphe Manager",
         description = "Optional APKMirror search fix; use the official Manager APK from GitHub.",

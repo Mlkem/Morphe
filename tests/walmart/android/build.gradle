@@ -1,8 +1,8 @@
 plugins { id 'java' }
 repositories { mavenCentral(); google() }
 sourceSets {
-    main.java.srcDirs = ['../../../extensions/gmail/src/main/java', '../../../extensions/canada/src/main/java', '../../../extensions/tagthai/src/main/java', '../../../extensions/eufy/src/main/java']
-    test.java.srcDirs = ['src/test/java', '../fixtures']
+    main.java.srcDirs = ['../../../extensions/updates/src/main/java', '../../../extensions/gmail/src/main/java', '../../../extensions/canada/src/main/java', '../../../extensions/tagthai/src/main/java', '../../../extensions/eufy/src/main/java']
+    test.java.srcDirs = ['../../updates/java', 'src/test/java', '../fixtures']
 }
 dependencies {
     def sdk = System.getenv('ANDROID_HOME') ?: System.getenv('ANDROID_SDK_ROOT')

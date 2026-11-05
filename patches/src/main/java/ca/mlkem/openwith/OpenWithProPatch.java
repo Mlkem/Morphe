@@ -23,6 +23,7 @@ public final class OpenWithProPatch {
         "licence startup calls for a re-signed build. Phone testing pending.",
         false,
         builder -> {
+            builder.dependsOn(ca.mlkem.updates.StartupUpdatesKt.getStartupUpdates());
             builder.compatibleWith(new Compatibility(
                 "com.openwith.app", "Open with", "Pro file-type handling test",
                 ApkFileType.APK, (Integer)null, null,

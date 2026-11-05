@@ -34,6 +34,7 @@ val disableAdSdkManifestPatch = resourcePatch(
     description = "Disables bundled ad mediation components and removes ad identifier/ad services permissions.",
     default = true,
 ) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(MUSIC_LEAGUE)
 
     execute {

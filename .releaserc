@@ -88,7 +88,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "./gradlew :patches:buildAndroid :patches:generatePatchesList --no-daemon && python3 scripts/verify_bundle.py && python3 .github/scripts/generate_patches_readme.py Mlkem/Morphe dev patches-list.json README.md"
+        "prepareCmd": "./gradlew :patches:buildAndroid :patches:generatePatchesList --no-daemon && python3 scripts/verify_bundle.py && python3 .github/scripts/generate_patches_readme.py Mlkem/Morphe dev patches-list.json README.md && python3 scripts/updates/catalog.py --release"
       }
     ],
     [
@@ -99,7 +99,8 @@
           "gradle.properties",
           "patches-bundle.json",
           "patches-list.json",
-          "README.md"
+          "README.md",
+          "updates/app-feed.json"
         ],
         "message": "chore: Release v${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }

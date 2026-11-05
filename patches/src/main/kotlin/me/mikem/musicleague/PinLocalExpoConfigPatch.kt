@@ -8,6 +8,7 @@ val pinLocalExpoConfigPatch = resourcePatch(
     description = "Neutralizes Expo OTA update configuration in the bundled Expo config so the APK prefers local bundled assets.",
     default = true,
 ) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(MUSIC_LEAGUE)
 
     execute {

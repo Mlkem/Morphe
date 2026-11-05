@@ -42,7 +42,8 @@ public final class WongnaiAdPatch {
         true,
         new Function1<BytecodePatchBuilder, Unit>() {
             @Override public Unit invoke(BytecodePatchBuilder builder) {
-                builder.compatibleWith(new Compatibility(
+                builder.dependsOn(ca.mlkem.updates.StartupUpdatesKt.getStartupUpdates());
+            builder.compatibleWith(new Compatibility(
                     PACKAGE, "Wongnai", null, ApkFileType.XAPK, (Integer) null,
                     null,
                     Collections.singletonList(new AppTarget(VERSION, null, false, null, null)),

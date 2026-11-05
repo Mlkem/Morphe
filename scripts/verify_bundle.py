@@ -109,7 +109,9 @@ for p in bundles:
         assert b'Lca/mlkem/openwith/OpenWithProPatch;' in z.read('classes.dex')
         assert 'ca/mlkem/manager/ApkMirrorSearchPatchKt.class' in files
         assert b'Lca/mlkem/manager/ApkMirrorSearchPatchKt;' in z.read('classes.dex')
-        for name in ['extensions/gmail-accounts.mpe','extensions/canada.mpe','extensions/pushpress-crossfit-only.mpe','extensions/manager-apkmirror.mpe','extensions/tagthai-text.mpe','extensions/eufy-camera-only.mpe']:
+        assert 'updates/revisions.properties' in files
+        assert b'Lca/mlkem/updates/UpdateProvider;' in z.read('extensions/startup-updates.mpe')
+        for name in ['extensions/startup-updates.mpe','extensions/gmail-accounts.mpe','extensions/canada.mpe','extensions/pushpress-crossfit-only.mpe','extensions/manager-apkmirror.mpe','extensions/tagthai-text.mpe','extensions/eufy-camera-only.mpe']:
             assert z.read(name).startswith(b'dex\n'), name
             assert b'Lkotlin/' not in z.read(name), f'Unexpected Kotlin runtime in Java extension: {name}'
         assert b'Lca/mlkem/manager/ApkMirrorUrls;' in z.read('extensions/manager-apkmirror.mpe')

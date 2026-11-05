@@ -43,6 +43,7 @@ private val canada = Compatibility(name="Walmart Canada", packageName="ca.walmar
 
 val patchTools = bytecodePatch(name="Patch Tools — Canada",
     description="Replace Sparky with a card-based tools menu: stock checker, barcode scanner, price history, shopping calculators, settings and backups. Includes Back navigation and dark-mode support.", default=true) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(canada); dependsOn(walmartCompatibility)
     execute {
         // CH.b is SparkyBottomTabInfo (implements v51.c). Preserve the internal
@@ -76,6 +77,7 @@ val patchTools = bytecodePatch(name="Patch Tools — Canada",
 
 val defaultLists = bytecodePatch(name="Default Lists Tab — Canada",
     description="Open Lists when entering My Items. Walmart Canada 26.31 and 26.41.2.", default=true) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(canada); dependsOn(walmartCompatibility)
     execute {
         val report=canadaFingerprint(definingClass="Lcom/walmart/glass/integration/root/RootActivity;",name="onCreate",parameters=listOf("Landroid/os/Bundle;"),returnType="V").method
@@ -87,6 +89,7 @@ val defaultLists = bytecodePatch(name="Default Lists Tab — Canada",
 }
 val stock = bytecodePatch(name="Stock Availability — Canada",
     description="Show list availability. On 26.41.2, read product-detail quantities into Patch tools → Stock checker with separate pickup, delivery and shipping labels. Missing numbers stay unknown; no watchlist or order-limit guesses.", default=true) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(canada); dependsOn(walmartCompatibility, patchTools)
     execute {
         if (isWalmart26412()) installStockCapture()
@@ -134,6 +137,7 @@ private fun installStockCapture() {
 }
 val findItem = bytecodePatch(name="Find Item for Linked Items — Canada",
     description="Restore Find item on linked shopping-list products so they can be linked to a different product.", default=true) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(canada); dependsOn(walmartCompatibility)
     execute {
         val report=canadaFingerprint(definingClass="Lcom/walmart/glass/integration/root/RootActivity;",name="onCreate",parameters=listOf("Landroid/os/Bundle;"),returnType="V").method
@@ -150,6 +154,7 @@ val findItem = bytecodePatch(name="Find Item for Linked Items — Canada",
 }
 val removeShop = bytecodePatch(name="Remove Shop — Canada",
     description="Hide Shop from bottom navigation and redirect the default Shop tab to My Items. Explicit other tabs are preserved.", default=false) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(canada); dependsOn(walmartCompatibility)
     execute {
         val report=canadaFingerprint(definingClass="Lcom/walmart/glass/integration/root/RootActivity;",name="onCreate",parameters=listOf("Landroid/os/Bundle;"),returnType="V").method
@@ -180,6 +185,7 @@ private fun browseBinders(): List<MutableMethod> {
 val priceHistory = bytecodePatch(name="Personal Price History — Canada",
     description="Record exact prices from list cards and search/browse product tiles. Tap History on list cards, or Patch tools → Price history. Recording starts after installation.", default=true) {
     dependsOn(patchTools)
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(canada); dependsOn(walmartCompatibility)
     execute {
         val report=canadaFingerprint(definingClass="Lcom/walmart/glass/integration/root/RootActivity;",name="onCreate",parameters=listOf("Landroid/os/Bundle;"),returnType="V").method
@@ -202,6 +208,7 @@ val priceHistory = bytecodePatch(name="Personal Price History — Canada",
 }
 val unitPrices = bytecodePatch(name="Clearer Unit Prices — Canada",
     description="Show Walmart's supplied price-per-unit in larger bold text on list items, including the shopping checklist. No guessed conversions.", default=true) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(canada); dependsOn(walmartCompatibility)
     execute {
         val report=canadaFingerprint(definingClass="Lcom/walmart/glass/integration/root/RootActivity;",name="onCreate",parameters=listOf("Landroid/os/Bundle;"),returnType="V").method
@@ -215,6 +222,7 @@ val unitPrices = bytecodePatch(name="Clearer Unit Prices — Canada",
 }
 val shoppingMode = bytecodePatch(name="Shopping Mode — Canada",
     description="Checklist switches for keeping the screen awake, larger checkboxes and hiding collected rows. Show collected restores them without changing your list.", default=true) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(canada); dependsOn(walmartCompatibility)
     execute {
         val report=canadaFingerprint(definingClass="Lcom/walmart/glass/integration/root/RootActivity;",name="onCreate",parameters=listOf("Landroid/os/Bundle;"),returnType="V").method
@@ -241,6 +249,7 @@ val shoppingMode = bytecodePatch(name="Shopping Mode — Canada",
 
 val aisleSort = bytecodePatch(name="Aisle-Sorted Checklist — Canada",
     description="Group remaining checklist items by supplied aisle, in natural order (A2 before A10). Unknown locations last. No floor-plan routing.", default=true) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(canada); dependsOn(walmartCompatibility)
     execute {
         val report=canadaFingerprint(definingClass="Lcom/walmart/glass/integration/root/RootActivity;",name="onCreate",parameters=listOf("Landroid/os/Bundle;"),returnType="V").method
@@ -253,6 +262,7 @@ val aisleSort = bytecodePatch(name="Aisle-Sorted Checklist — Canada",
 }
 val runningTotal = bytecodePatch(name="Running List Total — Canada",
     description="Checklist subtotal, remaining and collected amounts from all loaded items, including offscreen rows. Estimated CAD before tax/fees; missing prices are counted and excluded.", default=true) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(canada); dependsOn(walmartCompatibility)
     execute {
         val report=canadaFingerprint(definingClass="Lcom/walmart/glass/integration/root/RootActivity;",name="onCreate",parameters=listOf("Landroid/os/Bundle;"),returnType="V").method
@@ -264,6 +274,7 @@ val runningTotal = bytecodePatch(name="Running List Total — Canada",
 }
 val quickScanner = bytecodePatch(name="Quick Scanner — Canada",
     description="Add a Scan barcode shortcut to the shopping checklist, opening Walmart's native scanner and permission flow.", default=true) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(canada); dependsOn(walmartCompatibility)
     execute {
         val report=canadaFingerprint(definingClass="Lcom/walmart/glass/integration/root/RootActivity;",name="onCreate",parameters=listOf("Landroid/os/Bundle;"),returnType="V").method
@@ -275,6 +286,7 @@ val quickScanner = bytecodePatch(name="Quick Scanner — Canada",
 }
 val promotionCleanup = bytecodePatch(name="Promotion Cleanup — Canada",
     description="Collapse the shopping-list deals promotional banner. Product discounts, expiry conditions, rewards, totals and checkout are preserved. Not an app-wide ad blocker.", default=true) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(canada); dependsOn(walmartCompatibility)
     execute {
         val report=canadaFingerprint(definingClass="Lcom/walmart/glass/integration/root/RootActivity;",name="onCreate",parameters=listOf("Landroid/os/Bundle;"),returnType="V").method
@@ -296,6 +308,7 @@ val promotionCleanup = bytecodePatch(name="Promotion Cleanup — Canada",
 }
 val saleReminders = bytecodePatch(name="Sale-Ending Reminders — Canada",
     description="Make Walmart's supplied promotion expiry text prominent on list items. In-list reminders only; no invented deadlines or background notifications.", default=true) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(canada); dependsOn(walmartCompatibility)
     execute {
         val report=canadaFingerprint(definingClass="Lcom/walmart/glass/integration/root/RootActivity;",name="onCreate",parameters=listOf("Landroid/os/Bundle;"),returnType="V").method
@@ -310,6 +323,7 @@ val saleReminders = bytecodePatch(name="Sale-Ending Reminders — Canada",
 val hideAds = bytecodePatch(name="Hide Ads and Sponsored Content — Canada",
     description="Collapse native ad containers and entire sponsored grid/list product cards, restoring organic cards when recycled. Includes display ads and sponsored carousels. Does not block network requests; some layouts may retain empty slots.", default=true) {
     dependsOn(patchTools)
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(canada); dependsOn(walmartCompatibility)
     execute {
         val report=canadaFingerprint(definingClass="Lcom/walmart/glass/integration/root/RootActivity;",name="onCreate",parameters=listOf("Landroid/os/Bundle;"),returnType="V").method

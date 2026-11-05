@@ -1,0 +1,192 @@
+{
+  "apps": {
+    "app.morphe.manager": {
+      "name": "Morphe Manager",
+      "revision": "1b1f0008784fdbe2cb957cba38b0c2f6d40cc2ef422030a3e2a44abc14bda3dc",
+      "supportedVersions": [
+        "2.4.0-dev.1",
+        "2.4.0-dev.2",
+        "2.4.0-dev.3",
+        "2.4.0-dev.4"
+      ],
+      "upstream": {
+        "checkedAt": "2026-11-05T02:21:22.378741+00:00",
+        "source": "GitHub",
+        "status": "ok",
+        "url": "https://github.com/MorpheApp/morphe-manager/releases/latest",
+        "version": "2.4.0"
+      }
+    },
+    "ca.walmart.ecommerceapp": {
+      "name": "Walmart Canada",
+      "revision": "87509f28b9dfd4c35b33964903f1f6e16e79dc0db21d9c8167cadc09ec528073",
+      "supportedVersions": [
+        "26.41.2",
+        "26.31"
+      ],
+      "upstream": {
+        "checkedAt": "2026-11-05T02:21:31.125120+00:00",
+        "source": "Google Play",
+        "status": "ok",
+        "url": "https://play.google.com/store/apps/details?id=ca.walmart.ecommerceapp&hl=en&gl=CA",
+        "version": "26.41.2"
+      }
+    },
+    "com.google.android.gm": {
+      "name": "Gmail",
+      "revision": "54923c27d4d24c7f7ff2c438b4715832e9744934c5f9327853569d1c7fc83754",
+      "supportedVersions": [
+        "2026.10.26.1012468012.Release"
+      ],
+      "upstream": {
+        "checkedAt": "2026-11-05T02:21:39.717608+00:00",
+        "source": "Google Play",
+        "status": "version_unavailable",
+        "url": "https://play.google.com/store/apps/details?id=com.google.android.gm&hl=en&gl=CA"
+      }
+    },
+    "com.google.android.inputmethod.latin": {
+      "name": "Gboard",
+      "revision": "44eaec6cb2afcfb9fcca683dd0410c6e1cfc9d52528e874a4a8a50f04abbcf5d",
+      "supportedVersions": [
+        "18.5.4.993608717-release-arm64-v8a"
+      ],
+      "upstream": {
+        "checkedAt": "2026-11-05T02:21:48.043468+00:00",
+        "source": "Google Play",
+        "status": "version_unavailable",
+        "url": "https://play.google.com/store/apps/details?id=com.google.android.inputmethod.latin&hl=en&gl=CA"
+      }
+    },
+    "com.musicleague.app": {
+      "name": "Music League",
+      "revision": "18e816e9aa49cefceeced73a55cf52b12ec5ba4170eb5db0e89a3e58ee252941",
+      "supportedVersions": [
+        "1.4.9"
+      ],
+      "upstream": {
+        "checkedAt": "2026-11-05T02:21:56.217432+00:00",
+        "source": "Google Play",
+        "status": "ok",
+        "url": "https://play.google.com/store/apps/details?id=com.musicleague.app&hl=en&gl=CA",
+        "version": "1.4.11"
+      }
+    },
+    "com.neave.zoomearth": {
+      "name": "Zoom Earth",
+      "revision": "64daf170e9e6cd29131d84ee8c935dbca75abc0b90bc20998b67893d7c0ef7a1",
+      "supportedVersions": [
+        "6.3.3",
+        "6.1"
+      ],
+      "upstream": {
+        "checkedAt": "2026-11-05T02:22:04.374618+00:00",
+        "source": "Google Play",
+        "status": "ok",
+        "url": "https://play.google.com/store/apps/details?id=com.neave.zoomearth&hl=en&gl=CA",
+        "version": "6.3.3"
+      }
+    },
+    "com.oceanwing.battery.cam": {
+      "name": "Anker eufy",
+      "revision": "08184c4ff56b8f195b8d37081df1d6d2fe7381d06444954b737636dbb2b8c217",
+      "supportedVersions": [
+        "6.1.20_31181"
+      ],
+      "upstream": {
+        "checkedAt": "2026-11-05T02:22:12.558797+00:00",
+        "source": "Google Play",
+        "status": "ok",
+        "url": "https://play.google.com/store/apps/details?id=com.oceanwing.battery.cam&hl=en&gl=CA",
+        "version": "6.1.20_31181"
+      }
+    },
+    "com.openwith.app": {
+      "name": "Open with",
+      "revision": "17ecb4073eeee536cbfe91ea4cb00e8dd9b81572cc35791e75127d80c0acc344",
+      "supportedVersions": [
+        "1.2.1"
+      ],
+      "upstream": {
+        "checkedAt": "2026-11-05T02:22:21.940482+00:00",
+        "source": "Google Play",
+        "status": "version_unavailable",
+        "url": "https://play.google.com/store/apps/details?id=com.openwith.app&hl=en&gl=CA"
+      }
+    },
+    "com.pushpress.memberportal": {
+      "name": "PushPress Members",
+      "revision": "12982f068a482cc6d7cf5efbcce87fb160816db278f09437c736d45224d8f024",
+      "supportedVersions": [
+        "3.42.0"
+      ],
+      "upstream": {
+        "checkedAt": "2026-11-05T02:22:30.204472+00:00",
+        "source": "Google Play",
+        "status": "ok",
+        "url": "https://play.google.com/store/apps/details?id=com.pushpress.memberportal&hl=en&gl=CA",
+        "version": "3.45.0"
+      }
+    },
+    "com.rosteam.gpsemulator": {
+      "name": "GPS Emulator",
+      "revision": "9bdf190c49ba162c3d705f0f5107ebb53bceedf9c3e280c8c3904716bd644b37",
+      "supportedVersions": [
+        "3.36"
+      ],
+      "upstream": {
+        "checkedAt": "2026-11-05T02:22:40.960911+00:00",
+        "source": "Google Play",
+        "status": "ok",
+        "url": "https://play.google.com/store/apps/details?id=com.rosteam.gpsemulator&hl=en&gl=CA",
+        "version": "3.31"
+      }
+    },
+    "com.songsterr": {
+      "name": "Songsterr",
+      "revision": "866cc33bd31dbce043a6841c68c80111b2c3204a27623769c71c23da656d3525",
+      "supportedVersions": [
+        "7.1.6"
+      ],
+      "upstream": {
+        "checkedAt": "2026-11-05T02:22:49.842909+00:00",
+        "source": "Google Play",
+        "status": "ok",
+        "url": "https://play.google.com/store/apps/details?id=com.songsterr&hl=en&gl=CA",
+        "version": "6.5.43"
+      }
+    },
+    "com.thaidigitalplatform.tagthai": {
+      "name": "TAGTHAi",
+      "revision": "99674149e2c79f838eccbf61ed29d49a5e141a62c94f1ae87d17c508fe25e7c4",
+      "supportedVersions": [
+        "4.25.1"
+      ],
+      "upstream": {
+        "checkedAt": "2026-11-05T02:22:58.191094+00:00",
+        "source": "Google Play",
+        "status": "ok",
+        "url": "https://play.google.com/store/apps/details?id=com.thaidigitalplatform.tagthai&hl=en&gl=CA",
+        "version": "4.25.1"
+      }
+    },
+    "com.wongnai.android": {
+      "name": "Wongnai",
+      "revision": "c5e348548db2fb39d42277820d63ec11c926d109d7a8eac5debdbe3fca6584ac",
+      "supportedVersions": [
+        "12.11.0"
+      ],
+      "upstream": {
+        "checkedAt": "2026-11-05T02:23:09.470918+00:00",
+        "source": "Google Play",
+        "status": "ok",
+        "url": "https://play.google.com/store/apps/details?id=com.wongnai.android&hl=en&gl=CA",
+        "version": "12.11.0"
+      }
+    }
+  },
+  "generatedAt": "2026-11-05T02:34:19.232148+00:00",
+  "releaseUrl": "https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.24",
+  "releaseVersion": "1.0.0-dev.24",
+  "schema": 1
+}

@@ -46,3 +46,27 @@ tasks {
         dependsOn("generatePatchesList")
     }
 }
+
+// Embed per-app source revisions; generated before every release build.
+val generateUpdateRevisions by tasks.registering(Exec::class) {
+    workingDir(rootProject.projectDir)
+    commandLine("python3", "scripts/updates/catalog.py")
+}
+tasks.named("processResources") { dependsOn(generateUpdateRevisions) }
+
+val compileUpdateGraphTest by tasks.registering(JavaCompile::class) {
+    dependsOn(tasks.named("classes"))
+    source(rootProject.file("tests/updates/BundleTest.java"))
+    classpath = sourceSets["main"].compileClasspath + sourceSets["main"].output
+    destinationDirectory.set(layout.buildDirectory.dir("update-tests"))
+}
+tasks.register<JavaExec>("verifyStartupUpdates") {
+    dependsOn("generatePatchesList", compileUpdateGraphTest)
+    classpath = sourceSets["main"].compileClasspath + sourceSets["main"].output + files(compileUpdateGraphTest.flatMap { it.destinationDirectory })
+    mainClass.set("BundleTest")
+    doFirst {
+        args(layout.buildDirectory.dir("libs").get().asFile.listFiles()!!.single {
+            it.name.endsWith(".mpp") && !it.name.contains("sources") && !it.name.contains("javadoc")
+        }.absolutePath)
+    }
+}

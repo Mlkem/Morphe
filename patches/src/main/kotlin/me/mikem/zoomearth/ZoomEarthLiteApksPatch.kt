@@ -25,6 +25,7 @@ val removeZoomEarthLitePromotions = rawResourcePatch(
         "Preserves its restored startup methods and DEX layout. Use this APK as input; do not select the original-only startup patch. Phone retest required.",
     default = false
 ) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(Compatibility(
         name = "Zoom Earth", packageName = "com.neave.zoomearth", apkFileType = ApkFileType.APK,
         description = "Exact supplied LiteAPKs 6.3.3 (52) APK required; original Play archive is not supported by this patch.",

@@ -27,6 +27,7 @@ public final class GpsEmulatorProPatch {
         "settings. Built against the original APKMirror APKM. Phone testing pending.",
         false,
         builder -> {
+            builder.dependsOn(ca.mlkem.updates.StartupUpdatesKt.getStartupUpdates());
             builder.compatibleWith(new Compatibility(
                 "com.rosteam.gpsemulator", "GPS Emulator", "Enable Pro on original 3.36",
                 ApkFileType.APKM, (Integer)null, null,

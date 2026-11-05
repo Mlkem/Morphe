@@ -44,6 +44,8 @@ jobs:
         run: |
           ./gradlew :patches:buildAndroid :patches:generatePatchesList --no-daemon
           python3 scripts/verify_bundle.py
+          ./gradlew :patches:verifyStartupUpdates --no-daemon
+          python3 -m unittest discover -s tests/updates -p 'test_*.py'
           python3 scripts/test_walmart_logic.py
           python3 scripts/test_manager_urls.py
       - name: Android UI regressions

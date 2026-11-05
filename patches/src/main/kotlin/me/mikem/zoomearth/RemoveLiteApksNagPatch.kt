@@ -42,6 +42,7 @@ val removeLiteApksNagPatch = bytecodePatch(
     description = "Removes the injected LiteAPKS / 9MOD promotional popup from Zoom Earth.",
     default = true,
 ) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(ZOOM_EARTH)
 
     execute {

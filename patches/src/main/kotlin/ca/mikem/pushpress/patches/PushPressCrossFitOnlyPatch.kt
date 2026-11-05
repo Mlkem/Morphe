@@ -17,6 +17,7 @@ val pushPressCrossFitOnlyPatch = bytecodePatch(
     description = "On the Workouts page, automatically selects CrossFit class from the Class type dropdown.",
     default = true
 ) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(PUSH_PRESS_MEMBERS)
     extendWith("extensions/pushpress-crossfit-only.mpe")
 

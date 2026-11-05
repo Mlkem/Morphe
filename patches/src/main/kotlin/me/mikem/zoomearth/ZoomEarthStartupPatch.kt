@@ -23,6 +23,7 @@ val allowZoomEarthPatchedInstallation = rawResourcePatch(
         "Do not select for the working LiteAPKs APK. Disables two local checks, preserves native VM assets and does not grant paid server access.",
     default = false
 ) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(Compatibility(
         name = "Zoom Earth", packageName = "com.neave.zoomearth", apkFileType = ApkFileType.APKM,
         description = "Original 6.3.3 (52) DEX required; experimental startup compatibility patch.",

@@ -52,6 +52,7 @@ val gmailAccountVisibility = bytecodePatch(
         "Does not hide mail, All inboxes, notifications or Android accounts. Creates a separate GmsCore copy; phone testing pending.",
     default = false
 ) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(gmail)
     dependsOn(gmailGmsCore)
     extendWith("extensions/gmail-accounts.mpe")

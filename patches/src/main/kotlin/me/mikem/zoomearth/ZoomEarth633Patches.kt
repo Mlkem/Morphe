@@ -93,6 +93,7 @@ val enableZoomEarthPro = rawResourcePatch(
         "Paid radar/model data still uses the real account entitlement; this does not create a subscription. Phone testing pending.",
     default = false
 ) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(zoom633)
     execute { editZoomAsset(proEdits) }
 }
@@ -102,6 +103,7 @@ val removeZoomEarthAds = rawResourcePatch(
     description = "Stops the bundled banner controller from initializing or showing ads, and collapses the ad footer. Works independently of Pro. Phone testing pending.",
     default = false
 ) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(zoom633)
     execute { editZoomAsset(adEdits) }
 }
@@ -111,6 +113,7 @@ val moreZoomEarthFavorites = rawResourcePatch(
     description = "Raises the visible and add-location limits from 3 free / 30 Pro to 100 saved places. Keeps existing saved data and works independently of Pro. Phone testing pending.",
     default = false
 ) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(zoom633)
     execute { editZoomAsset(favoriteEdits) }
 }
@@ -120,6 +123,7 @@ val quietZoomEarthPrompts = rawResourcePatch(
     description = "Disables automatic subscription popups and review requests. Manual subscription actions, permission prompts and weather/outage notices remain available. Phone testing pending.",
     default = false
 ) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(zoom633)
     execute { editZoomAsset(quietEdits) }
 }
