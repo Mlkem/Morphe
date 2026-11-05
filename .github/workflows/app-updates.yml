@@ -1,5 +1,8 @@
 name: Refresh upstream app versions
 on:
+  push:
+    branches: [dev]
+    paths: [scripts/updates/refresh.py]
   schedule:
     - cron: '23 */6 * * *'
   workflow_dispatch:
@@ -25,6 +28,8 @@ jobs:
         with:
           python-version: '3.12'
       - name: Check public version metadata
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python3 -m unittest discover -s tests/updates -p 'test_*.py'
           python3 scripts/updates/refresh.py
