@@ -94,7 +94,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.22](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.22)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;42 patches total
+> **[v1.0.0-dev.23](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.23)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;42 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -153,7 +153,7 @@ provide privacy.
 | [Default Lists Tab — Canada](#default-lists-tab-canada) | Open Lists when entering My Items. Walmart Canada 26.31 and 26.41.2. |  |
 | [Find Item for Linked Items — Canada](#find-item-for-linked-items-canada) | Restore Find item on linked shopping-list products so they can be linked to a different product. |  |
 | [Hide Ads and Sponsored Content — Canada](#hide-ads-and-sponsored-content-canada) | Collapse native ad containers and entire sponsored grid/list product cards, restoring organic cards when recycled. Includes display ads and sponsored carousels. Does not block network requests; some layouts may retain empty slots. |  |
-| [Patch Tools — Canada](#patch-tools-canada) | Replace Sparky's bottom tab with Patch tools: live ad/recording controls, searchable price trends, watchlists and targets, CSV/JSON export and restore, scanner, shopping calculators and diagnostics. |  |
+| [Patch Tools — Canada](#patch-tools-canada) | Replace Sparky with a card-based tools menu: stock checker, barcode scanner, price history, shopping calculators, settings and backups. Includes Back navigation and dark-mode support. |  |
 | [Personal Price History — Canada](#personal-price-history-canada) | Record exact prices from list cards and search/browse product tiles. Tap History on list cards, or Patch tools → Price history. Recording starts after installation. |  |
 | [Promotion Cleanup — Canada](#promotion-cleanup-canada) | Collapse the shopping-list deals promotional banner. Product discounts, expiry conditions, rewards, totals and checkout are preserved. Not an app-wide ad blocker. |  |
 | [Quick Scanner — Canada](#quick-scanner-canada) | Add a Scan barcode shortcut to the shopping checklist, opening Walmart's native scanner and permission flow. |  |
@@ -161,7 +161,7 @@ provide privacy.
 | [Running List Total — Canada](#running-list-total-canada) | Checklist subtotal, remaining and collected amounts from all loaded items, including offscreen rows. Estimated CAD before tax/fees; missing prices are counted and excluded. |  |
 | [Sale-Ending Reminders — Canada](#sale-ending-reminders-canada) | Make Walmart's supplied promotion expiry text prominent on list items. In-list reminders only; no invented deadlines or background notifications. |  |
 | [Shopping Mode — Canada](#shopping-mode-canada) | Checklist switches for keeping the screen awake, larger checkboxes and hiding collected rows. Show collected restores them without changing your list. |  |
-| [Stock Availability — Canada](#stock-availability-canada) | Show Walmart's supplied availability and message below list item names. Unknown stays unknown; purchase limits are never treated as inventory counts. |  |
+| [Stock Availability — Canada](#stock-availability-canada) | Show list availability. On 26.41.2, read product-detail quantities into Patch tools → Stock checker with separate pickup, delivery and shipping labels. Missing numbers stay unknown; no watchlist or order-limit guesses. |  |
 
 </details>
 

@@ -1,3 +1,9 @@
+## [1.0.0-dev.23](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.22...v1.0.0-dev.23) (2026-11-05)
+
+### ✨ New Features
+
+* **walmart:** show supplied stock quantities and simplify tools navigation ([b77194a](https://github.com/Mlkem/Morphe/commit/b77194aaaca8698789802804ce529e18fad93c22))
+
 ## [1.0.0-dev.22](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.21...v1.0.0-dev.22) (2026-11-05)
 
 ### 🐛 Bug Fixes
