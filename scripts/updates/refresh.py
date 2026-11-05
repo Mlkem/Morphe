@@ -6,7 +6,7 @@ Walmart's actual public response was checked against this path on 2026-11-05.
 """
 from pathlib import Path
 from datetime import datetime,timezone
-import argparse,json,re,time,urllib.request,urllib.error
+import argparse,json,os,re,time,urllib.request,urllib.error
 ROOT=Path(__file__).resolve().parents[2]
 MAX_BYTES=4_000_000
 VERSION=re.compile(r'^[vV]?\d+(?:[._]\d+)*(?:[-._][A-Za-z0-9][A-Za-z0-9._+\-]*)?$')
@@ -20,9 +20,16 @@ def play_version(page,package):
    return version if valid_version(version) else None
   except (ValueError,TypeError,IndexError,KeyError):continue
  return None
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+ def redirect_request(self,request,fp,code,message,headers,newurl):return None
 def fetch(url):
- request=urllib.request.Request(url,headers={'User-Agent':'mlkemac-release-check/1.0 (+https://github.com/Mlkem/Morphe)','Accept':'text/html,application/json'})
- with urllib.request.urlopen(request,timeout=20) as response:
+ headers={'User-Agent':'mlkemac-release-check/1.0 (+https://github.com/Mlkem/Morphe)','Accept':'text/html,application/json'}
+ # The Actions token is sent only to the official GitHub API, never Google Play.
+ token=os.environ.get('GITHUB_TOKEN')
+ if token and url.startswith('https://api.github.com/'):
+  headers['Authorization']='Bearer '+token
+ request=urllib.request.Request(url,headers=headers)
+ with urllib.request.build_opener(NoRedirect).open(request,timeout=20) as response:
   if not response.url.startswith(('https://play.google.com/','https://api.github.com/')):raise ValueError('Unexpected redirect')
   data=response.read(MAX_BYTES+1)
   if len(data)>MAX_BYTES:raise ValueError('Response too large')

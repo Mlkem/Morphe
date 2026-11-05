@@ -3,6 +3,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'scripts/updates'))
 import refresh,catalog
+from unittest.mock import patch,MagicMock
 class FeedTests(unittest.TestCase):
  def page(self,package,version):
   app=[None]*146;app[77]=[package];app[140]=[[[version]]]
@@ -23,6 +24,16 @@ class FeedTests(unittest.TestCase):
    for key in before:
     if key!='ca.walmart.ecommerceapp':self.assertEqual(before[key],after[key])
   finally:p.unlink(missing_ok=True)
+ def test_token_is_only_attached_to_github_api(self):
+  for url,authorized in [('https://api.github.com/repos/MorpheApp/morphe-manager/releases/latest',True),('https://play.google.com/store/apps/details?id=test.app',False)]:
+   response=MagicMock();response.__enter__.return_value=response;response.url=url;response.read.return_value=b'{}'
+   opener=MagicMock();opener.open.return_value=response
+   with patch.dict(refresh.os.environ,{'GITHUB_TOKEN':'test-only'}),patch.object(refresh.urllib.request,'build_opener',return_value=opener):
+    refresh.fetch(url)
+   request=opener.open.call_args.args[0]
+   self.assertEqual('Bearer test-only' if authorized else None,request.get_header('Authorization'))
+ def test_redirects_cannot_forward_authorization(self):
+  self.assertIsNone(refresh.NoRedirect().redirect_request(None,None,302,'',{},'https://other.example/'))
  def test_no_private_data_or_apk_urls(self):
   data=json.loads((ROOT/'updates/app-feed.json').read_text());self.assertEqual(1,data['schema']);self.assertEqual(set(catalog.PATHS),set(data['apps']))
   self.assertLess(len(json.dumps(data)),128*1024)
