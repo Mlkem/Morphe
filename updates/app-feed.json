@@ -10,7 +10,7 @@
         "2.4.0-dev.4"
       ],
       "upstream": {
-        "checkedAt": "2026-11-07T21:59:26.406613+00:00",
+        "checkedAt": "2026-11-08T06:18:43.232088+00:00",
         "source": "GitHub",
         "status": "ok",
         "url": "https://github.com/MorpheApp/morphe-manager/releases/latest",
@@ -25,7 +25,7 @@
         "26.31"
       ],
       "upstream": {
-        "checkedAt": "2026-11-07T21:59:27.302128+00:00",
+        "checkedAt": "2026-11-08T06:18:44.229771+00:00",
         "source": "Google Play",
         "status": "ok",
         "url": "https://play.google.com/store/apps/details?id=ca.walmart.ecommerceapp&hl=en&gl=CA",
@@ -39,7 +39,7 @@
         "2026.10.26.1012468012.Release"
       ],
       "upstream": {
-        "checkedAt": "2026-11-07T21:59:28.149686+00:00",
+        "checkedAt": "2026-11-08T06:18:45.097602+00:00",
         "source": "Google Play",
         "status": "version_unavailable",
         "url": "https://play.google.com/store/apps/details?id=com.google.android.gm&hl=en&gl=CA"
@@ -52,7 +52,7 @@
         "18.5.4.993608717-release-arm64-v8a"
       ],
       "upstream": {
-        "checkedAt": "2026-11-07T21:59:28.988783+00:00",
+        "checkedAt": "2026-11-08T06:18:45.940196+00:00",
         "source": "Google Play",
         "status": "version_unavailable",
         "url": "https://play.google.com/store/apps/details?id=com.google.android.inputmethod.latin&hl=en&gl=CA"
@@ -65,7 +65,7 @@
         "1.4.9"
       ],
       "upstream": {
-        "checkedAt": "2026-11-07T21:59:29.839202+00:00",
+        "checkedAt": "2026-11-08T06:18:46.797360+00:00",
         "source": "Google Play",
         "status": "ok",
         "url": "https://play.google.com/store/apps/details?id=com.musicleague.app&hl=en&gl=CA",
@@ -80,7 +80,7 @@
         "6.1"
       ],
       "upstream": {
-        "checkedAt": "2026-11-07T21:59:30.681266+00:00",
+        "checkedAt": "2026-11-08T06:18:47.641745+00:00",
         "source": "Google Play",
         "status": "ok",
         "url": "https://play.google.com/store/apps/details?id=com.neave.zoomearth&hl=en&gl=CA",
@@ -94,7 +94,7 @@
         "6.1.20_31181"
       ],
       "upstream": {
-        "checkedAt": "2026-11-07T21:59:31.537203+00:00",
+        "checkedAt": "2026-11-08T06:18:48.494224+00:00",
         "source": "Google Play",
         "status": "ok",
         "url": "https://play.google.com/store/apps/details?id=com.oceanwing.battery.cam&hl=en&gl=CA",
@@ -108,7 +108,7 @@
         "1.2.1"
       ],
       "upstream": {
-        "checkedAt": "2026-11-07T21:59:32.375331+00:00",
+        "checkedAt": "2026-11-08T06:18:49.366972+00:00",
         "source": "Google Play",
         "status": "version_unavailable",
         "url": "https://play.google.com/store/apps/details?id=com.openwith.app&hl=en&gl=CA"
@@ -121,7 +121,7 @@
         "3.42.0"
       ],
       "upstream": {
-        "checkedAt": "2026-11-07T21:59:33.241205+00:00",
+        "checkedAt": "2026-11-08T06:18:50.222686+00:00",
         "source": "Google Play",
         "status": "ok",
         "url": "https://play.google.com/store/apps/details?id=com.pushpress.memberportal&hl=en&gl=CA",
@@ -135,11 +135,11 @@
         "3.36"
       ],
       "upstream": {
-        "checkedAt": "2026-11-07T21:59:34.126214+00:00",
+        "checkedAt": "2026-11-08T06:18:51.063213+00:00",
         "source": "Google Play",
         "status": "ok",
         "url": "https://play.google.com/store/apps/details?id=com.rosteam.gpsemulator&hl=en&gl=CA",
-        "version": "3.36"
+        "version": "3.37"
       }
     },
     "com.songsterr": {
@@ -149,7 +149,7 @@
         "7.1.6"
       ],
       "upstream": {
-        "checkedAt": "2026-11-07T21:59:34.970955+00:00",
+        "checkedAt": "2026-11-08T06:18:51.939575+00:00",
         "source": "Google Play",
         "status": "ok",
         "url": "https://play.google.com/store/apps/details?id=com.songsterr&hl=en&gl=CA",
@@ -163,7 +163,7 @@
         "4.25.1"
       ],
       "upstream": {
-        "checkedAt": "2026-11-07T21:59:35.822362+00:00",
+        "checkedAt": "2026-11-08T06:18:52.784458+00:00",
         "source": "Google Play",
         "status": "ok",
         "url": "https://play.google.com/store/apps/details?id=com.thaidigitalplatform.tagthai&hl=en&gl=CA",
@@ -177,7 +177,7 @@
         "12.11.0"
       ],
       "upstream": {
-        "checkedAt": "2026-11-07T21:59:36.670006+00:00",
+        "checkedAt": "2026-11-08T06:18:53.674170+00:00",
         "source": "Google Play",
         "status": "ok",
         "url": "https://play.google.com/store/apps/details?id=com.wongnai.android&hl=en&gl=CA",
@@ -189,5 +189,5 @@
   "releaseUrl": "https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.24",
   "releaseVersion": "1.0.0-dev.24",
   "schema": 1,
-  "upstreamCheckedAt": "2026-11-07T21:59:37.579798+00:00"
+  "upstreamCheckedAt": "2026-11-08T06:18:54.517487+00:00"
 }
