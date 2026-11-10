@@ -1,5 +1,31 @@
 # Eufy validation
 
+## New-version acceptance gate (6.1.30_32823)
+
+The candidate is declared in patch metadata only to allow explicit validation.
+**Do not promote the branch, publish a beta, or install a 6.1.30 patched
+output until the complete original 32823 APKM/XAPK has been reviewed.**
+The old 6.1.20 `CameraOnly` resource IDs are not yet confirmed for 6.1.30.
+
+Using original files obtained independently, check:
+
+- App ID `com.oceanwing.battery.cam`, version name `6.1.30_32823`,
+  version code `32823`, signing certificate and every included split.
+- The obfuscated Activity factory class, signature, both call branches,
+  invoke/move-result register counts, and encrypted-code bootstrap.
+- Each ID in `extensions/eufy/src/main/java/ca/mlkem/eufy/CameraOnly.java`
+  resolves to the intended 6.1.30 UI element; inspect main tab hierarchy.
+- Run the following patching command and `verify_apk.py` with new source
+  files; it must verify original DEX/payloads/ARM64 assets and branch flow.
+- Deliberately modify the manifest version and factory method in disposable
+  test copies and confirm that patching **rejects** them.
+- Repeat the same patch/negative tests on 6.1.20 to catch regressions.
+- Verify on-device login, camera video/audio, recordings, notifications,
+  background/foreground transitions and promotional coverage before release.
+
+Compiling the new metadata in GitHub Actions is a **source-only** check.
+It does not replace APK-specific verification or phone tests.
+
 Keep original APKs, extracted proprietary code, modified diagnostic inputs and
 signing keys outside this repository. Only patch source and tests are published.
 
