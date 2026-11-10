@@ -10,13 +10,23 @@ import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 
 private const val PACKAGE = "com.oceanwing.battery.cam"
-private const val VERSION = "6.1.20_31181"
+private const val LEGACY_VERSION = "6.1.20_31181"
+private const val CANDIDATE_VERSION = "6.1.30_32823"
+private val expectedVersionCodes = mapOf(
+    LEGACY_VERSION to "31181",
+    CANDIDATE_VERSION to "32823"
+)
 private const val HOOK = "Lca/mlkem/eufy/CameraOnly;"
 private val eufy = Compatibility(
     name = "Anker eufy", packageName = PACKAGE, apkFileType = ApkFileType.APKM,
-    description = "Original APKMirror 6.1.20_31181 (31181), including its asset-pack split. " +
-        "Experimental UI cleanup; protected startup and camera operation need phone testing.",
-    targets = listOf(AppTarget(version = VERSION, isExperimental = true, minSdk = 29))
+    description = "Original APKMirror APKM including the required asset-pack split. " +
+        "6.1.20_31181: statically verified, phone testing pending. " +
+        "6.1.30_32823: CANDIDATE ONLY; input DEX, UI IDs and native startup are not yet verified. " +
+        "Fail closed if the protected Activity factory shape changes.",
+    targets = listOf(
+        AppTarget(version = LEGACY_VERSION, isExperimental = true, minSdk = 29),
+        AppTarget(version = CANDIDATE_VERSION, isExperimental = true, minSdk = 29)
+    )
 )
 
 // Android 10+ calls A.instantiateClassLoader, which selects EufyApplication
@@ -37,8 +47,11 @@ private val legacyStartup = Fingerprint(
 private val eufyExtension = bytecodePatch {
     extendWith("extensions/eufy-camera-only.mpe")
     execute {
-        check(packageMetadata.packageName == PACKAGE && packageMetadata.versionName == VERSION &&
-            packageMetadata.versionCode == "31181") { "Requires original Anker eufy $VERSION (31181)." }
+        val expectedCode = expectedVersionCodes[packageMetadata.versionName]
+        check(packageMetadata.packageName == PACKAGE && expectedCode != null &&
+            packageMetadata.versionCode == expectedCode) {
+            "Requires an unmodified Anker eufy version in $expectedVersionCodes."
+        }
         val method = activityFactory.method
         val instructions = method.instructions.toList()
         check((instructions + legacyStartup.method.instructions.toList()).none {
