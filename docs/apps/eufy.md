@@ -1,8 +1,38 @@
 # Anker eufy: camera-focused interface
 
-**Experimental. Phone testing is required.** These patches target the verified
-original **6.1.20_31181 (31181)** APKMirror bundle, package
-`com.oceanwing.battery.cam`, on Android 10 or newer.
+**Experimental. Phone testing is required.** The previously reviewed and
+statically validated input is the original **6.1.20_31181 (31181)** APKMirror
+bundle, package `com.oceanwing.battery.cam`, on Android 10 or newer.
+
+## 6.1.30_32823 (32823) candidate — NOT YET VERIFIED
+
+Google Play's public version metadata reported **6.1.30_32823** on 2026-11-10.
+This version is **staged only on `beta/eufy-6.1.30-32823`**, with strict version
+and Activity-factory-shape checks. It has not been merged into `dev`, published
+as a beta, or marked safe for installation. This is **not** a claim that the
+old 6.1.20 fingerprint and UI resource IDs remain valid on 6.1.30.
+
+Before enabling it for users, obtain the complete original 6.1.30 APKM/XAPK
+(including asset packs) from a trustworthy source, then:
+
+1. Confirm package name, version name/code, original signing certificate,
+   complete splits and native libraries. Keep the original package outside Git.
+2. Compare the `Ls/h/e/l/l/A;` Activity factory method and both injection paths
+   against 6.1.20. Review protected startup, returned registers and branch
+   targets; revise fingerprints/hooks only if warranted by the new DEX.
+3. Audit every `CameraOnly` resource ID and the main navigation structure on the
+   new APK. Do not assume `MAIN_TABS`, marketing banners or close-button IDs
+   remained stable. New resource IDs require version-specific handling.
+4. Run the real APK patch/negative tests in
+   [Eufy validation](../../tests/eufy/README.md), verify preserved encrypted
+   payload/assets, and run Android UI regression tests.
+5. On a phone: verify launch/login, live video/audio, notifications, Events,
+   Profile, warning banners and app relaunch. Keep a rollback build available.
+
+**Blocker:** the new original APK bundle was not available for binary analysis
+in the current update. The repository's GitHub CI can prove source compilation,
+but it cannot establish protected-app startup or new-resource compatibility.
+The previous 6.1.20 version remains the documented patchable input.
 
 [Download the exact APKMirror APKM](https://www.apkmirror.com/apk/anker/anker-eufy/anker-eufy-6-1-20_31181-release/anker-eufy-6-1-20_31181-android-apk-download/).
 It contains the base APK and 34 splits, including the required asset pack. Use
