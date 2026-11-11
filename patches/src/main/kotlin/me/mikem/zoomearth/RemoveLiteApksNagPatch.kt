@@ -12,7 +12,7 @@ private val ZOOM_EARTH = Compatibility(
     packageName = "com.neave.zoomearth",
     apkFileType = ApkFileType.APK,
     targets = listOf(
-        AppTarget(version = "6.1"),
+        AppTarget(version = "6.1", isExperimental = true),
     ),
 )
 
@@ -39,14 +39,20 @@ private object LiteApksDialogBuilderAltFingerprint : Fingerprint(
 @Suppress("unused")
 val removeLiteApksNagPatch = bytecodePatch(
     name = "Remove LiteAPKS nag",
-    description = "Removes the injected LiteAPKS / 9MOD promotional popup from Zoom Earth.",
-    default = true,
+    description = "Legacy Zoom Earth 6.1 LiteAPKS/9MOD popup cleanup. Both original fingerprints must match; unverified on a phone.",
+    default = false,
 ) {
     dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(ZOOM_EARTH)
 
     execute {
-        LiteApksDialogBuilderFingerprint.method.addInstruction(0, "return-void")
-        LiteApksDialogBuilderAltFingerprint.method.addInstruction(0, "return-void")
+        // Resolve both version-specific methods before changing either. The
+        // older implementation could leave a partially modified input if the
+        // second fingerprint failed after the first return was inserted.
+        val primary = LiteApksDialogBuilderFingerprint.method
+        val alternate = LiteApksDialogBuilderAltFingerprint.method
+        check(primary !== alternate) { "Legacy Zoom Earth popup fingerprints must match distinct methods." }
+        primary.addInstruction(0, "return-void")
+        alternate.addInstruction(0, "return-void")
     }
 }
