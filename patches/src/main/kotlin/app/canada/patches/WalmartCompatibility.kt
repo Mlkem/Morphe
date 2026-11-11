@@ -51,10 +51,12 @@ internal fun canadaFingerprint(definingClass: String, name: String, parameters: 
 internal val walmartCompatibility = bytecodePatch {
     extendWith("extensions/canada.mpe")
     execute {
+        // The original 26.31 archive was inspected at code 26310017. Version
+        // names are reused across APK variants, so fail closed on the code too.
         check(packageMetadata.packageName == "ca.walmart.ecommerceapp" &&
-            (packageMetadata.versionName == "26.31" ||
+            ((packageMetadata.versionName == "26.31" && packageMetadata.versionCode == "26310017") ||
              (isWalmart26412() && packageMetadata.versionCode == "26410201"))) {
-            "Requires original Walmart Canada 26.31 or 26.41.2 (26410201). Do not force other builds."
+            "Requires original Walmart Canada 26.31 (26310017) or 26.41.2 (26410201). Do not force other builds."
         }
         if (isWalmart26412()) {
             val accessors = mapOf(
