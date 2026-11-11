@@ -75,6 +75,18 @@ def main() -> None:
     assert f"versionCode='{VERSION_CODE}'" in package_record, "Wrong versionCode"
     assert f"versionName='{VERSION_NAME}'" in package_record, "Wrong versionName"
     print("PASS: original APK manifest package and versionCode/versionName", flush=True)
+    # Fail closed if the new bundle has a different signing identity. APKMirror
+    # archives retain Anker's original signature on the base APK.
+    apksigner = shutil.which("apksigner") or str(aapt2.parent / "apksigner")
+    assert Path(apksigner).is_file(), "Android apksigner required"
+    cert_output = subprocess.run([apksigner, "verify", "--print-certs", str(BASE)],
+                                 text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                 timeout=120, check=True).stdout
+    certs = re.findall(r"Signer #\\d+ certificate SHA-256 digest:\\s*([0-9a-fA-F]{64})", cert_output)
+    assert len(certs) == 1, f"Expected one original signer, found {len(certs)}"
+    expected_cert = "166c234557b776cad8ac94c979379e48df387d4d8f96a343df40fcd905bff686"
+    assert certs[0].lower() == expected_cert, "Eufy 32823 signer differs from reviewed 31181"
+    print("PASS: Eufy 32823 signer matches reviewed 31181", flush=True)
 
     with zipfile.ZipFile(BASE) as z:
         dex_names = [n for n in z.namelist() if re.fullmatch(r"classes[0-9]*\.dex", n)]

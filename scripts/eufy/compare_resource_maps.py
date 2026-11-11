@@ -22,7 +22,7 @@ OLD_URL = TARGET.replace("6-1-30_32823", "6-1-20_31181")
 JAVA_SOURCE = Path(__file__).resolve().parents[2] / "extensions/eufy/src/main/java/ca/mlkem/eufy/CameraOnly.java"
 
 def source_id(source: str, name: str) -> int:
-    hits = re.findall(r"\\b" + re.escape(name) + r"\\s*=\\s*(0x[0-9a-fA-F]+)\\b", source)
+    hits = re.findall(r"\b" + re.escape(name) + r"\s*=\s*(0x[0-9a-fA-F]+)\b", source)
     assert len(hits) == 1, f"Expected exactly one ID declaration for {name}; found {hits}"
     return int(hits[0], 16)
 
