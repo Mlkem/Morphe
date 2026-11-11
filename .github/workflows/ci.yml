@@ -29,6 +29,11 @@ jobs:
           python3 scripts/test_manager_urls.py
       - name: Android UI regressions
         run: ./gradlew -p tests/walmart/android test --no-daemon
+      - name: Audit public Eufy 6.1.30 original bundle (candidate branch only)
+        if: github.event_name == 'pull_request' && github.head_ref == 'beta/eufy-6.1.30-32823'
+        run: |
+          python3 -m pip install --disable-pip-version-check 'curl_cffi>=0.7,<1.0' 'beautifulsoup4>=4.12,<5' 'lxml>=5,<7'
+          python3 scripts/eufy/fetch_upstream_32823.py
       - uses: actions/upload-artifact@v4
         with:
           name: mlkem-patches-test-build
