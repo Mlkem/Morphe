@@ -104,9 +104,13 @@ def main() -> None:
               "opcodes", opcodes, flush=True)
         assert method.get_code().get_registers_size() == 5, "Factory register shape differs"
         assert opcodes == EXPECTED_FACTORY, "Factory instruction signature differs"
-        call_refs = [i.get_output() for i in ins if i.get_name() in ("invoke-virtual","invoke-super")]
-        assert len(call_refs) >= 2 and all(EXPECTED_FACTORY_CALL in ref for ref in call_refs[:2]), \
-            "Activity factory invocation targets changed"
+        factory_calls = [(idx, i.get_name(), i.get_output())
+                         for idx, i in enumerate(ins)
+                         if i.get_name() in ("invoke-virtual", "invoke-super")
+                         and EXPECTED_FACTORY_CALL in i.get_output()]
+        print("Factory call positions:", [(idx, op) for idx, op, _ in factory_calls], flush=True)
+        assert [idx for idx, _, _ in factory_calls] == [7, 10], \
+            "Expected delegated and framework Activity factory paths at 7 and 10"
         assert any(m.get_name()=="onCreate" and m.get_descriptor().endswith("V")
                    for m in methods[LEGACY_CLASS]), "Legacy startup onCreate changed"
         print("PASS: protected factory instruction shape, both delegated/framework paths, startup", flush=True)
