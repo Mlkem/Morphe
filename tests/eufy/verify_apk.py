@@ -21,14 +21,36 @@ for name in ('assets/ijiami.dat', 'assets/IJMDal.Data', 'classes2.dex', 'classes
 # Verify every original asset and every retained native library, across splits.
 # The test command keeps arm64-v8a; other architectures may be stripped by Morphe.
 assets = set()
+unmatched = []
+output_names = set(out.namelist())
 for split in bundle.namelist():
     if not split.endswith('.apk'): continue
     with zipfile.ZipFile(io.BytesIO(bundle.read(split))) as apk:
         for name in apk.namelist():
             if name.endswith('/'): continue
             if name.startswith('assets/') or name.startswith('lib/arm64-v8a/'):
-                assert apk.read(name) == out.read(name), f'missing/changed asset or arm64 library: {name}'
+                content = apk.read(name)
+                if name in output_names:
+                    assert content == out.read(name), f'changed asset or arm64 library: {name}'
+                else:
+                    # APKEditor may rewrite the path encoding for non-ASCII ZIP
+                    # filenames while retaining their exact content. Never
+                    # permit absent bytes: verify every such entry by digest.
+                    unmatched.append((name, hashlib.sha256(content).digest()))
                 assets.add(name)
+
+if unmatched:
+    output_digests = {}
+    for name in out.namelist():
+        if not (name.startswith('assets/') or name.startswith('lib/arm64-v8a/')):
+            continue
+        digest = hashlib.sha256(out.read(name)).digest()
+        output_digests.setdefault(digest, []).append(name)
+    for name, digest in unmatched:
+        matches = output_digests.get(digest, [])
+        assert matches, f'missing asset or arm64 library bytes after merge: {name}'
+        print('Preserved bytes under normalized ZIP filename:', repr(name),
+              '->', repr(matches[0]))
 
 original = DEX(base.read('classes.dex'))
 classes = {}
