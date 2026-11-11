@@ -79,10 +79,15 @@ def main() -> None:
     # archives retain Anker's original signature on the base APK.
     apksigner = shutil.which("apksigner") or str(aapt2.parent / "apksigner")
     assert Path(apksigner).is_file(), "Android apksigner required"
-    cert_output = subprocess.run([apksigner, "verify", "--print-certs", str(BASE)],
-                                 text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                 timeout=120, check=True).stdout
-    certs = re.findall(r"Signer #\d+ certificate SHA-256 digest:\s*([0-9a-fA-F]{64})", cert_output)
+    cert_check = subprocess.run([apksigner, "verify", "--print-certs", "--verbose", str(BASE)],
+                                text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                timeout=120, check=True)
+    cert_output = cert_check.stdout + "\n" + cert_check.stderr
+    certs = re.findall(r"certificate SHA-256 digest:\s*([0-9a-fA-F]{64})", cert_output, re.I)
+    if len(certs) != 1:
+        print("Signer metadata:", [line[:240] for line in cert_output.splitlines()
+                                    if "signer" in line.lower() or "certificate" in line.lower()][:16],
+              flush=True)
     assert len(certs) == 1, f"Expected one original signer, found {len(certs)}"
     expected_cert = "166c234557b776cad8ac94c979379e48df387d4d8f96a343df40fcd905bff686"
     assert certs[0].lower() == expected_cert, "Eufy 32823 signer differs from reviewed 31181"
