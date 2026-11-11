@@ -1,3 +1,9 @@
+## [1.0.0-dev.25](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.24...v1.0.0-dev.25) (2026-11-11)
+
+### ✨ New Features
+
+* **eufy:** validate 6.1.30 beta with build-specific UI mappings ([b753138](https://github.com/Mlkem/Morphe/commit/b75313864023dd188b79ad5ce1959149d4332ea9))
+
 ## [1.0.0-dev.24](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.23...v1.0.0-dev.24) (2026-11-05)
 
 ### ✨ New Features
