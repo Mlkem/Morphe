@@ -23,6 +23,7 @@ jobs:
           python3 -m pip install --disable-pip-version-check 'curl_cffi>=0.7,<1.0' 'beautifulsoup4>=4.12,<5' 'lxml>=5,<7' 'androguard>=4.1,<5'
           python3 scripts/eufy/fetch_upstream_32823.py
           python3 scripts/eufy/inspect_32823.py
+          python3 scripts/eufy/compare_resource_maps.py
       - name: Build and inspect patches
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
