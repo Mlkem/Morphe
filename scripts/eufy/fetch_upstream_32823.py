@@ -12,7 +12,7 @@ import json
 import os
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
-from zipfile import ZipFile, BadZipFile
+from zipfile import ZipFile, is_zipfile
 
 from bs4 import BeautifulSoup
 from curl_cffi import requests as curl
@@ -100,7 +100,7 @@ def download(url: str, target: Path) -> tuple[str, int, str]:
 
 
 def inspect(path: Path, source: str, sha256: str, size: int) -> dict:
-    if not ZipFile.is_zipfile(path):
+    if not is_zipfile(path):
         raise RuntimeError("Downloaded file is not a ZIP/APKM/XAPK")
     if sha256 != EXPECTED_APKM_SHA256 and source == "APKMirror":
         raise RuntimeError("APKMirror file SHA-256 does not match published release")
