@@ -74,10 +74,11 @@ def apkmirror_link() -> str:
 
 
 def download(url: str, target: Path) -> tuple[str, int, str]:
-    """Use streaming; reject redirects outside public APK mirror/CDN hosts."""
+    """Stream public APK bytes and close the response explicitly."""
     h = hashlib.sha256()
     n = 0
-    with sess.get(url, stream=True, timeout=300, allow_redirects=True) as response:
+    response = sess.get(url, stream=True, timeout=300, allow_redirects=True)
+    try:
         print("Binary response", response.status_code,
               "host", urlparse(response.url).netloc,
               "content-type", response.headers.get("Content-Type", ""),
@@ -96,7 +97,9 @@ def download(url: str, target: Path) -> tuple[str, int, str]:
                 h.update(block)
                 if n % (100 * 1024 * 1024) < len(block):
                     print(f"Transferred {n // (1024*1024)} MiB", flush=True)
-    return h.hexdigest(), n, urlparse(response.url).netloc
+        return h.hexdigest(), n, urlparse(response.url).netloc
+    finally:
+        response.close()
 
 
 def inspect(path: Path, source: str, sha256: str, size: int) -> dict:
