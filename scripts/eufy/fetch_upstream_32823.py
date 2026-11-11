@@ -55,8 +55,8 @@ def candidates(soup: BeautifulSoup, *, max_count: int = 12) -> list[str]:
             if any(word in a.get("href", "").lower() for word in ("download", "apkm", "key="))][:max_count]
 
 
-def apkmirror_link() -> str:
-    soup, page_url = page(TARGET)
+def apkmirror_link(target_url: str = TARGET) -> str:
+    soup, page_url = page(target_url)
     button = soup.select_one("a.downloadButton[href]")
     if not button:
         print("Variant candidates:", candidates(soup), flush=True)
