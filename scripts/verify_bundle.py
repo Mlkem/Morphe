@@ -24,7 +24,7 @@ assert len(eufy)==2
 for p in eufy:
     assert not p['default']
     assert p['compatiblePackages'][0]['apkFileType']=='APKM'
-    assert [t['version'] for t in p['compatiblePackages'][0]['targets']]==['6.1.20_31181']
+    assert [t['version'] for t in p['compatiblePackages'][0]['targets']]==['6.1.20_31181', '6.1.30_32823']
     assert all(t['isExperimental'] and t['minSdk']==29 for t in p['compatiblePackages'][0]['targets'])
 gmail=next(p for p in patches if p['name']=='Gmail account visibility')
 assert not gmail['default'] and len(gmail['compatiblePackages']) == 1

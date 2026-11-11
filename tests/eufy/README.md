@@ -1,5 +1,23 @@
 # Eufy validation
 
+## 6.1.30_32823 acceptance gate
+
+The original 32823 APKMirror APKM was SHA-256 verified and patched through
+GitHub CI using the real Morphe Desktop patcher on November 11, 2026.
+The original 31181 APKM is included as a separate regression input.
+All 12 modified resource IDs are verified by name against both original base
+APKs and checked again after producing the 32823 patched APK. The original
+factory control flow, both hooks, encrypted DEX and native/asset data are checked.
+
+The patch extension selects a different static hook entry for 32823 so its
+resource table cannot accidentally target an unrelated old numeric ID.
+The original version-code and factory-instruction guards remain enabled.
+
+These are **binary and simulated UI checks only**. Phone testing still must
+confirm actual startup, sign-in, camera video/audio, recordings, notifications,
+background/foreground transitions, menu accessibility and promotional coverage.
+Do not mark stable or claim real-device compatibility based on CI.
+
 Keep original APKs, extracted proprietary code, modified diagnostic inputs and
 signing keys outside this repository. Only patch source and tests are published.
 
@@ -10,7 +28,8 @@ original full APKM from [the app guide](../../docs/apps/eufy.md).
 java -Xmx5g -jar "$MORPHE_JAR" patch "$ORIGINAL_APKM" -p "$MPP" \
   --exclusive -e 'Hide Eufy Discover, Smart and Shop' -e 'Hide Eufy promotions' \
   --unsigned --validate --striplibs arm64-v8a -o "$PATCHED_APK" -r "$RESULT_JSON"
-python3 tests/eufy/verify_apk.py "$ORIGINAL_APKM" "$PATCHED_APK"
+python3 tests/eufy/verify_apk.py "$ORIGINAL_APKM" "$PATCHED_APK" 32823
+python3 scripts/eufy/compare_resource_maps.py --patched "$PATCHED_APK"
 ANDROID_JAR="$ANDROID_JAR" ./gradlew -p tests/walmart/android test \
   --tests ca.mlkem.eufy.CameraOnlyTest --no-daemon
 ```
@@ -37,11 +56,6 @@ Negative checks must fail without writing an output APK:
   the reviewed instruction shape.
 - Verify the old dev.18 patched output is rejected too; the old shell hook must
   never be stacked with the replacement factory hook.
-
-Also apply **APKMirror search for collection apps** to the original official
-Manager 2.4.0-dev.4 APK, and run `scripts/test_manager_urls.py`. The URL test must
-pin only Eufy `6.1.20_31181`; unspecified/other versions retain package/version
-search rather than silently pointing at build 31181.
 
 Real-device startup, camera behavior, notifications and total ad coverage remain
 separate phone tests. Do not mark the collection stable based on these checks.

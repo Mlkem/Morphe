@@ -9,6 +9,9 @@ from loguru import logger
 logger.remove()
 from androguard.core.dex import DEX
 
+assert len(sys.argv) == 4 and sys.argv[3] in ('31181', '32823'), 'Usage: verify_apk.py original.apkm patched.apk 31181|32823'
+expected_hooks = ({'enableNavigation', 'enablePromotions'} if sys.argv[3] == '31181'
+                  else {'enableNavigation32823', 'enablePromotions32823'})
 bundle = zipfile.ZipFile(sys.argv[1])
 base = zipfile.ZipFile(io.BytesIO(bundle.read('base.apk')))
 out = zipfile.ZipFile(sys.argv[2])
@@ -21,14 +24,36 @@ for name in ('assets/ijiami.dat', 'assets/IJMDal.Data', 'classes2.dex', 'classes
 # Verify every original asset and every retained native library, across splits.
 # The test command keeps arm64-v8a; other architectures may be stripped by Morphe.
 assets = set()
+unmatched = []
+output_names = set(out.namelist())
 for split in bundle.namelist():
     if not split.endswith('.apk'): continue
     with zipfile.ZipFile(io.BytesIO(bundle.read(split))) as apk:
         for name in apk.namelist():
             if name.endswith('/'): continue
             if name.startswith('assets/') or name.startswith('lib/arm64-v8a/'):
-                assert apk.read(name) == out.read(name), f'missing/changed asset or arm64 library: {name}'
+                content = apk.read(name)
+                if name in output_names:
+                    assert content == out.read(name), f'changed asset or arm64 library: {name}'
+                else:
+                    # APKEditor may rewrite the path encoding for non-ASCII ZIP
+                    # filenames while retaining their exact content. Never
+                    # permit absent bytes: verify every such entry by digest.
+                    unmatched.append((name, hashlib.sha256(content).digest()))
                 assets.add(name)
+
+if unmatched:
+    output_digests = {}
+    for name in out.namelist():
+        if not (name.startswith('assets/') or name.startswith('lib/arm64-v8a/')):
+            continue
+        digest = hashlib.sha256(out.read(name)).digest()
+        output_digests.setdefault(digest, []).append(name)
+    for name, digest in unmatched:
+        matches = output_digests.get(digest, [])
+        assert matches, f'missing asset or arm64 library bytes after merge: {name}'
+        print('Preserved bytes under normalized ZIP filename:', repr(name),
+              '->', repr(matches[0]))
 
 original = DEX(base.read('classes.dex'))
 classes = {}
@@ -62,7 +87,7 @@ for cls in original.get_classes():
             for call in calls:
                 assert ins[call+1] == ('move-result-object', 'v0')
                 entries = ins[call+2:call+4]
-                assert {text.split('->')[1].split('(')[0] for _,text in entries} == {'enableNavigation', 'enablePromotions'}
+                assert {text.split('->')[1].split('(')[0] for _,text in entries} == expected_hooks, 'wrong version-specific hook'
                 assert all(op == 'invoke-static' and text.startswith('v0, ') and
                            '(Landroid/app/Activity;)V' in text for op,text in entries)
             assert [i for i,_ in hooks] == [c+j for c in calls for j in (2,3)]
@@ -93,7 +118,7 @@ for cls in original.get_classes():
             assert code(method) == code(patched), f'unrelated loader method changed: {k}'
 
 assert 'Lca/mlkem/eufy/CameraOnly;' in classes
-print(f'PASS: both Activity factory paths hooked with both options; original branch targets preserved; other loader methods unchanged; '
+print(f'PASS: Eufy {sys.argv[3]} uses {sorted(expected_hooks)}; both Activity factory paths hooked with both options; original branch targets preserved; other loader methods unchanged; '
       f'{len(assets)} assets/arm64 libraries preserved; no duplicate classes; '
       'encrypted payload and secondary DEX files byte-identical.')
 print('APK SHA-256:', hashlib.file_digest(Path(sys.argv[2]).open('rb'), 'sha256').hexdigest())

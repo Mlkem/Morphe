@@ -17,6 +17,13 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
+      - name: Audit public Eufy 6.1.30 original bundle (candidate branch only)
+        if: github.event_name == 'pull_request' && github.head_ref == 'beta/eufy-6.1.30-32823'
+        run: |
+          python3 -m pip install --disable-pip-version-check 'curl_cffi>=0.7,<1.0' 'beautifulsoup4>=4.12,<5' 'lxml>=5,<7' 'androguard>=4.1,<5'
+          python3 scripts/eufy/fetch_upstream_32823.py
+          python3 scripts/eufy/inspect_32823.py
+          python3 scripts/eufy/compare_resource_maps.py
       - name: Build and inspect patches
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -27,6 +34,35 @@ jobs:
           python3 -m unittest discover -s tests/updates -p 'test_*.py'
           python3 scripts/test_walmart_logic.py
           python3 scripts/test_manager_urls.py
+      - name: Apply both Eufy 6.1.30 patches to original APKM (candidate branch only)
+        if: github.event_name == 'pull_request' && github.head_ref == 'beta/eufy-6.1.30-32823'
+        run: |
+          curl --fail --location --retry 3 --silent --show-error \
+            https://github.com/MorpheApp/morphe-desktop/releases/download/v2.1.1/morphe-desktop-2.1.1-all.jar \
+            -o "$RUNNER_TEMP/morphe-desktop.jar"
+          MPP=$(find patches/build/libs -maxdepth 1 -name 'patches-*.mpp' ! -name '*sources*' ! -name '*javadoc*' | head -n 1)
+          test -n "$MPP"
+          ORIGINAL="$RUNNER_TEMP/eufy-32823-binary-qa/original.apkm"
+          PATCHED="$RUNNER_TEMP/eufy-32823-binary-qa/patched.apk"
+          test -f "$ORIGINAL"
+          java -Xmx5g -jar "$RUNNER_TEMP/morphe-desktop.jar" patch "$ORIGINAL" -p "$MPP" \
+            --exclusive -e 'Hide Eufy Discover, Smart and Shop' -e 'Hide Eufy promotions' \
+            --unsigned --validate --striplibs arm64-v8a -o "$PATCHED" \
+            -r "$RUNNER_TEMP/eufy-32823-binary-qa/patch-result.json"
+          python3 tests/eufy/verify_apk.py "$ORIGINAL" "$PATCHED" 32823
+          python3 scripts/eufy/compare_resource_maps.py --patched "$PATCHED"
+      - name: Regression test original Eufy 6.1.20 APKM (candidate branch only)
+        if: github.event_name == 'pull_request' && github.head_ref == 'beta/eufy-6.1.30-32823'
+        run: |
+          MPP=$(find patches/build/libs -maxdepth 1 -name 'patches-*.mpp' ! -name '*sources*' ! -name '*javadoc*' | head -n 1)
+          ORIGINAL="$RUNNER_TEMP/eufy-32823-binary-qa/original-31181.apkm"
+          PATCHED="$RUNNER_TEMP/eufy-32823-binary-qa/patched-31181.apk"
+          test -f "$ORIGINAL"
+          java -Xmx5g -jar "$RUNNER_TEMP/morphe-desktop.jar" patch "$ORIGINAL" -p "$MPP" \
+            --exclusive -e 'Hide Eufy Discover, Smart and Shop' -e 'Hide Eufy promotions' \
+            --unsigned --validate --striplibs arm64-v8a -o "$PATCHED" \
+            -r "$RUNNER_TEMP/eufy-32823-binary-qa/patch-result-31181.json"
+          python3 tests/eufy/verify_apk.py "$ORIGINAL" "$PATCHED" 31181
       - name: Android UI regressions
         run: ./gradlew -p tests/walmart/android test --no-daemon
       - uses: actions/upload-artifact@v4

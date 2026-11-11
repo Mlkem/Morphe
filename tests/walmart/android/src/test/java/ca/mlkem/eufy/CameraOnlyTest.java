@@ -178,6 +178,57 @@ public class CameraOnlyTest {
         assertEquals(View.GONE, root.getChildAt(6).getVisibility());
     }
 
+    @Test public void modern32823UsesOnlyRemappedUiIds() {
+        Activity a = activity();
+        LinearLayout root = new LinearLayout(a), oldStrip = new LinearLayout(a), newStrip = new LinearLayout(a);
+        for (String title : new String[]{"Home", "Discover", "Events", "Smart", "Shop"}) {
+            oldStrip.addView(tab(a, title));
+            newStrip.addView(tab(a, title));
+        }
+        LinearLayout oldBar = bar(a, oldStrip), newBar = bar(a, newStrip);
+        newBar.setId(CameraOnly.MAIN_TABS_32823);
+        root.addView(oldBar); root.addView(newBar);
+        TextView oldOffer = text(a, "Unrelated new-version element", CameraOnly.HOME_BANNER);
+        TextView newOffer = text(a, "Real marketing", CameraOnly.HOME_BANNER_32823);
+        TextView oldAi = text(a, "Unrelated new-version element", CameraOnly.AI_BANNER);
+        TextView newAi = text(a, "Real AI offer", CameraOnly.AI_BANNER_32823);
+        root.addView(oldOffer); root.addView(newOffer); root.addView(oldAi); root.addView(newAi);
+        CameraOnly cleaner = new CameraOnly();
+        cleaner.setTestBuild(32823);
+        cleaner.setTestFlags(CameraOnly.NAV | CameraOnly.PROMOTIONS);
+        cleaner.apply(root);
+        assertEquals(View.VISIBLE, oldStrip.getChildAt(1).getVisibility());
+        assertEquals(View.VISIBLE, oldStrip.getChildAt(3).getVisibility());
+        assertEquals(View.VISIBLE, oldStrip.getChildAt(4).getVisibility());
+        for (int i : new int[]{1, 3, 4}) assertEquals(View.GONE, newStrip.getChildAt(i).getVisibility());
+        assertEquals(View.VISIBLE, oldOffer.getVisibility());
+        assertEquals(View.VISIBLE, oldAi.getVisibility());
+        assertEquals(View.GONE, newOffer.getVisibility());
+        assertEquals(View.GONE, newAi.getVisibility());
+    }
+
+    @Test public void modern32823PopupUsesOnlyNewSignature() {
+        Activity a = activity();
+        CameraOnly cleaner = new CameraOnly();
+        cleaner.setTestBuild(32823);
+        cleaner.setTestFlags(CameraOnly.PROMOTIONS);
+        LinearLayout old = new LinearLayout(a);
+        old.addView(text(a, "Old marker", CameraOnly.SHOP_IMAGE));
+        TextView oldClose = text(a, "Old close", CameraOnly.SHOP_CLOSE);
+        old.addView(oldClose);
+        oldClose.setOnClickListener(v -> fail("Older ID must not close a new-version popup"));
+        cleaner.apply(old);
+        LinearLayout card = new LinearLayout(a);
+        card.addView(text(a, "Offer", CameraOnly.SHOP_IMAGE_32823));
+        TextView close = text(a, "Close", CameraOnly.SHOP_CLOSE_32823);
+        card.addView(close);
+        AlertDialog dialog = new AlertDialog.Builder(a).setView(card).create();
+        close.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
+        cleaner.apply(dialog.getWindow().getDecorView());
+        assertFalse(dialog.isShowing());
+    }
+
     @Test public void optionsAreIndependent() {
         Activity a = activity(); LinearLayout root = new LinearLayout(a), strip = new LinearLayout(a);
         strip.addView(tab(a, "Home")); strip.addView(tab(a, "Shop")); root.addView(bar(a, strip));
