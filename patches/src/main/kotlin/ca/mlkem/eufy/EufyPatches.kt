@@ -77,6 +77,9 @@ private val eufyExtension = bytecodePatch {
 
 context(_: BytecodePatchContext)
 private fun install(entry: String) {
+    // The resource table changed in 32823. Encode the reviewed version-specific
+    // extension method into both injection paths, rather than guessing at runtime.
+    val selectedEntry = if (context.packageMetadata.versionName == CANDIDATE_VERSION) "${entry}32823" else entry
     val method = activityFactory.method
     val calls = method.instructions.withIndex().filter {
         (it.value as? ReferenceInstruction)?.reference.toString() == FACTORY_CALL
@@ -85,7 +88,7 @@ private fun install(entry: String) {
     // Insert after each move-result, not before the shared return: the fallback
     // branch jumps directly to that return and would skip an insertion there.
     for (index in calls.reversed()) {
-        method.addInstruction(index + 2, "invoke-static {v0}, $HOOK->$entry(Landroid/app/Activity;)V")
+        method.addInstruction(index + 2, "invoke-static {v0}, $HOOK->$selectedEntry(Landroid/app/Activity;)V")
     }
 }
 

@@ -115,20 +115,10 @@ def main() -> None:
                    for m in methods[LEGACY_CLASS]), "Legacy startup onCreate changed"
         print("PASS: protected factory instruction shape, both delegated/framework paths, startup", flush=True)
 
-    result = subprocess.run([str(aapt2), "dump", "resources", str(BASE)],
-                            text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                            timeout=120, check=True)
-    lines = result.stdout.splitlines()
-    failures = []
-    for resid, label in IDS.items():
-        pat = re.compile(rf"\b0x{resid:08x}\b", re.IGNORECASE)
-        hits = [s.strip() for s in lines if pat.search(s)][:3]
-        print(f"Resource {label} (0x{resid:08x}): {hits or '<missing>'}", flush=True)
-        if not hits:
-            failures.append(label)
-    assert not failures, f"Legacy Eufy UI resource IDs missing: {failures}"
-    print("PASS: all 12 old UI resource IDs exist. Semantic targets still require comparison/phone testing.",
-          flush=True)
+    # Old numeric IDs still exist, but now identify unrelated resources.
+    # The name-accurate old/new ID table is checked, along with the compiled
+    # extension constants, by compare_resource_maps.py before patching.
+    print("Factory preflight complete; version-specific resource map checked separately.", flush=True)
 
 
 if __name__ == "__main__":

@@ -18,7 +18,7 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-/** Exact 6.1.20 UI targets. No permissions, network access or camera API calls. */
+/** Version-specific UI IDs confirmed against original 6.1.20 and 6.1.30 APKMs. No network/camera API calls. */
 public final class CameraOnly implements Application.ActivityLifecycleCallbacks {
     static final int NAV = 1, PROMOTIONS = 2;
     static final int MAIN_TABS = 0x7f0a1719;
@@ -26,6 +26,15 @@ public final class CameraOnly implements Application.ActivityLifecycleCallbacks 
     static final int SHOP_IMAGE = 0x7f0a1a01, SHOP_CLOSE = 0x7f0a19ff;
     static final int SOLAR_IMAGE = 0x7f0a1284, SOLAR_CLOSE = 0x7f0a1285, SOLAR_MORE = 0x7f0a1e2b;
     private static final int DISCOVER = 0x7f14082b, SMART = 0x7f1439fa, SHOP = 0x7f1437dd, HOME = 0x7f1439f9;
+    // 6.1.30 (32823) remappings are name-verified in the original APK's resource
+    // table. Old numeric values now identify *different* views/strings, so the
+    // source version selects the correct entry points at patch time.
+    static final int MAIN_TABS_32823 = 0x7f0a1739;
+    static final int HOME_BANNER_32823 = 0x7f0a0c0b, AI_BANNER_32823 = 0x7f0a0c0a;
+    static final int SHOP_IMAGE_32823 = 0x7f0a1a22, SHOP_CLOSE_32823 = 0x7f0a1a20;
+    static final int SOLAR_IMAGE_32823 = 0x7f0a1298, SOLAR_CLOSE_32823 = 0x7f0a1299, SOLAR_MORE_32823 = 0x7f0a1e56;
+    static final int DISCOVER_32823 = 0x7f140858, SMART_32823 = 0x7f143a42, SHOP_32823 = 0x7f143825, HOME_32823 = 0x7f143a41;
+    private static final int BUILD_31181 = 31181, BUILD_32823 = 32823;
     private static final String PACKAGE = "com.oceanwing.battery.cam";
     private static final String BUSINESS_CARD = "com.oceanwing.battery.cam.account.ui.ItemBusinessBannerView";
     private static CameraOnly instance;
@@ -35,12 +44,15 @@ public final class CameraOnly implements Application.ActivityLifecycleCallbacks 
     private final WeakHashMap<Activity, Boolean> registered = new WeakHashMap<>();
     private final WeakHashMap<View, HiddenState> hidden = new WeakHashMap<>();
     private int flags;
+    private int targetBuild = BUILD_31181;
     private boolean applying;
 
-    public static void enableNavigation(Activity activity) { enable(activity, NAV); }
-    public static void enablePromotions(Activity activity) { enable(activity, PROMOTIONS); }
+    public static void enableNavigation(Activity activity) { enable(activity, NAV, BUILD_31181); }
+    public static void enablePromotions(Activity activity) { enable(activity, PROMOTIONS, BUILD_31181); }
+    public static void enableNavigation32823(Activity activity) { enable(activity, NAV, BUILD_32823); }
+    public static void enablePromotions32823(Activity activity) { enable(activity, PROMOTIONS, BUILD_32823); }
 
-    private static void enable(Activity activity, int flag) {
+    private static void enable(Activity activity, int flag, int versionCode) {
         if (activity == null) return;
         // AppComponentFactory returns an unattached Activity. Registration is
         // explicitly supported before onCreate (API 29); Context APIs are not.
@@ -48,6 +60,7 @@ public final class CameraOnly implements Application.ActivityLifecycleCallbacks 
         // its modern path. Register on the actual Activity on BOTH factory paths.
         if (instance == null) instance = new CameraOnly();
         instance.flags |= flag;
+        instance.targetBuild = versionCode;
         if (!instance.registered.containsKey(activity)) {
             activity.registerActivityLifecycleCallbacks(instance);
             instance.registered.put(activity, Boolean.TRUE);
@@ -80,13 +93,19 @@ public final class CameraOnly implements Application.ActivityLifecycleCallbacks 
     }
 
     void apply(View root) {
+        // A new build reuses the old IDs for unrelated views. Never search the
+        // old IDs when running 32823, even if the correct targets are absent.
+        boolean modern = targetBuild == BUILD_32823;
         if ((flags & NAV) != 0) {
-            View bar = root.findViewById(MAIN_TABS);
+            View bar = root.findViewById(modern ? MAIN_TABS_32823 : MAIN_TABS);
             if (bar instanceof ViewGroup) {
                 Resources res = root.getResources();
                 hideTabs((ViewGroup) bar,
-                    new String[]{text(res, DISCOVER, "Discover"), text(res, SMART, "Smart"), text(res, SHOP, "Shop")},
-                    text(res, HOME, "Home"));
+                    new String[]{
+                        text(res, modern ? DISCOVER_32823 : DISCOVER, "Discover"),
+                        text(res, modern ? SMART_32823 : SMART, "Smart"),
+                        text(res, modern ? SHOP_32823 : SHOP, "Shop")
+                    }, text(res, modern ? HOME_32823 : HOME, "Home"));
             }
         }
         if ((flags & PROMOTIONS) == 0) return;
@@ -96,7 +115,9 @@ public final class CameraOnly implements Application.ActivityLifecycleCallbacks 
         while (!queue.isEmpty() && visited++ < 4096) {
             View view = queue.removeFirst();
             int id = view.getId();
-            if (id == HOME_BANNER || id == AI_BANNER || BUSINESS_CARD.equals(view.getClass().getName())) {
+            if (id == (modern ? HOME_BANNER_32823 : HOME_BANNER) ||
+                id == (modern ? AI_BANNER_32823 : AI_BANNER) ||
+                BUSINESS_CARD.equals(view.getClass().getName())) {
                 collapse(view);
                 continue;
             }
@@ -107,8 +128,10 @@ public final class CameraOnly implements Application.ActivityLifecycleCallbacks 
         }
         // Exact multi-view signatures. Only the native close control is invoked;
         // no generic dialog dismissal, Back action or purchase button is used.
-        closeOffer(root, SHOP_IMAGE, SHOP_CLOSE, 0);
-        closeOffer(root, SOLAR_IMAGE, SOLAR_CLOSE, SOLAR_MORE);
+        closeOffer(root, modern ? SHOP_IMAGE_32823 : SHOP_IMAGE,
+            modern ? SHOP_CLOSE_32823 : SHOP_CLOSE, 0);
+        closeOffer(root, modern ? SOLAR_IMAGE_32823 : SOLAR_IMAGE,
+            modern ? SOLAR_CLOSE_32823 : SOLAR_CLOSE, modern ? SOLAR_MORE_32823 : SOLAR_MORE);
     }
 
     private void closeOffer(View root, int marker, int closeId, int secondMarker) {
@@ -256,4 +279,8 @@ public final class CameraOnly implements Application.ActivityLifecycleCallbacks 
     // Package-scoped constructor for Android view regression tests.
     CameraOnly() {}
     void setTestFlags(int flags) { this.flags = flags; }
+    void setTestBuild(int versionCode) {
+        if (versionCode != BUILD_31181 && versionCode != BUILD_32823) throw new IllegalArgumentException("Unsupported test build");
+        this.targetBuild = versionCode;
+    }
 }

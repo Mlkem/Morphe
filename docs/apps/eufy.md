@@ -1,38 +1,36 @@
 # Anker eufy: camera-focused interface
 
-**Experimental. Phone testing is required.** The previously reviewed and
-statically validated input is the original **6.1.20_31181 (31181)** APKMirror
-bundle, package `com.oceanwing.battery.cam`, on Android 10 or newer.
+**Experimental. Phone testing is required.** The verified 6.1.20_31181 (31181)
+and binary-checked 6.1.30_32823 (32823) APKMirror bundles use the same package,
+`com.oceanwing.battery.cam`, on Android 10 or newer.
 
-## 6.1.30_32823 (32823) candidate — NOT YET VERIFIED
+## 6.1.30_32823 (32823) — binary-verified candidate, phone test pending
 
-Google Play's public version metadata reported **6.1.30_32823** on 2026-11-10.
-This version is **staged only on `beta/eufy-6.1.30-32823`**, with strict version
-and Activity-factory-shape checks. It has not been merged into `dev`, published
-as a beta, or marked safe for installation. This is **not** a claim that the
-old 6.1.20 fingerprint and UI resource IDs remain valid on 6.1.30.
+The original **6.1.30_32823 (32823)** APKMirror APKM was retrieved and verified
+in CI on 2026-11-11. It has 37 APK splits, including the protected payload
+and asset pack. Its SHA-256 is:
+`250793bfa2225a9dda9bff0bb74f263f534b4e65b6b354e5be0f91d2bd84d31d`.
+The original base APK MD5 is `c61d72577bd2edeafb6346c6f79e81ec`.
 
-Before enabling it for users, obtain the complete original 6.1.30 APKM/XAPK
-(including asset packs) from a trustworthy source, then:
+The new build's Activity factory matches both reviewed injection paths, but
+**all 12 resource IDs used for navigation and promotions changed**. The Eufy
+extension now has separate ID tables and the patch selects version-specific
+hooks for 6.1.20 or 6.1.30. The CI audit compares each constant with the
+real original APK resource name and verifies IDs are retained after patching.
+The new-version map never uses the 6.1.20 IDs, which now point to unrelated UI.
 
-1. Confirm package name, version name/code, original signing certificate,
-   complete splits and native libraries. Keep the original package outside Git.
-2. Compare the `Ls/h/e/l/l/A;` Activity factory method and both injection paths
-   against 6.1.20. Review protected startup, returned registers and branch
-   targets; revise fingerprints/hooks only if warranted by the new DEX.
-3. Audit every `CameraOnly` resource ID and the main navigation structure on the
-   new APK. Do not assume `MAIN_TABS`, marketing banners or close-button IDs
-   remained stable. New resource IDs require version-specific handling.
-4. Run the real APK patch/negative tests in
-   [Eufy validation](../../tests/eufy/README.md), verify preserved encrypted
-   payload/assets, and run Android UI regression tests.
-5. On a phone: verify launch/login, live video/audio, notifications, Events,
-   Profile, warning banners and app relaunch. Keep a rollback build available.
+The original APKM has been patched with both Eufy options in the desktop
+verification harness; factory branch targets, untouched protected DEX/assets,
+ARM64 libraries, and all original other factory methods are checked. The
+existing 6.1.20 input is regression-tested separately.
 
-**Blocker:** the new original APK bundle was not available for binary analysis
-in the current update. The repository's GitHub CI can prove source compilation,
-but it cannot establish protected-app startup or new-resource compatibility.
-The previous 6.1.20 version remains the documented patchable input.
+**The version is not phone-tested.** Successful desktop validation does not
+guarantee startup after re-signing or camera/notification functionality.
+This branch must remain a beta candidate until a physical-device launch, login,
+live view/audio, Events, background alert, profile, and promotional cleanup
+test passes. Do not publish stable before those checks.
+
+[Original Eufy 6.1.30 APKM on APKMirror](https://www.apkmirror.com/apk/anker/anker-eufy/anker-eufy-6-1-30_32823-release/anker-eufy-6-1-30_32823-android-apk-download/).
 
 [Download the exact APKMirror APKM](https://www.apkmirror.com/apk/anker/anker-eufy/anker-eufy-6-1-20_31181-release/anker-eufy-6-1-20_31181-android-apk-download/).
 It contains the base APK and 34 splits, including the required asset pack. Use
