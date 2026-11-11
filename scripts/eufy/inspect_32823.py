@@ -83,7 +83,7 @@ def main() -> None:
                                 text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                 timeout=120, check=True)
     cert_output = cert_check.stdout + "\n" + cert_check.stderr
-    certs = re.findall(r"certificate SHA-256 digest:\s*([0-9a-fA-F]{64})", cert_output, re.I)
+    certs = re.findall(r"(?m)^V3\.0 Signer: certificate SHA-256 digest:\s*([0-9a-fA-F]{64})$", cert_output)
     if len(certs) != 1:
         print("Signer metadata:", [line[:240] for line in cert_output.splitlines()
                                     if "signer" in line.lower() or "certificate" in line.lower()][:16],
