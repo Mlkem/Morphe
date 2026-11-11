@@ -38,15 +38,15 @@ public final class WongnaiAdPatch {
     private static final Logger LOG = Logger.getLogger(WongnaiAdPatch.class.getName());
     private static final BytecodePatch PATCH = PatchKt.bytecodePatch(
         "Disable Wongnai Google ads",
-        "Stops the identified Google banner, native and interstitial ad loaders in Wongnai 12.11.0, and uses its existing photo-ad fallback.",
-        true,
+        "Stops the identified Google banner, native and interstitial ad loaders in Wongnai 12.11.0, and uses its existing photo-ad fallback. Phone testing pending.",
+        false,
         new Function1<BytecodePatchBuilder, Unit>() {
             @Override public Unit invoke(BytecodePatchBuilder builder) {
                 builder.dependsOn(ca.mlkem.updates.StartupUpdatesKt.getStartupUpdates());
             builder.compatibleWith(new Compatibility(
                     PACKAGE, "Wongnai", null, ApkFileType.XAPK, (Integer) null,
                     null,
-                    Collections.singletonList(new AppTarget(VERSION, null, false, null, null)),
+                    Collections.singletonList(new AppTarget(VERSION, null, true, null, null)),
                     FormFactor.MOBILE
                 ));
                 builder.execute(new Function1<BytecodePatchContext, Unit>() {
