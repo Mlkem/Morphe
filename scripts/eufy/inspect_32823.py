@@ -16,7 +16,6 @@ import zipfile
 from loguru import logger
 logger.remove()
 from androguard.core.dex import DEX
-from androguard.core.apk import APK
 
 BASE = Path(os.environ.get("RUNNER_TEMP", "/tmp")) / "eufy-32823-binary-qa" / "base.apk"
 PACKAGE = "com.oceanwing.battery.cam"
@@ -63,10 +62,18 @@ def find_aapt2() -> Path | None:
 def main() -> None:
     if not BASE.is_file():
         raise SystemExit(f"Verified original base not present: {BASE}")
-    apk = APK(str(BASE), skip_analysis=True)
-    assert apk.get_package() == PACKAGE, f"Wrong application package: {apk.get_package()}"
-    assert apk.get_androidversion_name() == VERSION_NAME, f"Wrong versionName: {apk.get_androidversion_name()}"
-    assert str(apk.get_androidversion_code()) == VERSION_CODE, f"Wrong versionCode: {apk.get_androidversion_code()}"
+    aapt2 = find_aapt2()
+    if not aapt2:
+        raise RuntimeError("Cannot check Android manifest/resources: aapt2 unavailable")
+    manifest_dump = subprocess.run([str(aapt2), "dump", "badging", str(BASE)],
+                                   text=True, stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE, timeout=120, check=True).stdout
+    package_record = next((line for line in manifest_dump.splitlines()
+                           if line.startswith("package:")), "")
+    print("Android build-tools manifest:", package_record, flush=True)
+    assert f"name='{PACKAGE}'" in package_record, "Wrong app package"
+    assert f"versionCode='{VERSION_CODE}'" in package_record, "Wrong versionCode"
+    assert f"versionName='{VERSION_NAME}'" in package_record, "Wrong versionName"
     print("PASS: original APK manifest package and versionCode/versionName", flush=True)
 
     with zipfile.ZipFile(BASE) as z:
@@ -104,9 +111,6 @@ def main() -> None:
                    for m in methods[LEGACY_CLASS]), "Legacy startup onCreate changed"
         print("PASS: protected factory instruction shape, both delegated/framework paths, startup", flush=True)
 
-    aapt2 = find_aapt2()
-    if not aapt2:
-        raise RuntimeError("Cannot check ID mapping: aapt2 unavailable")
     result = subprocess.run([str(aapt2), "dump", "resources", str(BASE)],
                             text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                             timeout=120, check=True)
