@@ -75,11 +75,11 @@ private val eufyExtension = bytecodePatch {
     }
 }
 
-context(_: BytecodePatchContext)
+context(context: BytecodePatchContext)
 private fun install(entry: String) {
     // The resource table changed in 32823. Encode the reviewed version-specific
     // extension method into both injection paths, rather than guessing at runtime.
-    val selectedEntry = if (packageMetadata.versionName == CANDIDATE_VERSION) "${entry}32823" else entry
+    val selectedEntry = if (context.packageMetadata.versionName == CANDIDATE_VERSION) "${entry}32823" else entry
     val method = activityFactory.method
     val calls = method.instructions.withIndex().filter {
         (it.value as? ReferenceInstruction)?.reference.toString() == FACTORY_CALL
