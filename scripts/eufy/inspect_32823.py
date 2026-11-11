@@ -82,7 +82,7 @@ def main() -> None:
     cert_output = subprocess.run([apksigner, "verify", "--print-certs", str(BASE)],
                                  text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                  timeout=120, check=True).stdout
-    certs = re.findall(r"Signer #\\d+ certificate SHA-256 digest:\\s*([0-9a-fA-F]{64})", cert_output)
+    certs = re.findall(r"Signer #\d+ certificate SHA-256 digest:\s*([0-9a-fA-F]{64})", cert_output)
     assert len(certs) == 1, f"Expected one original signer, found {len(certs)}"
     expected_cert = "166c234557b776cad8ac94c979379e48df387d4d8f96a343df40fcd905bff686"
     assert certs[0].lower() == expected_cert, "Eufy 32823 signer differs from reviewed 31181"
