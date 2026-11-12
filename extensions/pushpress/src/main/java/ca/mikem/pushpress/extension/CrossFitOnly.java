@@ -23,20 +23,28 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Defaults Workouts -> Class type to the API-provided CrossFit class on each visit.
- * Flutter's AccessibilityBridge does not implement findAccessibilityNodeInfosByText,
- * so we enumerate its semantics IDs and request node information for each ID.
+ * Automatically defaults the visible workout-category dropdown to CrossFit Class.
+ * Screenshot-verified UI: the CLOSED field displays a class name (e.g.
+ * "Small Group/Teams"), not a "Class type" label. The OPEN control is a
+ * bottom sheet whose first row is "CrossFit Class".
+ * Flutter's accessibility bridge is consulted by ID, not a text-search API.
+ * Class selection is verified by observing the closed field after tapping.
+ * All operations run on the app's main thread and affect Workouts only.
  */
 @SuppressWarnings({"unused", "JavaReflectionMemberAccess"})
 public final class CrossFitOnly {
     private static final String TAG = "PushPressCrossFitOnly";
-    private static final String CLASS_TYPE_TEXT = "class type";
     private static final String CROSS_FIT_CLASS = "crossfit class";
-    private static final String CROSS_FIT_SHORT = "crossfit";
+    // These are the actual five rows shown in the 782 Fitness Workouts dropdown.
+    private static final String[] WORKOUT_CLASSES = {
+            "crossfit class", "express", "hyrox training club",
+            "small group/teams", "prime time class"
+    };
     private static final long INSTALL_RETRY_MS = 250L;
     private static final long IDLE_SCAN_MS = 650L;
     private static final long ACTIVE_SCAN_MS = 200L;
     private static final long MENU_WAIT_MS = 4_500L;
+    private static final long VERIFY_WAIT_MS = 1_800L;
     private static final long RETRY_PAUSE_MS = 900L;
     private static final long SCREEN_EXIT_MS = 1_500L;
     private static final int MAX_AUTO_OPEN_ATTEMPTS = 4;
@@ -53,6 +61,8 @@ public final class CrossFitOnly {
     private static boolean semanticsEnabled;
     private static boolean selectedThisVisit;
     private static boolean openingMenu;
+    private static boolean verifyingSelection;
+    private static long selectionRequestedAt;
     private static long menuOpenedAt;
     private static long lastClassTypeSeenAt;
     private static long nextAttemptAt;
@@ -124,25 +134,28 @@ public final class CrossFitOnly {
                 lastDiagnosticAt = now;
             }
 
-            // Flutter dropdown routes may hide the underlying Class type label from semantics.
-            // Finish an in-flight selection before checking whether the label is still visible.
+            // Finish an in-flight bottom-sheet selection before inspecting the closed field.
+            // The menu's CrossFit row lives in the lower half of the screen.
             if (openingMenu) {
-                SemanticNode target = findCrossFit(nodes);
+                SemanticNode target = findCrossFitMenuItem(nodes, flutterView);
                 if (target != null && activate(flutterView, target)) {
-                    selectedThisVisit = true;
                     openingMenu = false;
-                    Log.i(TAG, "Requested CrossFit class selection");
+                    verifyingSelection = true;
+                    selectionRequestedAt = now;
+                    Log.i(TAG, "Tapped CrossFit Class in the bottom sheet; verifying field");
                 } else if (now - menuOpenedAt >= MENU_WAIT_MS) {
                     openingMenu = false;
                     nextAttemptAt = now + RETRY_PAUSE_MS;
-                    Log.w(TAG, "CrossFit option not exposed; will retry if the field is visible");
+                    Log.w(TAG, "CrossFit Class option not exposed in bottom sheet");
                 }
-                MAIN.postDelayed(this, openingMenu ? ACTIVE_SCAN_MS : IDLE_SCAN_MS);
+                MAIN.postDelayed(this, ACTIVE_SCAN_MS);
                 return;
             }
 
-            SemanticNode classTypeLabel = findClassType(nodes);
-            if (classTypeLabel == null) {
+            // The real 3.44 screen has NO 'Class type' caption. Detect the
+            // selected class name itself above the weekday/date strip.
+            SemanticNode classField = findWorkoutsClassField(nodes, flutterView);
+            if (classField == null) {
                 if (lastClassTypeSeenAt > 0L && now - lastClassTypeSeenAt > SCREEN_EXIT_MS) {
                     resetVisit();
                 }
@@ -151,22 +164,36 @@ public final class CrossFitOnly {
             }
             lastClassTypeSeenAt = now;
 
-            // A previously selected CrossFit value appears alongside the closed field.
-            if (!selectedThisVisit && isCrossFitValueNearField(nodes, classTypeLabel, flutterView)) {
+            if (isExactClass(classField, CROSS_FIT_CLASS)) {
                 selectedThisVisit = true;
-                Log.i(TAG, "CrossFit class already selected");
+                verifyingSelection = false;
+                openingMenu = false;
             }
 
-            // Only default once per Workouts visit. Users can still change it afterward.
-            if (!selectedThisVisit && openAttempts < MAX_AUTO_OPEN_ATTEMPTS
+            // Do not mark success merely because a tap was dispatched:
+            // only the CLOSED dropdown displaying CrossFit Class confirms it.
+            if (verifyingSelection) {
+                if (now - selectionRequestedAt >= VERIFY_WAIT_MS) {
+                    verifyingSelection = false;
+                    nextAttemptAt = now + RETRY_PAUSE_MS;
+                    Log.w(TAG, "CrossFit tap was not reflected in selected class; retrying");
+                } else {
+                    MAIN.postDelayed(this, ACTIVE_SCAN_MS);
+                    return;
+                }
+            }
+
+            // Once CrossFit is visible, do not keep interfering with manual changes.
+            if (!selectedThisVisit && !openingMenu && openAttempts < MAX_AUTO_OPEN_ATTEMPTS
                     && now >= nextAttemptAt) {
-                SemanticNode field = chooseClassTypeField(nodes, classTypeLabel, flutterView);
                 openAttempts++;
-                if (field != null && activate(flutterView, field)) {
+                if (activate(flutterView, classField)) {
                     openingMenu = true;
                     menuOpenedAt = now;
+                    Log.i(TAG, "Opened workout category menu; attempt " + openAttempts);
                 } else {
                     nextAttemptAt = now + RETRY_PAUSE_MS;
+                    Log.w(TAG, "Could not open workout category dropdown");
                 }
             }
             MAIN.postDelayed(this, selectedThisVisit ? IDLE_SCAN_MS : ACTIVE_SCAN_MS);
@@ -176,6 +203,8 @@ public final class CrossFitOnly {
     private static void resetVisit() {
         selectedThisVisit = false;
         openingMenu = false;
+        verifyingSelection = false;
+        selectionRequestedAt = 0L;
         menuOpenedAt = 0L;
         lastClassTypeSeenAt = 0L;
         nextAttemptAt = 0L;
@@ -265,70 +294,67 @@ public final class CrossFitOnly {
         }
     }
 
-    private static SemanticNode findClassType(List<SemanticNode> nodes) {
+    /**
+     * On the supplied screen the closed category dropdown is between the gym
+     * header and weekday strip (roughly 11%-25% of the Flutter viewport).
+     * Match actual class values rather than looking for a non-existent caption.
+     * Geometric bounds keep the same words inside workout cards and sheets out.
+     */
+    private static SemanticNode findWorkoutsClassField(List<SemanticNode> nodes, View view) {
+        Rect visible = new Rect();
+        if (!view.getGlobalVisibleRect(visible)) return null;
+        int start = visible.top + (visible.height() * 8 / 100);
+        int finish = visible.top + (visible.height() * 37 / 100);
+        SemanticNode best = null;
+        int bestScore = Integer.MIN_VALUE;
         for (SemanticNode node : nodes) {
-            if (node.text.contains(CLASS_TYPE_TEXT) || node.description.contains(CLASS_TYPE_TEXT)) {
-                return node;
+            if (!isKnownClass(node)) continue;
+            int cy = node.rect.centerY();
+            if (cy < start || cy > finish) continue;
+            int score = (node.clickable ? 10000 : 0)
+                    + Math.min(node.rect.width(), visible.width())
+                    - Math.abs(cy - (visible.top + visible.height() * 16 / 100));
+            if (score > bestScore) {
+                bestScore = score;
+                best = node;
             }
         }
-        return null;
+        return best;
     }
 
-    private static SemanticNode findCrossFit(List<SemanticNode> nodes) {
+    /** CrossFit Class appears as the first option inside the screenshot's bottom sheet. */
+    private static SemanticNode findCrossFitMenuItem(List<SemanticNode> nodes, View view) {
+        Rect visible = new Rect();
+        if (!view.getGlobalVisibleRect(visible)) return null;
+        int sheetTop = visible.top + (visible.height() * 48 / 100);
+        SemanticNode best = null;
         for (SemanticNode node : nodes) {
-            if (isCrossFit(node.text) || isCrossFit(node.description)) return node;
+            if (!isExactClass(node, CROSS_FIT_CLASS) || node.rect.centerY() < sheetTop) continue;
+            if (best == null || (node.clickable && !best.clickable) ||
+                    (node.clickable == best.clickable && node.rect.top < best.rect.top)) {
+                best = node;
+            }
         }
-        return null;
+        return best;
     }
 
-    private static boolean isCrossFit(String value) {
-        return value.equals(CROSS_FIT_CLASS) || value.equals(CROSS_FIT_SHORT)
-                || value.startsWith(CROSS_FIT_CLASS + ",")
-                || value.startsWith(CROSS_FIT_SHORT + ",");
-    }
-
-    private static boolean isCrossFitValueNearField(
-            List<SemanticNode> nodes, SemanticNode label, View flutterView) {
-        float density = flutterView.getResources().getDisplayMetrics().density;
-        int maxDistance = (int) (140f * density);
-        for (SemanticNode node : nodes) {
-            if (!isCrossFit(node.text) && !isCrossFit(node.description)) continue;
-            if (node.rect.top >= label.rect.top - maxDistance
-                    && node.rect.top <= label.rect.bottom + maxDistance
-                    && horizontalOverlap(node.rect, label.rect) > 0) return true;
+    private static boolean isKnownClass(SemanticNode node) {
+        for (String className : WORKOUT_CLASSES) {
+            if (isExactClass(node, className)) return true;
         }
         return false;
     }
 
-    private static SemanticNode chooseClassTypeField(
-            List<SemanticNode> nodes, SemanticNode label, View flutterView) {
-        // Best case: a tappable semantics node includes the Class type caption.
-        for (SemanticNode node : nodes) {
-            if (node.clickable && (node.text.contains(CLASS_TYPE_TEXT)
-                    || node.description.contains(CLASS_TYPE_TEXT))) return node;
-        }
-        // Otherwise the caption and dropdown have separate semantics nodes.
-        float density = flutterView.getResources().getDisplayMetrics().density;
-        int maxDistance = (int) (105f * density);
-        SemanticNode closest = null;
-        int bestDistance = Integer.MAX_VALUE;
-        for (SemanticNode node : nodes) {
-            if (!node.clickable || node == label || node.rect.isEmpty()) continue;
-            int verticalDistance = node.rect.top - label.rect.bottom;
-            if (verticalDistance < -(int) (16 * density) || verticalDistance > maxDistance) continue;
-            if (horizontalOverlap(node.rect, label.rect) <= 0) continue;
-            int distance = Math.abs(verticalDistance);
-            if (distance < bestDistance) {
-                closest = node;
-                bestDistance = distance;
-            }
-        }
-        // Final fallback: tapping a combined Flutter field's text label can open it.
-        return closest != null ? closest : label;
+    private static boolean isExactClass(SemanticNode node, String className) {
+        return matchesClass(node.text, className) || matchesClass(node.description, className);
     }
 
-    private static int horizontalOverlap(Rect a, Rect b) {
-        return Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left));
+    private static boolean matchesClass(String value, String className) {
+        if (value == null || value.isEmpty()) return false;
+        // Flutter can append semantics hints such as ", selected" and ", button".
+        return value.equals(className) || value.startsWith(className + ",")
+                || value.endsWith(", " + className)
+                || value.contains(", " + className + ",");
     }
 
     private static boolean activate(View flutterView, SemanticNode node) {
