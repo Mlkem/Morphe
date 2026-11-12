@@ -13,14 +13,23 @@ Custom Morphe patch source for the uploaded **PushPress Members 3.42.0 XAPK**.
 
 ## What it does
 
-PushPress obtains the Class type choices from its API, so this patch does not edit a fixed Android string list. It installs a small app-side selector that:
+When the Workouts screen's **Class type** field becomes visible, the patch automatically
+opens that control and selects the API-provided **CrossFit class** choice. It is designed
+to repeat on a fresh app start and on each subsequent return to the screen.
 
-1. Activates only while the **Workouts** screen or its **Class type** control is present.
-2. Records the Flutter semantics state when that dropdown is touched.
-3. When the menu opens, finds the exact API-returned item **CrossFit class**.
-4. Immediately taps that item.
+- No manual dropdown tap is required.
+- If CrossFit is already selected, the patch avoids opening the menu.
+- It runs once per Workouts visit and lets the user change the value afterward.
+- Up to four bounded attempts handle slow-loaded Flutter menus.
+- Other dropdowns and the server/API response are left unchanged.
 
-Other dropdowns are ignored. The API response is not changed. Depending on rendering speed, the other choices may be visible very briefly before CrossFit class is selected.
+The patch reads Flutter's semantics tree using its provider's node IDs; Flutter's
+`findAccessibilityNodeInfosByText` is not implemented and cannot reliably find a
+dropdown item. If Flutter changes its internal semantics implementation or the
+Class type screen labels, this version may need adjustment.
+
+**Validation:** Source change committed to `dev`; actual menu selection is
+not confirmed until a patched 3.42.0 XAPK runs on a physical device.
 
 ## Build on Windows
 
