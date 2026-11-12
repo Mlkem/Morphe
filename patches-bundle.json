@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-11-12T13:40:58",
-  "description": "## [1.0.0-dev.27](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.26...v1.0.0-dev.27) (2026-11-12)\n\n### 🐛 Bug Fixes\n\n* **pushpress:** default Class type to CrossFit on each Workouts visit ([143d7a7](https://github.com/Mlkem/Morphe/commit/143d7a71567a745ee2da094408295c2123855720))",
-  "download_url": "https://github.com/Mlkem/Morphe/releases/download/v1.0.0-dev.27/patches-1.0.0-dev.27.mpp",
+  "created_at": "2026-11-12T14:06:09",
+  "description": "## [1.0.0-dev.28](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.27...v1.0.0-dev.28) (2026-11-12)\n\n### 🐛 Bug Fixes\n\n* **pushpress:** access Flutter semantics when Android accessibility is disabled ([ea1e5eb](https://github.com/Mlkem/Morphe/commit/ea1e5eb9bd2d16c6342d717d2014e0487fd29957))\n* **pushpress:** add experimental 3.44 and 3.45 targets ([aa0e9ba](https://github.com/Mlkem/Morphe/commit/aa0e9ba262183f7dc51de79be2a65163bc30d6ae))",
+  "download_url": "https://github.com/Mlkem/Morphe/releases/download/v1.0.0-dev.28/patches-1.0.0-dev.28.mpp",
   "signature_download_url": "",
-  "version": "1.0.0-dev.27"
+  "version": "1.0.0-dev.28"
 }

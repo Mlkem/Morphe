@@ -1,3 +1,10 @@
+## [1.0.0-dev.28](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.27...v1.0.0-dev.28) (2026-11-12)
+
+### 🐛 Bug Fixes
+
+* **pushpress:** access Flutter semantics when Android accessibility is disabled ([ea1e5eb](https://github.com/Mlkem/Morphe/commit/ea1e5eb9bd2d16c6342d717d2014e0487fd29957))
+* **pushpress:** add experimental 3.44 and 3.45 targets ([aa0e9ba](https://github.com/Mlkem/Morphe/commit/aa0e9ba262183f7dc51de79be2a65163bc30d6ae))
+
 ## [1.0.0-dev.27](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.26...v1.0.0-dev.27) (2026-11-12)
 
 ### 🐛 Bug Fixes
