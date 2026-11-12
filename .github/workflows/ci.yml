@@ -34,7 +34,7 @@ jobs:
           python3 -m unittest discover -s tests/updates -p 'test_*.py'
           python3 scripts/test_walmart_logic.py
           python3 scripts/test_manager_urls.py
-      - name: Apply both Eufy 6.1.30 patches to original APKM (candidate branch only)
+      - name: Apply three Eufy 6.1.30 patches to original APKM (candidate branch only)
         if: github.event_name == 'pull_request' && github.head_ref == 'beta/eufy-6.1.30-32823'
         run: |
           curl --fail --location --retry 3 --silent --show-error \
@@ -46,7 +46,7 @@ jobs:
           PATCHED="$RUNNER_TEMP/eufy-32823-binary-qa/patched.apk"
           test -f "$ORIGINAL"
           java -Xmx5g -jar "$RUNNER_TEMP/morphe-desktop.jar" patch "$ORIGINAL" -p "$MPP" \
-            --exclusive -e 'Hide Eufy Discover, Smart and Shop' -e 'Hide Eufy promotions' \
+            --exclusive -e 'Hide Eufy Discover, Smart and Shop' -e 'Hide Eufy promotions' -e 'Auto-confirm Eufy mobile-data streaming' \
             --unsigned --validate --striplibs arm64-v8a -o "$PATCHED" \
             -r "$RUNNER_TEMP/eufy-32823-binary-qa/patch-result.json"
           python3 tests/eufy/verify_apk.py "$ORIGINAL" "$PATCHED" 32823
@@ -59,7 +59,7 @@ jobs:
           PATCHED="$RUNNER_TEMP/eufy-32823-binary-qa/patched-31181.apk"
           test -f "$ORIGINAL"
           java -Xmx5g -jar "$RUNNER_TEMP/morphe-desktop.jar" patch "$ORIGINAL" -p "$MPP" \
-            --exclusive -e 'Hide Eufy Discover, Smart and Shop' -e 'Hide Eufy promotions' \
+            --exclusive -e 'Hide Eufy Discover, Smart and Shop' -e 'Hide Eufy promotions' -e 'Auto-confirm Eufy mobile-data streaming' \
             --unsigned --validate --striplibs arm64-v8a -o "$PATCHED" \
             -r "$RUNNER_TEMP/eufy-32823-binary-qa/patch-result-31181.json"
           python3 tests/eufy/verify_apk.py "$ORIGINAL" "$PATCHED" 31181
