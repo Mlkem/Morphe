@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import org.junit.Test;
@@ -266,4 +268,97 @@ public class CameraOnlyTest {
         CameraOnly cleaner = new CameraOnly(); cleaner.setTestFlags(CameraOnly.PROMOTIONS); cleaner.apply(card);
         assertEquals(View.VISIBLE, close.getVisibility());
     }
+
+    private LinearLayout mobileDataPanel(Activity activity, boolean checked, int[] confirmations) {
+        LinearLayout panel = new LinearLayout(activity);
+        panel.setOrientation(LinearLayout.VERTICAL);
+        panel.addView(text(activity, "Mobile Data Consuming", View.generateViewId()));
+        panel.addView(text(activity, "Continue using mobile data for streaming? Data will be consumed continuously.", View.generateViewId()));
+        CheckBox check = new CheckBox(activity);
+        check.setText("Don't show again");
+        check.setChecked(checked);
+        panel.addView(check);
+        Button proceed = new Button(activity);
+        proceed.setText("Continue");
+        proceed.setOnClickListener(v -> confirmations[0]++);
+        panel.addView(proceed);
+        return panel;
+    }
+
+    @Test public void mobileDataPromptSelectsRememberAndContinues() {
+        Activity a = activity();
+        int[] confirmations = {0};
+        LinearLayout panel = mobileDataPanel(a, false, confirmations);
+        CheckBox remember = (CheckBox) panel.getChildAt(2);
+        AlertDialog dialog = new AlertDialog.Builder(a).setView(panel).create();
+        ((Button) panel.getChildAt(3)).setOnClickListener(v -> {
+            confirmations[0]++;
+            dialog.dismiss();
+        });
+        CameraOnly patch = new CameraOnly();
+        patch.setTestFlags(CameraOnly.MOBILE_STREAMING);
+        dialog.show();
+        patch.apply(dialog.getWindow().getDecorView());
+        assertTrue(remember.isChecked());
+        assertEquals(1, confirmations[0]);
+        assertFalse(dialog.isShowing());
+    }
+
+    @Test public void mobileDataPromptLeavesPreviouslySelectedCheckTrue() {
+        Activity a = activity();
+        int[] confirmations = {0};
+        LinearLayout panel = mobileDataPanel(a, true, confirmations);
+        AlertDialog dialog = new AlertDialog.Builder(a).setView(panel).create();
+        CameraOnly patch = new CameraOnly();
+        patch.setTestFlags(CameraOnly.MOBILE_STREAMING);
+        dialog.show();
+        patch.apply(dialog.getWindow().getDecorView());
+        assertTrue(((CheckBox) panel.getChildAt(2)).isChecked());
+        assertEquals(1, confirmations[0]);
+        dialog.dismiss();
+    }
+
+    @Test public void unrelatedWarningsAndDisabledPatchAreNotConfirmed() {
+        Activity a = activity();
+        int[] confirmations = {0};
+        LinearLayout panel = mobileDataPanel(a, false, confirmations);
+        AlertDialog dialog = new AlertDialog.Builder(a).setView(panel).create();
+        CameraOnly patch = new CameraOnly();
+        patch.setTestFlags(CameraOnly.PROMOTIONS);
+        dialog.show();
+        patch.apply(dialog.getWindow().getDecorView());
+        assertEquals(0, confirmations[0]);
+        patch.setTestFlags(CameraOnly.MOBILE_STREAMING);
+        ((TextView) panel.getChildAt(0)).setText("Camera offline");
+        patch.apply(dialog.getWindow().getDecorView());
+        assertEquals(0, confirmations[0]);
+        ((TextView) panel.getChildAt(0)).setText("Mobile Data Consuming");
+        ((TextView) panel.getChildAt(1)).setText("Delete all videos?");
+        patch.apply(dialog.getWindow().getDecorView());
+        assertEquals(0, confirmations[0]);
+        assertFalse(((CheckBox) panel.getChildAt(2)).isChecked());
+        dialog.dismiss();
+    }
+
+    @Test public void customWrappedContinueButtonIsSupported() {
+        Activity a = activity();
+        int[] confirmations = {0};
+        LinearLayout panel = new LinearLayout(a);
+        panel.setOrientation(LinearLayout.VERTICAL);
+        panel.addView(text(a, "Mobile Data Consuming", View.generateViewId()));
+        panel.addView(text(a, "Continue using mobile data for streaming?", View.generateViewId()));
+        panel.addView(text(a, "Don't show again", View.generateViewId()));
+        LinearLayout wrapper = new LinearLayout(a);
+        wrapper.addView(text(a, "Continue", View.generateViewId()));
+        wrapper.setOnClickListener(v -> confirmations[0]++);
+        panel.addView(wrapper);
+        AlertDialog dialog = new AlertDialog.Builder(a).setView(panel).create();
+        CameraOnly patch = new CameraOnly();
+        patch.setTestFlags(CameraOnly.MOBILE_STREAMING);
+        dialog.show();
+        patch.apply(dialog.getWindow().getDecorView());
+        assertEquals(1, confirmations[0]);
+        dialog.dismiss();
+    }
+
 }
