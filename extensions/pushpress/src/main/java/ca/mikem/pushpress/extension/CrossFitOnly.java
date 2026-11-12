@@ -46,6 +46,9 @@ public final class CrossFitOnly {
     private static WeakReference<View> flutterViewRef = new WeakReference<>(null);
     private static AccessibilityNodeProvider provider;
     private static Field semanticsTreeField;
+    private static Field flutterAccessibilityBridgeField;
+    private static long lastSemanticsRequestAt;
+    private static long lastDiagnosticAt;
     private static boolean installed;
     private static boolean semanticsEnabled;
     private static boolean selectedThisVisit;
@@ -66,6 +69,9 @@ public final class CrossFitOnly {
         flutterViewRef = new WeakReference<>(null);
         provider = null;
         semanticsTreeField = null;
+        flutterAccessibilityBridgeField = null;
+        lastSemanticsRequestAt = 0L;
+        lastDiagnosticAt = 0L;
         semanticsEnabled = false;
         installed = true;
         resetVisit();
@@ -86,8 +92,9 @@ public final class CrossFitOnly {
             }
             flutterViewRef = new WeakReference<>(flutterView);
             enableFlutterSemantics(flutterView);
-            provider = flutterView.getAccessibilityNodeProvider();
-            Log.i(TAG, "Watching Workouts/Class type for CrossFit default");
+            provider = resolveFlutterAccessibilityBridge(flutterView);
+            Log.i(TAG, "Watching Workouts/Class type for CrossFit default (bridge=" +
+                    (provider != null) + ")");
             MAIN.post(SCAN);
         }
     };
@@ -102,10 +109,20 @@ public final class CrossFitOnly {
                 return;
             }
             if (!semanticsEnabled) enableFlutterSemantics(flutterView);
-            if (provider == null) provider = flutterView.getAccessibilityNodeProvider();
+            if (provider == null) provider = resolveFlutterAccessibilityBridge(flutterView);
 
             long now = SystemClock.uptimeMillis();
             List<SemanticNode> nodes = readVisibleSemantics(flutterView);
+            if (nodes.isEmpty() && now - lastSemanticsRequestAt >= 3_000L) {
+                // Request Flutter semantics without changing Android accessibility settings.
+                enableFlutterSemantics(flutterView);
+                lastSemanticsRequestAt = now;
+            }
+            if (nodes.isEmpty() && now - lastDiagnosticAt >= 6_000L) {
+                Log.w(TAG, "No visible Flutter semantics (bridge=" + (provider != null) +
+                        ", requested=" + semanticsEnabled + ")");
+                lastDiagnosticAt = now;
+            }
 
             // Flutter dropdown routes may hide the underlying Class type label from semantics.
             // Finish an in-flight selection before checking whether the label is still visible.
@@ -163,6 +180,38 @@ public final class CrossFitOnly {
         lastClassTypeSeenAt = 0L;
         nextAttemptAt = 0L;
         openAttempts = 0;
+    }
+
+    /**
+     * FlutterView returns a null public provider when Android accessibility is off.
+     * The bridge still exists as a FlutterView field; read it directly instead.
+     */
+    private static AccessibilityNodeProvider resolveFlutterAccessibilityBridge(View flutterView) {
+        if (flutterView == null) return null;
+        try {
+            AccessibilityNodeProvider publicProvider = flutterView.getAccessibilityNodeProvider();
+            if (publicProvider != null) return publicProvider;
+            if (flutterAccessibilityBridgeField == null) {
+                Class<?> type = flutterView.getClass();
+                while (type != null) {
+                    try {
+                        Field field = type.getDeclaredField("accessibilityBridge");
+                        field.setAccessible(true);
+                        flutterAccessibilityBridgeField = field;
+                        break;
+                    } catch (NoSuchFieldException ignored) {
+                        type = type.getSuperclass();
+                    }
+                }
+            }
+            if (flutterAccessibilityBridgeField == null) return null;
+            Object raw = flutterAccessibilityBridgeField.get(flutterView);
+            return raw instanceof AccessibilityNodeProvider
+                    ? (AccessibilityNodeProvider) raw : null;
+        } catch (Throwable error) {
+            Log.w(TAG, "Could not obtain Flutter's private accessibility bridge", error);
+            return null;
+        }
     }
 
     private static List<SemanticNode> readVisibleSemantics(View flutterView) {
