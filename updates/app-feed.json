@@ -89,7 +89,7 @@
     },
     "com.oceanwing.battery.cam": {
       "name": "Anker eufy",
-      "revision": "da283ec956b107906da338323aaafd69af0a9976a7a8e6775bd1a093c24eacc7",
+      "revision": "230c081e0b75c3df097dd6a8fac2b87b0e547a00e0a894cd35e2b0fa0f7200d4",
       "supportedVersions": [
         "6.1.20_31181",
         "6.1.30_32823"
@@ -188,9 +188,8 @@
       }
     }
   },
-  "generatedAt": "2026-11-12T14:06:20.055218+00:00",
-  "releaseUrl": "https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.28",
-  "releaseVersion": "1.0.0-dev.28",
-  "schema": 1,
-  "upstreamCheckedAt": "2026-11-12T14:07:18.270922+00:00"
+  "generatedAt": "2026-11-12T14:17:20.887466+00:00",
+  "releaseUrl": "https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.29",
+  "releaseVersion": "1.0.0-dev.29",
+  "schema": 1
 }

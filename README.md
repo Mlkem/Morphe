@@ -94,7 +94,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.28](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.28)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;42 patches total
+> **[v1.0.0-dev.29](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.29)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;43 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -181,6 +181,25 @@ provide privacy.
 | [Allow TAGTHAi accessibility apps](#allow-tagthai-accessibility-apps) | Normalizes the local accessibility result after AppGuard completes its check. Intended for accessibility services installed from any source. Other sideloaded-app restrictions and server Play Integrity checks are not bypassed. Phone testing pending. |  |
 | [Allow TAGTHAi screenshots](#allow-tagthai-screenshots) | Clears FLAG_SECURE at TAGTHAi's three identified window-control sites. Allows screenshots and may expose previews in Recents. Screen-recording detection and protected third-party screens are not changed. Phone testing pending. |  |
 | [Select TAGTHAi text](#select-tagthai-text) | Adds a movable Select text button and a native copy/select panel for visible Flutter accessibility text. Requests semantics only after tapping Select text; no system accessibility service is needed. Does not add inline selection or OCR. Phone testing pending. |  |
+
+</details>
+
+<details>
+<summary>📦 Anker eufy&nbsp;&nbsp;•&nbsp;&nbsp;3 patches</summary>
+<br>
+
+**Package name:** `com.oceanwing.battery.cam`
+
+**🎯 Supported versions:**
+
+| 🧪&nbsp;6.1.20_31181 | 🧪&nbsp;6.1.30_32823 |
+| :---: | :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Auto-confirm Eufy mobile-data streaming](#auto-confirm-eufy-mobile-data-streaming) | Accepts only the exact Mobile Data Consuming streaming prompt. Checks Don't show again when exposed as a standard checkbox; other prompts, Wi-Fi and camera transport are unchanged. A brief prompt flash is possible. Phone testing pending. |  |
+| [Hide Eufy Discover, Smart and Shop](#hide-eufy-discover-smart-and-shop) | Hides Discover, Smart and Shop in the main bottom navigation, retaining original tab indices. Restored hidden tabs return to Home. Other Smart controls, cameras, events and Profile are preserved. Phone testing pending. |  |
+| [Hide Eufy promotions](#hide-eufy-promotions) | Collapses the identified camera-home marketing and AI offer banners and promotional inbox cards, and closes the identified shopping and solar-panel offer popups. No network blocking or notification filtering; remote/React Native offers may remain. Phone testing pending. |  |
 
 </details>
 
@@ -308,24 +327,6 @@ provide privacy.
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
 | [Gmail account visibility](#gmail-account-visibility) | Adds Account visibility to Gmail settings and a long press on the account avatar. Hide or show individual switcher accounts, with Show all recovery. Keeps the current account visible. Does not hide mail, All inboxes, notifications or Android accounts. Creates a separate GmsCore copy; phone testing pending. |  |
-
-</details>
-
-<details>
-<summary>📦 Anker eufy&nbsp;&nbsp;•&nbsp;&nbsp;2 patches</summary>
-<br>
-
-**Package name:** `com.oceanwing.battery.cam`
-
-**🎯 Supported versions:**
-
-| 🧪&nbsp;6.1.20_31181 | 🧪&nbsp;6.1.30_32823 |
-| :---: | :---: |
-
-| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
-|----------|----------------|-----------|
-| [Hide Eufy Discover, Smart and Shop](#hide-eufy-discover-smart-and-shop) | Hides Discover, Smart and Shop in the main bottom navigation, retaining original tab indices. Restored hidden tabs return to Home. Other Smart controls, cameras, events and Profile are preserved. Phone testing pending. |  |
-| [Hide Eufy promotions](#hide-eufy-promotions) | Collapses the identified camera-home marketing and AI offer banners and promotional inbox cards, and closes the identified shopping and solar-panel offer popups. No network blocking or notification filtering; remote/React Native offers may remain. Phone testing pending. |  |
 
 </details>
 

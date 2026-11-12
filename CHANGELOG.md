@@ -1,3 +1,9 @@
+## [1.0.0-dev.29](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.28...v1.0.0-dev.29) (2026-11-12)
+
+### ✨ New Features
+
+* **eufy:** auto-confirm recurring mobile-data streaming prompt ([d65ef36](https://github.com/Mlkem/Morphe/commit/d65ef3632c09312d75c54d03b2692beb2cd1681e))
+
 ## [1.0.0-dev.28](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.27...v1.0.0-dev.28) (2026-11-12)
 
 ### 🐛 Bug Fixes
