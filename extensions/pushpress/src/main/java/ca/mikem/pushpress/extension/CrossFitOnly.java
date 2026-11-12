@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.util.Log;
+import android.widget.Toast;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,8 @@ public final class CrossFitOnly {
     private static Field flutterAccessibilityBridgeField;
     private static long lastSemanticsRequestAt;
     private static long lastDiagnosticAt;
+    private static long installStartedAt;
+    private static int missingFlutterViewPolls;
     private static boolean installed;
     private static boolean semanticsEnabled;
     private static boolean selectedThisVisit;
@@ -84,10 +87,27 @@ public final class CrossFitOnly {
         lastDiagnosticAt = 0L;
         semanticsEnabled = false;
         installed = true;
+        installStartedAt = SystemClock.uptimeMillis();
+        missingFlutterViewPolls = 0;
+        Log.i(TAG, "PushPress CrossFit diagnostic: constructor hook entered");
         resetVisit();
         MAIN.removeCallbacks(INSTALL);
         MAIN.removeCallbacks(SCAN);
         MAIN.post(INSTALL);
+
+        // Temporary diagnostic: proves that the patched MainActivity actually calls
+        // this extension, even if FlutterView or semantics are unavailable.
+        MAIN.postDelayed(() -> {
+            Activity live = activityRef.get();
+            if (!isActivityUsable(live)) return;
+            View flutter = flutterViewRef.get();
+            String status = flutter == null
+                    ? "hook active; FlutterView not detected"
+                    : "hook active; FlutterView detected";
+            Log.i(TAG, "Diagnostic toast: " + status);
+            Toast.makeText(live, "PushPress CrossFit patch: " + status,
+                    Toast.LENGTH_LONG).show();
+        }, 2_800L);
     }
 
     private static final Runnable INSTALL = new Runnable() {
@@ -97,13 +117,19 @@ public final class CrossFitOnly {
             View root = activity.getWindow() == null ? null : activity.getWindow().getDecorView();
             View flutterView = findFlutterView(root);
             if (flutterView == null || !flutterView.isAttachedToWindow()) {
+                missingFlutterViewPolls++;
+                if (missingFlutterViewPolls % 16 == 0) {
+                    Log.w(TAG, "No attached FlutterView after " +
+                            (SystemClock.uptimeMillis() - installStartedAt) +
+                            " ms; root=" + (root == null ? "null" : root.getClass().getName()));
+                }
                 MAIN.postDelayed(this, INSTALL_RETRY_MS);
                 return;
             }
             flutterViewRef = new WeakReference<>(flutterView);
             enableFlutterSemantics(flutterView);
             provider = resolveFlutterAccessibilityBridge(flutterView);
-            Log.i(TAG, "Watching Workouts/Class type for CrossFit default (bridge=" +
+            Log.i(TAG, "Watching Workouts category dropdown (bridge=" +
                     (provider != null) + ")");
             MAIN.post(SCAN);
         }
