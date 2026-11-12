@@ -1,3 +1,9 @@
+## [1.0.0-dev.27](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.26...v1.0.0-dev.27) (2026-11-12)
+
+### 🐛 Bug Fixes
+
+* **pushpress:** default Class type to CrossFit on each Workouts visit ([143d7a7](https://github.com/Mlkem/Morphe/commit/143d7a71567a745ee2da094408295c2123855720))
+
 ## [1.0.0-dev.26](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.25...v1.0.0-dev.26) (2026-11-12)
 
 ### 🐛 Bug Fixes
