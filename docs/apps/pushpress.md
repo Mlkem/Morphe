@@ -13,8 +13,7 @@ Morphe patch for PushPress Members 3.42.0, 3.44.0 and 3.45.0 XAPK. Only the orig
 
 ## What it does
 
-When the Workouts screen's **Class type** field becomes visible, the patch automatically
-opens that control and selects the API-provided **CrossFit class** choice. It is designed
+When the Workouts screen's category dropdown displays a current class name (for example **Small Group/Teams**), the patch automatically opens that control and selects the API-provided **CrossFit Class** option. It is designed
 to repeat on a fresh app start and on each subsequent return to the screen.
 
 - No manual dropdown tap is required.
@@ -23,10 +22,11 @@ to repeat on a fresh app start and on each subsequent return to the screen.
 - Up to four bounded attempts handle slow-loaded Flutter menus.
 - Other dropdowns and the server/API response are left unchanged.
 
-The patch reads Flutter's semantics tree using its provider's node IDs. Earlier versions of the patch failed to handle FlutterView returning a null public accessibility provider when Android accessibility was disabled. The updated implementation tries FlutterView's internal `accessibilityBridge` field, and periodically retries enabling semantics when no nodes have appeared. This avoids requiring the user to enable TalkBack. The reflection strategy is dependent on Flutter internals and still requires a physical-device test. If Flutter changes its internal semantics implementation or the
-Class type screen labels, this version may need adjustment.
+The original selector searched for an invisible **Class type** label, so it never activated on the actual screen. The November 12 screenshot confirms the closed field reads **Small Group/Teams**, and the bottom sheet contains **CrossFit Class**, **Express**, **HYROX Training Club**, **Small Group/Teams**, **Prime Time Class**. The revised code detects these visible labels in the upper field, chooses CrossFit Class in the lower sheet, and verifies that the selected upper label changed before stopping. It does not simply assume success after a synthetic tap.
 
-**Validation:** Source is committed to `dev`; automated build results only establish compilation and bundle metadata. No supplied 3.45.0 original XAPK or physical-device results are available, so applying the fingerprint and selecting CrossFit on 3.45.0 are not yet verified.
+The patch reads Flutter's semantics tree using its provider's node IDs. Earlier versions of the patch failed to handle FlutterView returning a null public accessibility provider when Android accessibility was disabled. The updated implementation tries FlutterView's internal `accessibilityBridge` field, and periodically retries enabling semantics when no nodes have appeared. This avoids requiring the user to enable TalkBack. The reflection strategy is dependent on Flutter internals and still requires a physical-device test. If Flutter changes its internal semantics implementation, this version may need adjustment.
+
+**Validation:** Screenshot-based control matching is implemented on `dev`; automated build results establish compilation and bundle metadata but not a successful real selection. No supplied 3.45.0 original XAPK or physical-device results are available, so applying the fingerprint and selecting CrossFit on 3.45.0 are not yet verified.
 
 ## Build on Windows
 
