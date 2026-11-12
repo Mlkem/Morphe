@@ -1,12 +1,12 @@
 # PushPress Members — Force CrossFit class
 
-Custom Morphe patch source for the uploaded **PushPress Members 3.42.0 XAPK**.
+Morphe patch for PushPress Members 3.42.0, 3.44.0 and 3.45.0 XAPK. Only the original 3.42.0 XAPK was inspected; 3.44.0 and 3.45.0 remain experimental compatibility targets.
 
 ## Target
 
 - App: PushPress Members
 - Package: `com.pushpress.memberportal`
-- Version: `3.42.0`
+- Versions targeted: `3.42.0`, `3.44.0`, `3.45.0` (all experimental)
 - XAPK version code inspected: `1780597459`
 - Architecture inspected: `arm64-v8a`
 - Patch name in Morphe: **Workouts: force CrossFit class**
@@ -23,13 +23,10 @@ to repeat on a fresh app start and on each subsequent return to the screen.
 - Up to four bounded attempts handle slow-loaded Flutter menus.
 - Other dropdowns and the server/API response are left unchanged.
 
-The patch reads Flutter's semantics tree using its provider's node IDs; Flutter's
-`findAccessibilityNodeInfosByText` is not implemented and cannot reliably find a
-dropdown item. If Flutter changes its internal semantics implementation or the
+The patch reads Flutter's semantics tree using its provider's node IDs. Earlier versions of the patch failed to handle FlutterView returning a null public accessibility provider when Android accessibility was disabled. The updated implementation tries FlutterView's internal `accessibilityBridge` field, and periodically retries enabling semantics when no nodes have appeared. This avoids requiring the user to enable TalkBack. The reflection strategy is dependent on Flutter internals and still requires a physical-device test. If Flutter changes its internal semantics implementation or the
 Class type screen labels, this version may need adjustment.
 
-**Validation:** Source change committed to `dev`; actual menu selection is
-not confirmed until a patched 3.42.0 XAPK runs on a physical device.
+**Validation:** Source is committed to `dev`; automated build results only establish compilation and bundle metadata. No supplied 3.45.0 original XAPK or physical-device results are available, so applying the fingerprint and selecting CrossFit on 3.45.0 are not yet verified.
 
 ## Build on Windows
 
@@ -45,7 +42,7 @@ Set-ExecutionPolicy -Scope Process Bypass
 Output:
 
 ```text
-dist\pushpress-crossfit-only-3.42.0.mpp
+patches/build/libs/patches-*.mpp
 ```
 
 The script clones the current official Morphe patch template, overlays these source files, and runs the template's `buildAndroid` task.
@@ -60,4 +57,4 @@ Use the resulting `.mpp` with Morphe CLI, or publish the repository as a custom 
 
 ## Validation status
 
-The package, version, split layout, MainActivity constructor, Flutter view class, Flutter engine field, and Flutter semantics methods were verified directly from the uploaded XAPK. The Java extension source was syntax-checked separately. A complete Morphe build and on-device interaction test could not be run in this offline environment, so the first installed build should be treated as a test release.
+The package, version, split layout, MainActivity constructor, Flutter view class, Flutter engine field, and Flutter semantics methods were verified for the original **3.42.0** XAPK. The 3.44.0 and 3.45.0 versions have not had their binaries inspected. The Java extension source was syntax-checked separately. A complete Morphe build and on-device interaction test could not be run in this offline environment, so the first installed build should be treated as a test release.
