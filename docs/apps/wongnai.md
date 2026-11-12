@@ -1,7 +1,7 @@
 Wongnai ad fix v1.0.0
 
 Target: com.wongnai.android 12.11.0 only.
-Morphe patch: Disable Wongnai Google ads.
+Morphe patch: Disable Wongnai Google ads. **Experimental and opt-in** because no on-device test has been completed. Google Play now lists 12.11.1; this is **not** a verified compatible input. Enable experimental app versions, and do not force the patch onto 12.11.1.
 
 Import this MPP as a local patch bundle, select the original Wongnai 12.11.0
 XAPK and enable this patch. It can be used by itself; it already includes the

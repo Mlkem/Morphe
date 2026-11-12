@@ -44,6 +44,13 @@ gboard_target=gboard['compatiblePackages'][0]
 assert gboard_target['packageName']=='com.google.android.inputmethod.latin'
 assert [t['version'] for t in gboard_target['targets']]==['18.5.4.993608717-release-arm64-v8a']
 assert all(t['isExperimental'] for t in gboard_target['targets'])
+wongnai=next(p for p in patches if p['name']=='Disable Wongnai Google ads')
+assert wongnai['default'] is False, 'Untested Wongnai patch must remain opt-in'
+assert len(wongnai['compatiblePackages']) == 1
+wongnai_target=wongnai['compatiblePackages'][0]
+assert wongnai_target['packageName'] == 'com.wongnai.android'
+assert [t['version'] for t in wongnai_target['targets']] == ['12.11.0']
+assert all(t['isExperimental'] for t in wongnai_target['targets'])
 songsterr=next(p for p in patches if p['name']=='Enable Songsterr premium features')
 assert not songsterr['default'] and len(songsterr['compatiblePackages'])==1
 song_target=songsterr['compatiblePackages'][0]
