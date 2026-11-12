@@ -116,3 +116,18 @@ val hideEufyPromotions = bytecodePatch(
     dependsOn(eufyExtension)
     execute { install("enablePromotions") }
 }
+
+
+// Independent opt-in: hide-promotions must not silently authorize mobile usage.
+val autoConfirmEufyMobileData = bytecodePatch(
+    name = "Auto-confirm Eufy mobile-data streaming",
+    description = "Accepts only the exact Mobile Data Consuming streaming prompt. " +
+        "Checks Don't show again when exposed as a standard checkbox; other prompts, Wi-Fi " +
+        "and camera transport are unchanged. A brief prompt flash is possible. Phone testing pending.",
+    default = false
+) {
+    dependsOn(ca.mlkem.updates.startupUpdates)
+    compatibleWith(eufy)
+    dependsOn(eufyExtension)
+    execute { install("enableMobileStreaming") }
+}
