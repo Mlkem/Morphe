@@ -1,3 +1,11 @@
+## [1.0.0-dev.30](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.29...v1.0.0-dev.30) (2026-11-12)
+
+### 🐛 Bug Fixes
+
+* **pushpress:** describe visible workout category selector ([cddeeb3](https://github.com/Mlkem/Morphe/commit/cddeeb3299c86d0592c842837188101885041c56))
+* **pushpress:** publish startup-hook diagnostic to isolate inactive selector ([3e74bdf](https://github.com/Mlkem/Morphe/commit/3e74bdf8c35a0f5397bb8ef128772d3fc30d6e92))
+* **pushpress:** recognize actual Workouts class dropdown and verify CrossFit selection ([fdb089d](https://github.com/Mlkem/Morphe/commit/fdb089df855ebec7c36a9d35efd4a477f334d190))
+
 ## [1.0.0-dev.29](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.28...v1.0.0-dev.29) (2026-11-12)
 
 ### ✨ New Features

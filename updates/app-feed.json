@@ -117,7 +117,7 @@
     },
     "com.pushpress.memberportal": {
       "name": "PushPress Members",
-      "revision": "912c4d065ef33a9cddb449724497d3d160d08dc43ffb742d3d0ca8d1b9193a59",
+      "revision": "4b98c9410ac9ef7403a7c3f2c002f46aa37e31e593d7fd24d13a065fbf85d7aa",
       "supportedVersions": [
         "3.42.0",
         "3.44.0",
@@ -188,9 +188,8 @@
       }
     }
   },
-  "generatedAt": "2026-11-12T14:17:20.887466+00:00",
-  "releaseUrl": "https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.29",
-  "releaseVersion": "1.0.0-dev.29",
-  "schema": 1,
-  "upstreamCheckedAt": "2026-11-12T14:30:58.645952+00:00"
+  "generatedAt": "2026-11-12T18:11:59.570525+00:00",
+  "releaseUrl": "https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.30",
+  "releaseVersion": "1.0.0-dev.30",
+  "schema": 1
 }

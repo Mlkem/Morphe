@@ -94,7 +94,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.29](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.29)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;43 patches total
+> **[v1.0.0-dev.30](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.30)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;43 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -343,7 +343,7 @@ provide privacy.
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [Workouts: force CrossFit class](#workouts-force-crossfit-class) | On the Workouts page, automatically selects CrossFit class from the Class type dropdown. |  |
+| [Workouts: force CrossFit class](#workouts-force-crossfit-class) | On Workouts, defaults the visible category dropdown to CrossFit Class on each visit. |  |
 
 </details>
 
