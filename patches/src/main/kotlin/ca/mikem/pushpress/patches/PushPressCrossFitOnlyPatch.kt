@@ -8,13 +8,13 @@ private const val EXTENSION_CLASS =
     "Lca/mikem/pushpress/extension/CrossFitOnly;"
 
 /**
- * Forces the API-provided "CrossFit class" item whenever the Class type dropdown is opened
- * on the PushPress Workouts screen. The API response itself is not modified.
+ * Opens the Workouts category dropdown and selects CrossFit Class using the
+ * actual category labels observed on screen. The API response is not modified.
  */
 @Suppress("unused")
 val pushPressCrossFitOnlyPatch = bytecodePatch(
     name = "Workouts: force CrossFit class",
-    description = "On the Workouts page, automatically selects CrossFit class from the Class type dropdown.",
+    description = "On Workouts, defaults the visible category dropdown to CrossFit Class on each visit.",
     default = true
 ) {
     dependsOn(ca.mlkem.updates.startupUpdates)
