@@ -35,7 +35,7 @@ ANDROID_JAR="$ANDROID_JAR" ./gradlew -p tests/walmart/android test \
 ```
 
 The Python verifier requires `androguard` 4.x. It checks that both factory
-branches call both options with the returned Activity register, original branch
+branches call all three options with the returned Activity register, original branch
 destinations and all other loader methods remain unchanged, all original assets
 and ARM64 libraries survive, the
 encrypted payload and secondary DEX files remain byte-identical, and class
@@ -59,3 +59,7 @@ Negative checks must fail without writing an output APK:
 
 Real-device startup, camera behavior, notifications and total ad coverage remain
 separate phone tests. Do not mark the collection stable based on these checks.
+
+## Mobile data streaming dialog
+
+The independently selectable **Auto-confirm Eufy mobile-data streaming** patch targets the exact English `Mobile Data Consuming` warning and streaming explanation. It sets the standard `Don't show again` checkbox if unchecked, then clicks the dialog's own Continue action. The checkable state is preserved if already enabled; image-drawn checkbox variants are not blindly toggled. No unrelated dialogs or network transport calls are modified. Android UI regressions cover positive, already-checked, unrelated-warning, and opt-in cases. The app's encrypted internal preference key has not been identified, so this is a foreground UI workaround rather than a guaranteed pre-display suppression or durable preference rewrite. Device verification is required.
