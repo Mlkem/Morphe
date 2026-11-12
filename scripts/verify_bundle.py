@@ -9,6 +9,11 @@ assert len(names)==len(set(names)), 'Duplicate patch names'
 packages={c['packageName'] for p in patches for c in (p.get('compatiblePackages') or [])}
 expected={'com.google.android.gm','com.oceanwing.battery.cam','com.google.android.inputmethod.latin','com.songsterr','com.musicleague.app','ca.walmart.ecommerceapp','com.wongnai.android','com.neave.zoomearth','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','com.thaidigitalplatform.tagthai','app.morphe.manager'}
 assert packages==expected, f'Unexpected app set: {packages}'
+legacy_zoom=next(p for p in patches if p['name']=='Remove LiteAPKS nag')
+assert legacy_zoom['default'] is False, 'Legacy 6.1 popup patch must be opt-in'
+assert len(legacy_zoom['compatiblePackages']) == 1
+assert [t['version'] for t in legacy_zoom['compatiblePackages'][0]['targets']] == ['6.1']
+assert all(t['isExperimental'] for t in legacy_zoom['compatiblePackages'][0]['targets'])
 zoom_names={'Enable Zoom Earth Pro features','Remove Zoom Earth ads','100 Zoom Earth favourites','Quiet Zoom Earth prompts','Allow Zoom Earth patched installation','Remove Zoom Earth LiteAPKs promotions'}
 zoom=[p for p in patches if p['name'] in zoom_names]
 assert len(zoom)==6

@@ -160,4 +160,4 @@ temporary signing keys are not published. [Machine record](zoom-earth-validation
   Morphe patch log. Confirm the source version and exact patch selections, then
   compare the APK's DEX and JavaScript with the desktop output before another retry.
 
-The legacy 6.1 LiteAPKS/9MOD popup-removal source is retained unchanged.
+The legacy 6.1 LiteAPKS/9MOD popup-removal patch is now **opt-in and experimental**. It must resolve both original dialog fingerprints before any bytecode changes; an unmatched or different 6.1 APK is rejected. This prevents the earlier partial-mutation path but does **not** establish phone compatibility or support for 6.3.3.
