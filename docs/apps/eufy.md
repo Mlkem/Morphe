@@ -110,3 +110,7 @@ If a promotion remains, report its screen and a screenshot with private camera
 images/account details obscured. If startup fails, attach Morphe's patch log and
 the Android crash log. Repatch the original APKM with fewer options to isolate
 the problem; do not patch a previously modified Eufy APK again.
+
+## Optional: do not interrupt mobile-data streaming
+
+Select **Auto-confirm Eufy mobile-data streaming** separately from both existing Eufy options. For the exact English `Mobile Data Consuming` dialog shown during camera streaming, it checks the native `Don't show again` checkbox when accessible and invokes that dialog's Continue action. Already-checked boxes remain checked. It does **not** block Wi-Fi or mobile data, change connectivity routing, or dismiss unrelated warnings. A brief popup can still be visible before foreground detection; the protected app's persistent preference has not been located. This experimental option still requires physical-phone validation on 6.1.20 and 6.1.30.

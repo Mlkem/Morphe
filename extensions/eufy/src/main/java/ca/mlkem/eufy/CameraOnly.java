@@ -7,10 +7,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.inspector.WindowInspector;
+import android.widget.Checkable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.util.ArrayDeque;
@@ -20,7 +22,7 @@ import java.util.WeakHashMap;
 
 /** Version-specific UI IDs confirmed against original 6.1.20 and 6.1.30 APKMs. No network/camera API calls. */
 public final class CameraOnly implements Application.ActivityLifecycleCallbacks {
-    static final int NAV = 1, PROMOTIONS = 2;
+    static final int NAV = 1, PROMOTIONS = 2, MOBILE_STREAMING = 4;
     static final int MAIN_TABS = 0x7f0a1719;
     static final int HOME_BANNER = 0x7f0a0c04, AI_BANNER = 0x7f0a0c03;
     static final int SHOP_IMAGE = 0x7f0a1a01, SHOP_CLOSE = 0x7f0a19ff;
@@ -43,6 +45,7 @@ public final class CameraOnly implements Application.ActivityLifecycleCallbacks 
     private final Map<Activity, Observer> active = new IdentityHashMap<>();
     private final WeakHashMap<Activity, Boolean> registered = new WeakHashMap<>();
     private final WeakHashMap<View, HiddenState> hidden = new WeakHashMap<>();
+    private final WeakHashMap<View, Long> acceptedMobileData = new WeakHashMap<>();
     private int flags;
     private int targetBuild = BUILD_31181;
     private boolean applying;
@@ -51,6 +54,8 @@ public final class CameraOnly implements Application.ActivityLifecycleCallbacks 
     public static void enablePromotions(Activity activity) { enable(activity, PROMOTIONS, BUILD_31181); }
     public static void enableNavigation32823(Activity activity) { enable(activity, NAV, BUILD_32823); }
     public static void enablePromotions32823(Activity activity) { enable(activity, PROMOTIONS, BUILD_32823); }
+    public static void enableMobileStreaming(Activity activity) { enable(activity, MOBILE_STREAMING, BUILD_31181); }
+    public static void enableMobileStreaming32823(Activity activity) { enable(activity, MOBILE_STREAMING, BUILD_32823); }
 
     private static void enable(Activity activity, int flag, int versionCode) {
         if (activity == null) return;
@@ -76,7 +81,7 @@ public final class CameraOnly implements Application.ActivityLifecycleCallbacks 
             if (Build.VERSION.SDK_INT >= 29) {
                 for (View root : WindowInspector.getGlobalWindowViews()) safeApply(root);
             }
-            handler.postDelayed(this, 600);
+            handler.postDelayed(this, (flags & MOBILE_STREAMING) != 0 ? 200 : 600);
         }
     };
 
@@ -93,6 +98,7 @@ public final class CameraOnly implements Application.ActivityLifecycleCallbacks 
     }
 
     void apply(View root) {
+        if ((flags & MOBILE_STREAMING) != 0) autoConfirmMobileData(root);
         // A new build reuses the old IDs for unrelated views. Never search the
         // old IDs when running 32823, even if the correct targets are absent.
         boolean modern = targetBuild == BUILD_32823;
@@ -132,6 +138,77 @@ public final class CameraOnly implements Application.ActivityLifecycleCallbacks 
             modern ? SHOP_CLOSE_32823 : SHOP_CLOSE, 0);
         closeOffer(root, modern ? SOLAR_IMAGE_32823 : SOLAR_IMAGE,
             modern ? SOLAR_CLOSE_32823 : SOLAR_CLOSE, modern ? SOLAR_MORE_32823 : SOLAR_MORE);
+    }
+
+
+    /**
+     * Exact-title UI workaround for Eufy's recurring mobile-data prompt.
+     * Does not alter Wi-Fi, network permissions, or other security dialogs.
+     * A separate dialog may briefly render before the foreground scan finds it.
+     */
+    private void autoConfirmMobileData(View root) {
+        if (root == null) return;
+        ArrayDeque<View> queue = new ArrayDeque<>();
+        queue.add(root);
+        boolean title = false, message = false, rememberLabel = false;
+        View continueLabel = null;
+        Checkable checkbox = null;
+        int checkboxCount = 0, visited = 0;
+        while (!queue.isEmpty() && visited++ < 2048) {
+            View view = queue.removeFirst();
+            if (view instanceof TextView) {
+                String s = ((TextView) view).getText().toString().replace('\n', ' ').trim();
+                if ("Mobile Data Consuming".equals(s) || "Cellular Data Consuming".equals(s))
+                    title = true;
+                else if (s.contains("Continue using mobile data for streaming?"))
+                    message = true;
+                else if ("Don't show again".equals(s) || "Don’t show again".equals(s))
+                    rememberLabel = true;
+                else if ("Continue".equals(s))
+                    continueLabel = view;
+            }
+            if (view instanceof Checkable) {
+                checkbox = (Checkable) view;
+                checkboxCount++;
+            }
+            if (view instanceof ViewGroup) {
+                ViewGroup group = (ViewGroup) view;
+                for (int i = 0; i < group.getChildCount(); i++)
+                    queue.addLast(group.getChildAt(i));
+            }
+        }
+        // All labels must match; unrelated warnings, incomplete prompts and
+        // ambiguous multiple-checkbox dialogs must be left alone.
+        if (!title || !message || !rememberLabel || continueLabel == null || checkboxCount > 1)
+            return;
+        View action = clickTarget(continueLabel);
+        if (action == null || !action.isShown()) return;
+        if (checkbox != null && !checkbox.isChecked()) {
+            View control = (View) checkbox;
+            if (!control.isEnabled()) return;
+            if (control.isClickable() && control.hasOnClickListeners())
+                control.performClick();
+            else
+                checkbox.setChecked(true);
+            if (!checkbox.isChecked()) return;
+        }
+        // Some Eufy variants use an image-based checkmark. Never blindly
+        // toggle an unknown state: the photographed box was already checked.
+        long now = SystemClock.uptimeMillis();
+        Long last = acceptedMobileData.get(action);
+        if (last != null && now - last < 1500) return;
+        acceptedMobileData.put(action, now);
+        if (!action.performClick()) acceptedMobileData.remove(action);
+    }
+
+    private static View clickTarget(View label) {
+        View action = label;
+        for (int i = 0; action != null && i < 4; i++) {
+            if (action.isEnabled() && action.isClickable() && action.hasOnClickListeners())
+                return action;
+            action = action.getParent() instanceof View ? (View) action.getParent() : null;
+        }
+        return null;
     }
 
     private void closeOffer(View root, int marker, int closeId, int secondMarker) {

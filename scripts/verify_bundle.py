@@ -4,7 +4,7 @@ import json, zipfile
 root=Path(__file__).resolve().parents[1]
 patches=json.loads((root/'patches-list.json').read_text())['patches']
 names=[p['name'] for p in patches]
-assert len(patches)==42, f'Expected 42 patches, found {len(patches)}'
+assert len(patches)==43, f'Expected 43 patches, found {len(patches)}'
 assert len(names)==len(set(names)), 'Duplicate patch names'
 packages={c['packageName'] for p in patches for c in (p.get('compatiblePackages') or [])}
 expected={'com.google.android.gm','com.oceanwing.battery.cam','com.google.android.inputmethod.latin','com.songsterr','com.musicleague.app','ca.walmart.ecommerceapp','com.wongnai.android','com.neave.zoomearth','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','com.thaidigitalplatform.tagthai','app.morphe.manager'}
@@ -25,7 +25,8 @@ for p in zoom:
     min_sdk=32 if p['name']=='Allow Zoom Earth patched installation' else 26
     assert all(t['minSdk']==min_sdk and t['isExperimental'] for t in target['targets'])
 eufy=[p for p in patches if any(c['packageName']=='com.oceanwing.battery.cam' for c in p.get('compatiblePackages') or [])]
-assert len(eufy)==2
+assert len(eufy)==3
+assert {p['name'] for p in eufy} == {'Hide Eufy Discover, Smart and Shop', 'Hide Eufy promotions', 'Auto-confirm Eufy mobile-data streaming'}
 for p in eufy:
     assert not p['default']
     assert p['compatiblePackages'][0]['apkFileType']=='APKM'
