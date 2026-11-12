@@ -94,7 +94,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.25](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.25)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;42 patches total
+> **[v1.0.0-dev.26](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.26)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;42 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -112,7 +112,7 @@ provide privacy.
 | [Allow Zoom Earth patched installation](#allow-zoom-earth-patched-installation) | Experimental original-APK startup attempt; dev.10 still showed Get this app from Play on the phone. Do not select for the working LiteAPKs APK. Disables two local checks, preserves native VM assets and does not grant paid server access. |  |
 | [Enable Zoom Earth Pro features](#enable-zoom-earth-pro-features) | Enables local Pro controls, hides Pro upsells and permits up to ten daily forecast rows when data is supplied. Paid radar/model data still uses the real account entitlement; this does not create a subscription. Phone testing pending. |  |
 | [Quiet Zoom Earth prompts](#quiet-zoom-earth-prompts) | Disables automatic subscription popups and review requests. Manual subscription actions, permission prompts and weather/outage notices remain available. Phone testing pending. |  |
-| [Remove LiteAPKS nag](#remove-liteapks-nag) | Removes the injected LiteAPKS / 9MOD promotional popup from Zoom Earth. |  |
+| [Remove LiteAPKS nag](#remove-liteapks-nag) | Legacy Zoom Earth 6.1 LiteAPKS/9MOD popup cleanup. Both original fingerprints must match; unverified on a phone. |  |
 | [Remove Zoom Earth LiteAPKs promotions](#remove-zoom-earth-liteapks-promotions) | Removes the two injected promotional startup calls from the supplied working LiteAPKs 6.3.3 APK. Preserves its restored startup methods and DEX layout. Use this APK as input; do not select the original-only startup patch. Phone retest required. |  |
 | [Remove Zoom Earth ads](#remove-zoom-earth-ads) | Stops the bundled banner controller from initializing or showing ads, and collapses the ad footer. Works independently of Pro. Phone testing pending. |  |
 
@@ -232,12 +232,12 @@ provide privacy.
 
 **🎯 Supported versions:**
 
-| 12.11.0 |
+| 🧪&nbsp;12.11.0 |
 | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [Disable Wongnai Google ads](#disable-wongnai-google-ads) | Stops the identified Google banner, native and interstitial ad loaders in Wongnai 12.11.0, and uses its existing photo-ad fallback. |  |
+| [Disable Wongnai Google ads](#disable-wongnai-google-ads) | Stops the identified Google banner, native and interstitial ad loaders in Wongnai 12.11.0, and uses its existing photo-ad fallback. Phone testing pending. |  |
 
 </details>
 

@@ -1,3 +1,11 @@
+## [1.0.0-dev.26](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.25...v1.0.0-dev.26) (2026-11-12)
+
+### 🐛 Bug Fixes
+
+* **walmart:** reject mismatched original build codes ([aaf4426](https://github.com/Mlkem/Morphe/commit/aaf44264ce6e0f2a463a3c58b6f843dd4573cdb5))
+* **wongnai:** keep untested ad patch experimental and opt-in ([99d31dc](https://github.com/Mlkem/Morphe/commit/99d31dc95131948430ec0d2d34f3b4552ae88c73))
+* **zoom-earth:** fail closed on legacy popup fingerprints ([972138c](https://github.com/Mlkem/Morphe/commit/972138ce13ac92799a76bda6aa5bfe55955687da))
+
 ## [1.0.0-dev.25](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.24...v1.0.0-dev.25) (2026-11-11)
 
 ### ✨ New Features

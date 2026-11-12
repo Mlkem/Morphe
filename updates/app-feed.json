@@ -19,7 +19,7 @@
     },
     "ca.walmart.ecommerceapp": {
       "name": "Walmart Canada",
-      "revision": "87509f28b9dfd4c35b33964903f1f6e16e79dc0db21d9c8167cadc09ec528073",
+      "revision": "ed03e78228a7617ac85aa65a0aad28e40fecb6d99334846e0004335a5ab55ef3",
       "supportedVersions": [
         "26.41.2",
         "26.31"
@@ -74,7 +74,7 @@
     },
     "com.neave.zoomearth": {
       "name": "Zoom Earth",
-      "revision": "64daf170e9e6cd29131d84ee8c935dbca75abc0b90bc20998b67893d7c0ef7a1",
+      "revision": "ad28c90d35dc659b026b0e36cb7b66c59fbab521b92a858e9068cd5aba58f11b",
       "supportedVersions": [
         "6.3.3",
         "6.1"
@@ -173,7 +173,7 @@
     },
     "com.wongnai.android": {
       "name": "Wongnai",
-      "revision": "c5e348548db2fb39d42277820d63ec11c926d109d7a8eac5debdbe3fca6584ac",
+      "revision": "55beff8eb3aa066c62e53793c48326938eca24f984fed23a40be5e3433a77c32",
       "supportedVersions": [
         "12.11.0"
       ],
@@ -186,9 +186,8 @@
       }
     }
   },
-  "generatedAt": "2026-11-11T14:32:22.038700+00:00",
-  "releaseUrl": "https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.25",
-  "releaseVersion": "1.0.0-dev.25",
-  "schema": 1,
-  "upstreamCheckedAt": "2026-11-11T19:43:19.825106+00:00"
+  "generatedAt": "2026-11-12T01:14:00.436926+00:00",
+  "releaseUrl": "https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.26",
+  "releaseVersion": "1.0.0-dev.26",
+  "schema": 1
 }
