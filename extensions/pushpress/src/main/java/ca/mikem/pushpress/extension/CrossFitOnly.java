@@ -19,9 +19,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import java.lang.reflect.Modifier;
 
 /**
  * Automatically defaults the visible workout-category dropdown to CrossFit Class.
@@ -54,12 +57,14 @@ public final class CrossFitOnly {
     private static WeakReference<Activity> activityRef = new WeakReference<>(null);
     private static WeakReference<View> flutterViewRef = new WeakReference<>(null);
     private static AccessibilityNodeProvider provider;
-    private static Field semanticsTreeField;
     private static Field flutterAccessibilityBridgeField;
     private static long lastSemanticsRequestAt;
     private static long lastDiagnosticAt;
     private static long installStartedAt;
     private static int missingFlutterViewPolls;
+    private static int lastNodeCount;
+    private static String lastRecognizedClass = "";
+    private static String lastSemanticsProblem = "";
     private static boolean installed;
     private static boolean semanticsEnabled;
     private static boolean selectedThisVisit;
@@ -81,8 +86,10 @@ public final class CrossFitOnly {
         activityRef = new WeakReference<>(activity);
         flutterViewRef = new WeakReference<>(null);
         provider = null;
-        semanticsTreeField = null;
         flutterAccessibilityBridgeField = null;
+        lastNodeCount = 0;
+        lastRecognizedClass = "";
+        lastSemanticsProblem = "";
         lastSemanticsRequestAt = 0L;
         lastDiagnosticAt = 0L;
         semanticsEnabled = false;
@@ -95,19 +102,21 @@ public final class CrossFitOnly {
         MAIN.removeCallbacks(SCAN);
         MAIN.post(INSTALL);
 
-        // Temporary diagnostic: proves that the patched MainActivity actually calls
-        // this extension, even if FlutterView or semantics are unavailable.
+        // Only report when the automatic selection did not complete.
+        // Report actual stage, rather than only saying that Flutter is present.
         MAIN.postDelayed(() -> {
             Activity live = activityRef.get();
-            if (!isActivityUsable(live)) return;
+            if (!isActivityUsable(live) || selectedThisVisit) return;
             View flutter = flutterViewRef.get();
-            String status = flutter == null
-                    ? "hook active; FlutterView not detected"
-                    : "hook active; FlutterView detected";
-            Log.i(TAG, "Diagnostic toast: " + status);
-            Toast.makeText(live, "PushPress CrossFit patch: " + status,
-                    Toast.LENGTH_LONG).show();
-        }, 2_800L);
+            String status = flutter == null ? "view missing"
+                    : provider == null ? "bridge missing"
+                    : lastNodeCount == 0 ? "semantics empty"
+                    : lastRecognizedClass.isEmpty() ? "selector not found"
+                    : "selection not completed (" + lastRecognizedClass + ")";
+            if (!lastSemanticsProblem.isEmpty()) status += "; " + lastSemanticsProblem;
+            Log.w(TAG, "Stage diagnosis: " + status);
+            Toast.makeText(live, "CrossFit diagnostic: " + status, Toast.LENGTH_LONG).show();
+        }, 8_500L);
     }
 
     private static final Runnable INSTALL = new Runnable() {
@@ -149,6 +158,7 @@ public final class CrossFitOnly {
 
             long now = SystemClock.uptimeMillis();
             List<SemanticNode> nodes = readVisibleSemantics(flutterView);
+            lastNodeCount = nodes.size();
             if (nodes.isEmpty() && now - lastSemanticsRequestAt >= 3_000L) {
                 // Request Flutter semantics without changing Android accessibility settings.
                 enableFlutterSemantics(flutterView);
@@ -189,6 +199,8 @@ public final class CrossFitOnly {
                 return;
             }
             lastClassTypeSeenAt = now;
+            lastRecognizedClass = !classField.text.isEmpty()
+                    ? classField.text : classField.description;
 
             if (isExactClass(classField, CROSS_FIT_CLASS)) {
                 selectedThisVisit = true;
@@ -238,64 +250,85 @@ public final class CrossFitOnly {
     }
 
     /**
-     * FlutterView returns a null public provider when Android accessibility is off.
-     * The bridge still exists as a FlutterView field; read it directly instead.
+     * The production Flutter embedding is R8-minified (the older app calls
+     * FlutterView Mf.A). Never rely on the private field being literally named
+     * 'accessibilityBridge': discover it by its AccessibilityNodeProvider type.
      */
     private static AccessibilityNodeProvider resolveFlutterAccessibilityBridge(View flutterView) {
         if (flutterView == null) return null;
         try {
             AccessibilityNodeProvider publicProvider = flutterView.getAccessibilityNodeProvider();
             if (publicProvider != null) return publicProvider;
-            if (flutterAccessibilityBridgeField == null) {
-                Class<?> type = flutterView.getClass();
-                while (type != null) {
+
+            if (flutterAccessibilityBridgeField != null) {
+                Object value = flutterAccessibilityBridgeField.get(flutterView);
+                if (value instanceof AccessibilityNodeProvider) {
+                    return (AccessibilityNodeProvider) value;
+                }
+            }
+
+            for (Class<?> type = flutterView.getClass(); type != null; type = type.getSuperclass()) {
+                for (Field field : type.getDeclaredFields()) {
+                    if (Modifier.isStatic(field.getModifiers())) continue;
+                    // R8 may rename the type and field, but cannot remove inheritance.
+                    if (!AccessibilityNodeProvider.class.isAssignableFrom(field.getType())) {
+                        continue;
+                    }
                     try {
-                        Field field = type.getDeclaredField("accessibilityBridge");
                         field.setAccessible(true);
-                        flutterAccessibilityBridgeField = field;
-                        break;
-                    } catch (NoSuchFieldException ignored) {
-                        type = type.getSuperclass();
+                        Object value = field.get(flutterView);
+                        if (value instanceof AccessibilityNodeProvider) {
+                            flutterAccessibilityBridgeField = field;
+                            return (AccessibilityNodeProvider) value;
+                        }
+                    } catch (Throwable ignored) {
+                        // Keep looking at other fields even when a private one is blocked.
                     }
                 }
             }
-            if (flutterAccessibilityBridgeField == null) return null;
-            Object raw = flutterAccessibilityBridgeField.get(flutterView);
-            return raw instanceof AccessibilityNodeProvider
-                    ? (AccessibilityNodeProvider) raw : null;
+            lastSemanticsProblem = "no provider-typed view field";
         } catch (Throwable error) {
-            Log.w(TAG, "Could not obtain Flutter's private accessibility bridge", error);
-            return null;
+            Log.w(TAG, "Could not obtain Flutter accessibility bridge", error);
+            lastSemanticsProblem = "bridge reflection error";
         }
+        return null;
     }
 
+    /**
+     * Flutter's Android accessibility bridge stores semantics in a Map<Integer,
+     * SemanticsNode>. Its field name is also obfuscated in production. Collect
+     * virtual IDs from candidate integer-keyed Maps and ask the provider for
+     * actual AccessibilityNodeInfo objects. Unrelated map keys are harmless.
+     */
     private static List<SemanticNode> readVisibleSemantics(View flutterView) {
         AccessibilityNodeProvider activeProvider = provider;
         if (activeProvider == null) return Collections.emptyList();
         try {
-            if (semanticsTreeField == null) {
-                Class<?> type = activeProvider.getClass();
-                while (type != null && semanticsTreeField == null) {
-                    try {
-                        semanticsTreeField = type.getDeclaredField("flutterSemanticsTree");
-                        semanticsTreeField.setAccessible(true);
-                    } catch (NoSuchFieldException missing) {
-                        type = type.getSuperclass();
-                    }
-                }
-                if (semanticsTreeField == null) return Collections.emptyList();
-            }
-            Object raw = semanticsTreeField.get(activeProvider);
-            if (!(raw instanceof Map)) return Collections.emptyList();
-            Map<?, ?> semantics = (Map<?, ?>) raw;
-            // Snapshot IDs before calling back into Flutter. All access is on the main thread.
-            List<Integer> ids = new ArrayList<>(semantics.size());
-            for (Object id : semantics.keySet()) {
-                if (id instanceof Integer) ids.add((Integer) id);
-            }
             Rect screen = new Rect();
             if (!flutterView.getGlobalVisibleRect(screen)) return Collections.emptyList();
-            List<SemanticNode> result = new ArrayList<>(ids.size());
+
+            Set<Integer> ids = new HashSet<>();
+            int mapsSeen = 0;
+            for (Class<?> type = activeProvider.getClass(); type != null;
+                 type = type.getSuperclass()) {
+                for (Field field : type.getDeclaredFields()) {
+                    if (Modifier.isStatic(field.getModifiers()) ||
+                            !Map.class.isAssignableFrom(field.getType())) continue;
+                    try {
+                        field.setAccessible(true);
+                        Object raw = field.get(activeProvider);
+                        if (!(raw instanceof Map)) continue;
+                        mapsSeen++;
+                        for (Object id : ((Map<?, ?>) raw).keySet()) {
+                            if (id instanceof Integer) ids.add((Integer) id);
+                        }
+                    } catch (Throwable ignored) {
+                        // Skip fields that are inaccessible; don't fail the entire scan.
+                    }
+                }
+            }
+
+            List<SemanticNode> result = new ArrayList<>(Math.min(ids.size(), 256));
             for (int id : ids) {
                 AccessibilityNodeInfo info = null;
                 try {
@@ -308,14 +341,22 @@ public final class CrossFitOnly {
                     String description = normalize(info.getContentDescription());
                     if (text.isEmpty() && description.isEmpty() && !info.isClickable()) continue;
                     result.add(new SemanticNode(id, text, description, rect, info.isClickable()));
+                } catch (Throwable ignored) {
+                    // Some virtual semantics IDs are not accessible from Android.
                 } finally {
                     recycle(info);
                 }
             }
+            if (result.isEmpty()) {
+                lastSemanticsProblem = mapsSeen == 0 ? "no semantics map"
+                        : ids.isEmpty() ? "semantics map empty" : "nodes not exposed";
+            } else {
+                lastSemanticsProblem = "";
+            }
             return result;
         } catch (Throwable error) {
             Log.w(TAG, "Unable to inspect Flutter semantics", error);
-            semanticsTreeField = null;
+            lastSemanticsProblem = "semantics inspection error";
             return Collections.emptyList();
         }
     }
@@ -377,8 +418,11 @@ public final class CrossFitOnly {
 
     private static boolean matchesClass(String value, String className) {
         if (value == null || value.isEmpty()) return false;
-        // Flutter can append semantics hints such as ", selected" and ", button".
+        // Flutter can append hints (button, selected, double-tap), sometimes
+        // separated by spaces instead of commas. Screen bounds filter the
+        // controls, so matching the entire category name as a phrase is safe.
         return value.equals(className) || value.startsWith(className + ",")
+                || value.startsWith(className + " ")
                 || value.endsWith(", " + className)
                 || value.contains(", " + className + ",");
     }
@@ -449,24 +493,50 @@ public final class CrossFitOnly {
         try {
             Method getEngine = flutterView.getClass().getMethod("getAttachedFlutterEngine");
             Object engine = getEngine.invoke(flutterView);
-            if (engine == null) return;
-            Field flutterJniField = null;
-            for (Field field : engine.getClass().getDeclaredFields()) {
-                if ("io.flutter.embedding.engine.FlutterJNI".equals(field.getType().getName())) {
-                    flutterJniField = field;
-                    break;
+            if (engine == null) {
+                lastSemanticsProblem = "engine not attached";
+                return;
+            }
+
+            // Prefer the official AccessibilityChannel API. Its implementation
+            // calls FlutterJNI.setSemanticsEnabled(true) and retains the bridge.
+            try {
+                Method getChannel = engine.getClass().getMethod("getAccessibilityChannel");
+                Object channel = getChannel.invoke(engine);
+                if (channel != null) {
+                    channel.getClass().getMethod("onAndroidAccessibilityEnabled").invoke(channel);
+                    semanticsEnabled = true;
+                    return;
+                }
+            } catch (Throwable ignored) {
+                // Some Flutter embeddings obfuscate this public API.
+            }
+
+            // Fallback: locate the JNI object by the *method* it implements.
+            // Field names and implementation class names may both be minified.
+            for (Class<?> type = engine.getClass(); type != null; type = type.getSuperclass()) {
+                for (Field field : type.getDeclaredFields()) {
+                    if (Modifier.isStatic(field.getModifiers())) continue;
+                    try {
+                        field.setAccessible(true);
+                        Object candidate = field.get(engine);
+                        if (candidate == null) continue;
+                        Method setSemantics = candidate.getClass().getMethod(
+                                "setSemanticsEnabled", boolean.class);
+                        setSemantics.invoke(candidate, true);
+                        semanticsEnabled = true;
+                        return;
+                    } catch (NoSuchMethodException ignored) {
+                        // Not FlutterJNI.
+                    } catch (Throwable ignored) {
+                        // Reflection failure on this field; try another.
+                    }
                 }
             }
-            if (flutterJniField == null) return;
-            flutterJniField.setAccessible(true);
-            Object flutterJni = flutterJniField.get(engine);
-            if (flutterJni == null) return;
-            Method setSemanticsEnabled =
-                    flutterJni.getClass().getMethod("setSemanticsEnabled", boolean.class);
-            setSemanticsEnabled.invoke(flutterJni, true);
-            semanticsEnabled = true;
+            lastSemanticsProblem = "semantics API unavailable";
         } catch (Throwable error) {
-            Log.w(TAG, "Unable to enable Flutter semantics yet", error);
+            Log.w(TAG, "Unable to enable Flutter semantics", error);
+            lastSemanticsProblem = "enable semantics error";
         }
     }
 
