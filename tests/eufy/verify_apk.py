@@ -10,8 +10,8 @@ logger.remove()
 from androguard.core.dex import DEX
 
 assert len(sys.argv) == 4 and sys.argv[3] in ('31181', '32823'), 'Usage: verify_apk.py original.apkm patched.apk 31181|32823'
-expected_hooks = ({'enableNavigation', 'enablePromotions'} if sys.argv[3] == '31181'
-                  else {'enableNavigation32823', 'enablePromotions32823'})
+expected_hooks = ({'enableNavigation', 'enablePromotions', 'enableMobileStreaming'} if sys.argv[3] == '31181'
+                  else {'enableNavigation32823', 'enablePromotions32823', 'enableMobileStreaming32823'})
 bundle = zipfile.ZipFile(sys.argv[1])
 base = zipfile.ZipFile(io.BytesIO(bundle.read('base.apk')))
 out = zipfile.ZipFile(sys.argv[2])
@@ -80,17 +80,17 @@ for cls in original.get_classes():
         if cls.get_name() == 'Ls/h/e/l/l/A;' and method.get_name() == 'instantiateActivity':
             ins = code(patched)
             hooks = [(i, text) for i, (op, text) in enumerate(ins) if 'Lca/mlkem/eufy/CameraOnly;' in text]
-            assert len(hooks) == 4, 'both options must cover BOTH factory paths'
+            assert len(hooks) == 6, 'all three options must cover BOTH factory paths'
             calls = [i for i,(op,s) in enumerate(ins) if op in ('invoke-virtual', 'invoke-super')
                      and 'Landroid/app/AppComponentFactory;->instantiateActivity' in s]
             assert len(calls) == 2
             for call in calls:
                 assert ins[call+1] == ('move-result-object', 'v0')
-                entries = ins[call+2:call+4]
+                entries = ins[call+2:call+5]
                 assert {text.split('->')[1].split('(')[0] for _,text in entries} == expected_hooks, 'wrong version-specific hook'
                 assert all(op == 'invoke-static' and text.startswith('v0, ') and
                            '(Landroid/app/Activity;)V' in text for op,text in entries)
-            assert [i for i,_ in hooks] == [c+j for c in calls for j in (2,3)]
+            assert [i for i,_ in hooks] == [c+j for c in calls for j in (2,3,4)]
             assert patched.get_code().get_registers_size() == method.get_code().get_registers_size() == 5
             # Match all original instructions, including exact control-flow
             # destinations, after excluding hooks and resolving byte offsets.
@@ -118,7 +118,7 @@ for cls in original.get_classes():
             assert code(method) == code(patched), f'unrelated loader method changed: {k}'
 
 assert 'Lca/mlkem/eufy/CameraOnly;' in classes
-print(f'PASS: Eufy {sys.argv[3]} uses {sorted(expected_hooks)}; both Activity factory paths hooked with both options; original branch targets preserved; other loader methods unchanged; '
+print(f'PASS: Eufy {sys.argv[3]} uses {sorted(expected_hooks)}; both Activity factory paths hooked with all three options; original branch targets preserved; other loader methods unchanged; '
       f'{len(assets)} assets/arm64 libraries preserved; no duplicate classes; '
       'encrypted payload and secondary DEX files byte-identical.')
 print('APK SHA-256:', hashlib.file_digest(Path(sys.argv[2]).open('rb'), 'sha256').hexdigest())
