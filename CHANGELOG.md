@@ -1,3 +1,9 @@
+## [1.0.0-dev.31](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.30...v1.0.0-dev.31) (2026-11-12)
+
+### 🐛 Bug Fixes
+
+* **pushpress:** find minified Flutter accessibility bridge by type and expose selector stage ([8b49aca](https://github.com/Mlkem/Morphe/commit/8b49aca9ca08362ed93f838ce26fa830c1e5f9f6))
+
 ## [1.0.0-dev.30](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.29...v1.0.0-dev.30) (2026-11-12)
 
 ### 🐛 Bug Fixes
