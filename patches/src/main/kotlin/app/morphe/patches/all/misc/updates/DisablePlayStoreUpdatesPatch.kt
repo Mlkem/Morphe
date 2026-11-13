@@ -32,8 +32,8 @@ import app.morphe.patcher.extensions.InstructionExtensions.getInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.replaceInstruction
 import app.morphe.patcher.fieldAccess
 import app.morphe.patcher.methodCall
-import app.morphe.patcher.patch.patch
-import app.morphe.patcher.patch.resourceXml
+import app.morphe.patcher.patch.bytecodePatch
+import app.morphe.patcher.patch.resourcePatch
 import app.morphe.patcher.util.getFreeRegisterProvider
 import app.morphe.patcher.util.matchAllMethodIndicesForEach
 import app.morphe.patcher.util.returnEarly
@@ -47,23 +47,33 @@ private const val EXTENSION_CLASS = "Lapp/morphe/extension/all/versioncode/Disab
 private var originalVersionCode: Int = 0
 
 @Suppress("unused")
-private val disablePlayStoreUpdatesResourcePatch = patch {
+private val disablePlayStoreUpdatesResourcePatch = resourcePatch {
     execute {
-        resourceXml("AndroidManifest.xml").use { manifest ->
-            originalVersionCode = manifest.root.attribute("android:versionCode")!!.toInt()
+        document("AndroidManifest.xml").use { document ->
+            val manifest = document.documentElement
+            val namespace = "http://schemas.android.com/apk/res/android"
+            val code = manifest.getAttributeNS(namespace, "versionCode")
+                .ifEmpty { manifest.getAttribute("android:versionCode") }
+            originalVersionCode = code.toInt()
+            check(originalVersionCode > 0) { "Missing or invalid original version code." }
         }
     }
 
     finalize {
-        resourceXml("AndroidManifest.xml").use { manifest ->
-            //  Max allowed by Play Store is 2100000000, but Android allows max int value.
-            manifest.root.setAttribute("android:versionCode", Int.MAX_VALUE.toString())
+        document("AndroidManifest.xml").use { document ->
+            // Play does not accept a higher signed version code, and Android
+            // accepts Integer.MAX_VALUE as the manifest value.
+            document.documentElement.setAttributeNS(
+                "http://schemas.android.com/apk/res/android",
+                "android:versionCode",
+                Int.MAX_VALUE.toString()
+            )
         }
     }
 }
 
 @Suppress("unused")
-internal val disablePlayStoreUpdatesPatch = patch(
+val disablePlayStoreUpdatesPatch = bytecodePatch(
     name = "Disable Play Store updates",
     description = "Disables Play Store updates by setting the version code to the maximum allowed. " +
             "This patch may cause unexpected issues with some apps and does not work if the " +
@@ -75,7 +85,7 @@ internal val disablePlayStoreUpdatesPatch = patch(
 
     extendWith("extensions/all/versioncode/change-version-code.mpe")
 
-    finalize {
+    execute {
         Fingerprint(
             definingClass = EXTENSION_CLASS,
             name = "originalVersionCode"
