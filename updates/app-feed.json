@@ -188,9 +188,8 @@
       }
     }
   },
-  "generatedAt": "2026-11-12T23:33:02.547679+00:00",
-  "releaseUrl": "https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.31",
-  "releaseVersion": "1.0.0-dev.31",
-  "schema": 1,
-  "upstreamCheckedAt": "2026-11-13T06:56:25.037743+00:00"
+  "generatedAt": "2026-11-13T13:45:24.640200+00:00",
+  "releaseUrl": "https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.32",
+  "releaseVersion": "1.0.0-dev.32",
+  "schema": 1
 }
