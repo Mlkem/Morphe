@@ -136,7 +136,7 @@ for p in bundles:
         assert b'Lca/mlkem/manager/ApkMirrorSearchPatchKt;' in z.read('classes.dex')
         assert 'app/morphe/patches/all/misc/updates/DisablePlayStoreUpdatesPatchKt.class' in files
         assert b'Lapp/morphe/extension/all/versioncode/DisablePlayStoreUpdatesPatch;' in z.read('extensions/all/versioncode/change-version-code.mpe')
-        assert z.read('extensions/all/versioncode/change-version-code.mpe').startswith(b'dex\\n')
+        assert z.read('extensions/all/versioncode/change-version-code.mpe').startswith(b'dex\n')
         assert 'updates/revisions.properties' in files
         assert b'Lca/mlkem/updates/UpdateProvider;' in z.read('extensions/startup-updates.mpe')
         for name in ['extensions/startup-updates.mpe','extensions/gmail-accounts.mpe','extensions/canada.mpe','extensions/pushpress-crossfit-only.mpe','extensions/manager-apkmirror.mpe','extensions/tagthai-text.mpe','extensions/eufy-camera-only.mpe']:
