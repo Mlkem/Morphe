@@ -4,7 +4,7 @@ import json, zipfile
 root=Path(__file__).resolve().parents[1]
 patches=json.loads((root/'patches-list.json').read_text())['patches']
 names=[p['name'] for p in patches]
-assert len(patches)==43, f'Expected 43 patches, found {len(patches)}'
+assert len(patches)==44, f'Expected 44 patches, found {len(patches)}'
 assert len(names)==len(set(names)), 'Duplicate patch names'
 packages={c['packageName'] for p in patches for c in (p.get('compatiblePackages') or [])}
 expected={'com.google.android.gm','com.oceanwing.battery.cam','com.google.android.inputmethod.latin','com.songsterr','com.musicleague.app','ca.walmart.ecommerceapp','com.wongnai.android','com.neave.zoomearth','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','com.thaidigitalplatform.tagthai','app.morphe.manager'}
@@ -93,6 +93,10 @@ manager_target=manager['compatiblePackages'][0]
 assert manager_target['packageName'] == 'app.morphe.manager'
 assert [t['version'] for t in manager_target['targets']] == ['2.4.0-dev.1','2.4.0-dev.2','2.4.0-dev.3','2.4.0-dev.4']
 assert all(t['minSdk'] == 26 for t in manager_target['targets'])
+playstore=next(p for p in patches if p['name']=='Disable Play Store updates')
+assert playstore['default'] is False, 'Play Store update blocker must be opt-in'
+assert playstore['compatiblePackages'] is None, 'Play Store update blocker must remain universal'
+assert playstore['options'] == [], 'Play Store update blocker should not show extra UI options'
 merge=next(p for p in patches if p['name']=='Merge XAPK only')
 assert merge['default'] is False and merge['compatiblePackages'] is None
 for p in patches:
@@ -130,6 +134,9 @@ for p in bundles:
         assert b'Lca/mlkem/openwith/OpenWithProPatch;' in z.read('classes.dex')
         assert 'ca/mlkem/manager/ApkMirrorSearchPatchKt.class' in files
         assert b'Lca/mlkem/manager/ApkMirrorSearchPatchKt;' in z.read('classes.dex')
+        assert 'app/morphe/patches/all/misc/updates/DisablePlayStoreUpdatesPatchKt.class' in files
+        assert b'Lapp/morphe/extension/all/versioncode/DisablePlayStoreUpdatesPatch;' in z.read('extensions/all/versioncode/change-version-code.mpe')
+        assert z.read('extensions/all/versioncode/change-version-code.mpe').startswith(b'dex\n')
         assert 'updates/revisions.properties' in files
         assert b'Lca/mlkem/updates/UpdateProvider;' in z.read('extensions/startup-updates.mpe')
         for name in ['extensions/startup-updates.mpe','extensions/gmail-accounts.mpe','extensions/canada.mpe','extensions/pushpress-crossfit-only.mpe','extensions/manager-apkmirror.mpe','extensions/tagthai-text.mpe','extensions/eufy-camera-only.mpe']:

@@ -15,7 +15,7 @@ public class BundleTest {
         for(Patch<?> p:patches){
             Set<Patch<?>> closure=new HashSet<>();walk(p,closure);
             long providers=closure.stream().filter(d->d == StartupUpdatesKt.getStartupUpdates()).count();
-            require(providers==(p.getName().equals("Merge XAPK only")?0:1),"Startup dependency: "+p.getName()+" count="+providers);count++;
+            require(providers==((p.getName().equals("Merge XAPK only") || p.getName().equals("Disable Play Store updates"))?0:1),"Startup dependency: "+p.getName()+" count="+providers);count++;
         }
         DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();factory.setNamespaceAware(true);
         for(String pkg:new String[]{"ca.walmart.ecommerceapp","com.google.android.gm","app.morphe.android.gm"}){
