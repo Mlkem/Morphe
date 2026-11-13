@@ -30,6 +30,19 @@ New GitHub releases update this source inside Morphe. You still tap to repatch a
 install; source updates do not silently install apps. Local MPP downloads remain
 available from Releases. Disable duplicate local sources for these apps.
 
+## Optional Play Store update blocker
+
+**Disable Play Store updates** is one universal patch available for all compatible Android
+APK inputs. In Morphe's patch selection, enable it only when you want to prevent
+Google Play from updating the patched installation. It is **off by default**
+and adds no buttons, settings or notifications to the app.
+
+It raises the installed manifest version code to Android's maximum and preserves
+the original version code in common in-app checks. This is not guaranteed to work
+with every app. It does not work with root-mounted patches. When later repatching
+over the same installation, keep the blocker enabled to avoid a version-code
+downgrade error. [Behavior and limitations](docs/play-store-updates.md).
+
 ## Collection status
 
 | App / utility | Target | Included source | Status |
