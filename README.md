@@ -107,7 +107,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.32](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.32)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;44 patches total
+> **[v1.0.0-dev.33](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.33)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;44 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -139,12 +139,12 @@ provide privacy.
 
 **🎯 Supported versions:**
 
-| 🧪&nbsp;2.4.0-dev.1 | 🧪&nbsp;2.4.0-dev.2 | 🧪&nbsp;2.4.0-dev.3 | 🧪&nbsp;2.4.0-dev.4 |
-| :---: | :---: | :---: | :---: |
+| 🧪&nbsp;2.6.0 | 🧪&nbsp;2.4.0-dev.1 | 🧪&nbsp;2.4.0-dev.2 | 🧪&nbsp;2.4.0-dev.3 | 🧪&nbsp;2.4.0-dev.4 |
+| :---: | :---: | :---: | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [APKMirror search for collection apps](#apkmirror-search-for-collection-apps) | Changes Morphe Manager's download links for this collection's supported apps. Walmart Canada 26.31, Anker eufy 6.1.20_31181 and Gmail 2026.10.26.1012468012.Release open verified APKMirror APKM pages; other versions/apps use a package-and-version Google search restricted to APKMirror, without nodpi. Other apps keep Manager's resolver. Does not download files automatically. |  |
+| [APKMirror search for collection apps](#apkmirror-search-for-collection-apps) | Changes Morphe Manager's download links for this collection's supported apps. Walmart Canada 26.31, Anker eufy 6.1.20_31181/6.1.30_32823 and Gmail 2026.10.26.1012468012.Release open verified APKMirror APKM pages; other versions/apps, including Gboard and Songsterr, use a package-and-version Google search restricted to APKMirror, without nodpi. Manager itself opens its official GitHub release. Apps outside the collection keep Manager's resolver. Does not download files automatically. |  |
 
 </details>
 

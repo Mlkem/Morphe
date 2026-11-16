@@ -1,3 +1,9 @@
+## [1.0.0-dev.33](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.32...v1.0.0-dev.33) (2026-11-16)
+
+### 🐛 Bug Fixes
+
+* cover all app searches and support Manager 2.6 ([1f18c57](https://github.com/Mlkem/Morphe/commit/1f18c575f14c712901881520fc27468d4a99e064))
+
 ## [1.0.0-dev.32](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.31...v1.0.0-dev.32) (2026-11-13)
 
 ### ✨ New Features
