@@ -1,7 +1,7 @@
 # Morphe Manager: APKMirror search
 
 The optional **APKMirror search for collection apps** patch targets
-`app.morphe.manager` versions **2.4.0-dev.1–2.4.0-dev.4**. It is
+`app.morphe.manager` versions **2.6.0 and 2.4.0-dev.1–2.4.0-dev.4**. It is
 off by default and experimental until tested on a phone.
 
 ## Why this targets Manager
@@ -14,7 +14,7 @@ constructs that URL itself and adds `nodpi` to most fallback searches. Walmart
 
 This patch hooks the initial download link, asynchronous resolver and download
 helper fallback. The result is available immediately, without waiting for the
-redirect API. It only overrides the ten app packages in this collection; other
+redirect API. It covers all 13 app packages in this collection (12 APKMirror lookups and the official GitHub release for Manager); other
 apps retain Manager's existing resolution, including ABI handling.
 
 | App | Lookup |
@@ -22,6 +22,9 @@ apps retain Manager's existing resolution, including ABI handling.
 | Walmart Canada `ca.walmart.ecommerceapp` 26.31 | [Verified APKMirror APKM page](https://www.apkmirror.com/apk/walmart/walmart-shopping-made-easy/walmart-grocery-shopping-26-31-release/walmart-grocery-shopping-26-31-android-apk-download/) for build 26310017, four architectures |
 | Anker eufy `com.oceanwing.battery.cam` 6.1.20_31181 | [Verified APKMirror APKM page](https://www.apkmirror.com/apk/anker/anker-eufy/anker-eufy-6-1-20_31181-release/anker-eufy-6-1-20_31181-android-apk-download/) for build 31181, including the asset-pack split |
 | Gmail `com.google.android.gm` 2026.10.26.1012468012.Release | [Verified APKMirror arm64 APKM page](https://www.apkmirror.com/apk/google-inc/gmail/gmail-2026-10-26-1012468012-release-release/gmail-2026-10-26-1012468012-release-2-android-apk-download/) for build 66141086 |
+| Anker eufy 6.1.30_32823 | [Verified APKMirror APKM page](https://www.apkmirror.com/apk/anker/anker-eufy/anker-eufy-6-1-30_32823-release/anker-eufy-6-1-30_32823-android-apk-download/); this is a download route, not a new compatibility claim |
+| Morphe Manager `app.morphe.manager` | Exact official GitHub release; release index when no version is requested |
+| Gboard `com.google.android.inputmethod.latin`, Songsterr `com.songsterr` | Exact package/version Google search restricted to APKMirror |
 | Other Eufy, Gmail and Walmart versions | Exact package/version Google search restricted to APKMirror |
 | Music League, Wongnai, Zoom Earth, PushPress Members, Open with, GPS Emulator, TAGTHAi | Exact package/version Google search restricted to APKMirror |
 
@@ -41,8 +44,8 @@ specifically requires the matching modified APK, not a stock mirror download.
 ## Install
 
 1. Refresh the `dev` source and enable **Experimental app versions**.
-2. Download the official [Manager 2.4.0-dev.4 APK](https://github.com/MorpheApp/morphe-manager/releases/tag/v2.4.0-dev.4).
-   The official dev.1–dev.3 APKs are also supported.
+2. Download the official [Manager 2.6.0 APK](https://github.com/MorpheApp/morphe-manager/releases/tag/v2.6.0).
+   The official 2.4.0-dev.1–dev.4 APKs are also supported.
 3. Select that APK in Manager and enable **APKMirror search for collection apps**.
    Patch it and save/export the resulting APK to Downloads before uninstalling
    anything; a copy kept only in Manager's private storage is deleted with the app.
@@ -62,13 +65,19 @@ need compatibility checks before being added to the supported list.
 ## Verification
 
 `python3 scripts/test_manager_urls.py` runs URL routing and encoding checks without
-network access. Both CI workflows run it. `tests/manager/VerifyManagerMpp.java`
+network access. It loads every package/version from the generated patch catalogue,
+so a missing route for a newly added app fails CI. Empty and unknown versions are
+checked for every package too. Both CI workflows run it. `tests/manager/VerifyManagerMpp.java`
 applies the actual MPP to a separately obtained official Manager APK and checks
 the three entry hooks, parameter registers, branch destinations, original method
 bodies and injected extension. APK inputs and patched APKs are never committed.
 
-The local checks passed against all three supported official APKs, and reapplying
-to dev.3 did not duplicate the hooks. See [validation records](manager-validation/).
+The earlier checks covered dev.1–dev.3. The November 15 update also checks dev.4
+and stable 2.6.0. The 2.6.0 hooks account for the new source-header and ABI-target
+parameters while preserving the original resolver bodies. Both CI and beta
+release now run `python3 scripts/test_manager_apks.py` against every declared
+Manager APK, verifying the official release asset SHA-256 before patching.
+See [validation records](manager-validation/).
 To reproduce the APK check with JDK 21 and a Morphe Desktop JAR containing Patcher
 2.1.0:
 
@@ -78,6 +87,10 @@ javac -cp "$MORPHE_DESKTOP_JAR" -d build/manager-tests tests/manager/VerifyManag
 java -Xmx2g -cp "build/manager-tests:$MORPHE_DESKTOP_JAR" VerifyManagerMpp "$MANAGER_APK" "$COLLECTION_MPP" build/manager-check
 ```
 
+These checks establish correct URL routing and patch application; they cannot
+make APKMirror host a missing app/version. Music League, PushPress, Open with,
+TAGTHAi and Wongnai did not have confirmed APKMirror listings in this audit.
+Use the matching original local APK/archive if its search has no result.
 Phone import, installation, browser handoff and backup/restore still need testing.
 
 

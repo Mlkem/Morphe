@@ -17,7 +17,8 @@ PATHS={
  'com.thaidigitalplatform.tagthai':['patches/src/main/kotlin/ca/mlkem/tagthai','extensions/tagthai'],
  'com.wongnai.android':['patches/src/main/java/local/wongnai'],
 }
-SHARED=['patches/src/main/kotlin/ca/mlkem/updates','extensions/updates','scripts/updates/catalog.py']
+SHARED=['patches/src/main/kotlin/ca/mlkem/updates','extensions/updates','scripts/updates/catalog.py',
+        'patches/src/main/kotlin/app/morphe/patches/all/misc/updates','extensions/all/change-version-code']
 def revision(paths):
  h=hashlib.sha256()
  for entry in sorted(set(paths+SHARED)):

@@ -10,14 +10,14 @@ import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 
 private const val RESOLVER = "Lapp/morphe/manager/domain/manager/DownloadUrlResolver;"
 private const val HOOK = "Lca/mlkem/manager/ApkMirrorUrls;->forApp(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"
-private val versions = listOf("2.4.0-dev.1", "2.4.0-dev.2", "2.4.0-dev.3", "2.4.0-dev.4")
+private val versions = listOf("2.6.0", "2.4.0-dev.1", "2.4.0-dev.2", "2.4.0-dev.3", "2.4.0-dev.4")
 
 val apkMirrorSearch = bytecodePatch(
     name = "APKMirror search for collection apps",
     description = "Changes Morphe Manager's download links for this collection's supported apps. " +
-        "Walmart Canada 26.31, Anker eufy 6.1.20_31181 and Gmail 2026.10.26.1012468012.Release open verified APKMirror APKM pages; other versions/apps " +
+        "Walmart Canada 26.31, Anker eufy 6.1.20_31181/6.1.30_32823 and Gmail 2026.10.26.1012468012.Release open verified APKMirror APKM pages; other versions/apps, including Gboard and Songsterr, " +
         "use a package-and-version Google search restricted to APKMirror, without nodpi. " +
-        "Other apps keep Manager's resolver. Does not download files automatically.",
+        "Manager itself opens its official GitHub release. Apps outside the collection keep Manager's resolver. Does not download files automatically.",
     default = false
 ) {
     dependsOn(ca.mlkem.updates.startupUpdates)
@@ -30,20 +30,26 @@ val apkMirrorSearch = bytecodePatch(
     extendWith("extensions/manager-apkmirror.mpe")
     execute {
         check(packageMetadata.packageName == "app.morphe.manager" && packageMetadata.versionName in versions) {
-            "Requires official Morphe Manager 2.4.0-dev.1, dev.2, dev.3 or dev.4."
+            "Requires official Morphe Manager ${versions.joinToString()}."
         }
+        // 2.6 adds source headers and an ABI-aware target. The package/version
+        // remain p1/p2; retain the other arguments and original fallback body.
+        val current = packageMetadata.versionName == "2.6.0"
+        val target = "Lapp/morphe/manager/domain/bundles/BundledAppTarget;"
         // Cover the immediate UI link, async resolution, and helper-app fallback.
         // Check every entry point before mutating any of them.
         val methods = listOf(
             Fingerprint(definingClass = RESOLVER, name = "apiSearchUrl",
-                parameters = listOf("Ljava/lang/String;", "Ljava/lang/String;"),
+                parameters = listOf("Ljava/lang/String;", "Ljava/lang/String;") + if (current) listOf(target) else emptyList(),
                 returnType = "Ljava/lang/String;",
                 strings = listOf("https://api.morphe.software/v2/web-search/")).method,
             Fingerprint(definingClass = RESOLVER, name = "webSearchUrl",
                 parameters = listOf("Ljava/lang/String;", "Ljava/lang/String;"),
                 returnType = "Ljava/lang/String;", strings = listOf("nodpi", "Using search query: ")).method,
             Fingerprint(definingClass = RESOLVER, name = "resolve",
-                parameters = listOf("Ljava/lang/String;", "Ljava/lang/String;", "Lkotlin/coroutines/Continuation;"),
+                parameters = listOf("Ljava/lang/String;", "Ljava/lang/String;") +
+                    (if (current) listOf("Lapp/morphe/manager/domain/bundles/PatchSourceHeaders;", target) else emptyList()) +
+                    "Lkotlin/coroutines/Continuation;",
                 returnType = "Ljava/lang/Object;", strings = listOf("Timed out resolving the download page")).method
         )
         methods.forEach { method ->

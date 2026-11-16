@@ -21,6 +21,7 @@ import java.util.zip.*;
 public final class VerifyManagerMpp {
     private static final String RESOLVER = "Lapp/morphe/manager/domain/manager/DownloadUrlResolver;";
     private static final String EXTENSION = "Lca/mlkem/manager/ApkMirrorUrls;";
+    private static final String UPDATES = "Lca/mlkem/updates/";
     // The official Android Gradle build also emits this empty resource class;
     // the offline Java/D8 verification build does not generate Android resources.
     private static final String RESOURCE_CONSTRUCTOR = "Lca/mlkem/manager/extension/R;-><init>()V";
@@ -101,7 +102,8 @@ public final class VerifyManagerMpp {
         check(after.values().stream().anyMatch(m -> m.getDefiningClass().equals(EXTENSION) && m.getName().equals("forApp")), "extension missing");
         Set<String> added = new HashSet<>(after.keySet());
         added.removeAll(before.keySet());
-        check(added.stream().allMatch(m -> m.startsWith(EXTENSION + "->") || m.equals(RESOURCE_CONSTRUCTOR)), "unexpected added app methods");
+        check(added.stream().allMatch(m -> m.startsWith(EXTENSION + "->") || m.startsWith(UPDATES)
+            || m.equals(RESOURCE_CONSTRUCTOR)), "unexpected added app methods");
         if (added.contains(RESOURCE_CONSTRUCTOR)) {
             List<Instruction> stub = instructions(after.get(RESOURCE_CONSTRUCTOR));
             check(stub.size() == 2 && stub.get(0).getOpcode() == Opcode.INVOKE_DIRECT
@@ -109,13 +111,20 @@ public final class VerifyManagerMpp {
                 && stub.get(1).getOpcode() == Opcode.RETURN_VOID, "resource class must be empty constructor boilerplate");
         }
         check(after.keySet().containsAll(before.keySet()), "original methods missing");
+        for (Method old : before.values()) {
+            if (old.getDefiningClass().equals(RESOLVER) || old.getImplementation() == null) continue;
+            List<Instruction> a = instructions(old), b = instructions(after.get(old.toString()));
+            check(a.size() == b.size(), "unrelated method size changed: " + old);
+            for (int j = 0; j < a.size(); j++) check(instruction(a.get(j)).equals(instruction(b.get(j))), "unrelated method changed: " + old);
+        }
         return count;
     }
     private static int verifyResources(Path before, Path after) throws Exception {
         int count = 0;
         try (ZipFile a = new ZipFile(before.toFile()); ZipFile b = new ZipFile(after.toFile())) {
             for (ZipEntry e : Collections.list(a.entries())) {
-                if (e.getName().matches("classes[0-9]*\\.dex") || e.getName().startsWith("META-INF/")) continue;
+                if (e.getName().matches("classes[0-9]*\\.dex") || e.getName().startsWith("META-INF/")
+                    || e.getName().equals("AndroidManifest.xml") || e.getName().equals("resources.arsc")) continue;
                 check(Arrays.equals(a.getInputStream(e).readAllBytes(), b.getInputStream(b.getEntry(e.getName())).readAllBytes()), "resource changed: " + e.getName());
                 count++;
             }
@@ -144,7 +153,8 @@ public final class VerifyManagerMpp {
             };
             BuildersKt.<Unit>runBlocking(EmptyCoroutineContext.INSTANCE,
                 (scope, continuation) -> patcher.invoke().collect(collector, continuation));
-            check(events.size() == 1, "patch executes");
+            check(events.stream().anyMatch(e -> e.getPatch().getName() != null &&
+                e.getPatch().getName().equals("APKMirror search for collection apps")), "Manager patch executes");
             PatcherResult result = patcher.get();
             check(!result.getDexFiles().isEmpty(), "modified DEX emitted");
             Files.copy(input, output, StandardCopyOption.REPLACE_EXISTING);
@@ -156,7 +166,8 @@ public final class VerifyManagerMpp {
         String report = "{\n  \"input\": \"" + input.getFileName() + "\",\n  \"input_sha256\": \"" + hash + "\",\n"
             + "  \"patcher\": \"2.1.0\",\n  \"original_methods\": " + before.size() + ",\n"
             + "  \"output_methods\": " + after.size() + ",\n  \"verified_entry_hooks\": " + hooks + ",\n"
-            + "  \"original_resolver_bodies_preserved\": true,\n  \"unchanged_resource_entries\": " + resources + ",\n"
+            + "  \"original_resolver_bodies_preserved\": true,\n  \"unrelated_method_bodies_preserved\": true,\n"
+            + "  \"manifest_and_resource_table\": \"rebuilt for startup-update provider\",\n  \"unchanged_other_resource_entries\": " + resources + ",\n"
             + "  \"all_dex_methods_structurally_valid\": true,\n  \"phone_tested\": false\n}\n";
         Files.writeString(root.resolve("validation.json"), report);
         System.out.print(report);

@@ -91,7 +91,7 @@ assert manager['default'] is False, 'Manager search must remain opt-in'
 assert len(manager['compatiblePackages']) == 1
 manager_target=manager['compatiblePackages'][0]
 assert manager_target['packageName'] == 'app.morphe.manager'
-assert [t['version'] for t in manager_target['targets']] == ['2.4.0-dev.1','2.4.0-dev.2','2.4.0-dev.3','2.4.0-dev.4']
+assert [t['version'] for t in manager_target['targets']] == ['2.6.0','2.4.0-dev.1','2.4.0-dev.2','2.4.0-dev.3','2.4.0-dev.4']
 assert all(t['minSdk'] == 26 for t in manager_target['targets'])
 playstore=next(p for p in patches if p['name']=='Disable Play Store updates')
 assert playstore['default'] is False, 'Play Store update blocker must be opt-in'

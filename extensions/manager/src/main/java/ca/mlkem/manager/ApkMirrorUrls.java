@@ -11,6 +11,15 @@ public final class ApkMirrorUrls {
         if (!supported(packageName)) return null;
         String requested = version == null ? "" : version.trim();
 
+        // Manager is distributed by its developer on GitHub, not APKMirror.
+        // Keep the requested release; never silently replace it with latest.
+        if ("app.morphe.manager".equals(packageName)) {
+            String releases = "https://github.com/MorpheApp/morphe-manager/releases";
+            if (requested.isEmpty()) return releases;
+            if (!requested.matches("[0-9]+(?:\\.[0-9]+)*(?:-[A-Za-z0-9.]+)?")) return null;
+            return releases + "/tag/v" + requested;
+        }
+
         // Verified package ca.walmart.ecommerceapp, build 26310017, four-ABI APKM.
         // Never send an unrelated or unspecified version to this pinned build.
         if ("ca.walmart.ecommerceapp".equals(packageName) && "26.31".equals(requested)) {
@@ -24,6 +33,12 @@ public final class ApkMirrorUrls {
             return "https://www.apkmirror.com/apk/anker/anker-eufy/"
                 + "anker-eufy-6-1-20_31181-release/"
                 + "anker-eufy-6-1-20_31181-android-apk-download/";
+        }
+
+        if ("com.oceanwing.battery.cam".equals(packageName) && "6.1.30_32823".equals(requested)) {
+            return "https://www.apkmirror.com/apk/anker/anker-eufy/"
+                + "anker-eufy-6-1-30_32823-release/"
+                + "anker-eufy-6-1-30_32823-android-apk-download/";
         }
 
         if ("com.google.android.gm".equals(packageName) && "2026.10.26.1012468012.Release".equals(requested)) {
@@ -48,6 +63,9 @@ public final class ApkMirrorUrls {
     private static boolean supported(String packageName) {
         return "com.oceanwing.battery.cam".equals(packageName)
             || "com.google.android.gm".equals(packageName)
+            || "com.google.android.inputmethod.latin".equals(packageName)
+            || "com.songsterr".equals(packageName)
+            || "app.morphe.manager".equals(packageName)
             || "ca.walmart.ecommerceapp".equals(packageName)
             || "com.musicleague.app".equals(packageName)
             || "com.wongnai.android".equals(packageName)
