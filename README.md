@@ -6,7 +6,7 @@ A single Morphe source for Gmail, Anker eufy, Music League, Walmart Canada, Wong
 PushPress, Open with, GPS Emulator, TAGTHAi, Songsterr, Gboard, an optional Morphe Manager APKMirror search fix, and the XAPK
 merge-only utility.
 
-**[Add source to Morphe](https://morphe.software/add-source?github=Mlkem/Morphe&name=mlkemac%20patches)** ·
+**[Set up the beta source](#install-and-update)** ·
 [Releases](https://github.com/Mlkem/Morphe/releases) ·
 [Builds](https://github.com/Mlkem/Morphe/actions) ·
 [Report a problem](https://github.com/Mlkem/Morphe/issues)
@@ -20,8 +20,10 @@ phone testing yet. In Morphe, open **Sources → + → Remote** and paste:
 https://github.com/Mlkem/Morphe/tree/dev
 ```
 
-An explicit `dev` source enables prerelease updates from the start. Alternatively,
-use the Add source link above and enable **Pre-release patches**. Enable
+An explicit `dev` source enables prerelease updates from the start. This collection
+has no `main/patches-bundle.json` stable feed: adding the bare repository URL with
+pre-releases disabled will not find an update. Enable **Pre-release patches** on
+**mlkemac patches itself**; Morphe Manager's own pre-release setting is separate. Enable
 **Experimental app versions** for Walmart Canada, Zoom Earth 6.3.3, PushPress, Open with, GPS Emulator, TAGTHAi, Songsterr, Gboard, Anker eufy, Gmail, and the Manager patch. Choose
 the original app APK/APKM/XAPK, select patches, then patch and install. Keep your existing Morphe
 APK signing key so future patched apps can update in place.
@@ -29,6 +31,21 @@ APK signing key so future patched apps can update in place.
 New GitHub releases update this source inside Morphe. You still tap to repatch and
 install; source updates do not silently install apps. Local MPP downloads remain
 available from Releases. Disable duplicate local sources for these apps.
+
+### If an update is missing
+
+1. Open **Sources → mlkemac patches**, enable **Pre-release patches**, then refresh
+   the sources. Compare the displayed collection version with the
+   [live beta manifest](https://raw.githubusercontent.com/Mlkem/Morphe/dev/patches-bundle.json).
+2. If the source was imported as a local `.mpp`, it cannot fetch later releases.
+   Add the exact remote `dev` URL above and disable the duplicate local source.
+3. If the remote source still cannot download, select the `.mpp` asset from the
+   [latest beta release](https://github.com/Mlkem/Morphe/releases) and import it
+   using **Sources → + → Local**. This is a manual update; the remote source is
+   still needed for future update checks.
+4. **Experimental app versions** controls which app targets are visible, not
+   whether the source downloads a new patch bundle. After updating a source,
+   repatch/reinstall the apps to apply its changes.
 
 ## Optional Play Store update blocker
 
