@@ -6,7 +6,7 @@ Production releases use the checked-in Gradle/Morphe template in GitHub Actions.
 from pathlib import Path
 import argparse, os, shutil, subprocess, time, zipfile
 p=argparse.ArgumentParser()
-p.add_argument('--tools',type=Path,required=True,help='Directory with JDK21, morphe.jar, r8.jar, android.jar')
+p.add_argument('--tools',type=Path,required=True,help='Directory with JDK21, morphe.jar (Desktop 1.20.0/Patcher 2.1.0), r8.jar, android.jar, annotation.jar')
 p.add_argument('--kotlin-libs',type=Path,required=True,help='Gradle lib directory with Kotlin compiler and Gson')
 p.add_argument('--version',default='0.4.0-dev.1')
 a=p.parse_args();root=Path(__file__).resolve().parents[1];t=a.tools.resolve();k=a.kotlin_libs.resolve()
@@ -30,11 +30,13 @@ def dex(source,name,minapi):
     return out/'classes.dex'
 patchdex=dex(b/'patches.jar','patch-dex','26')
 extensions={}
-for name,resource in [('updates','startup-updates.mpe'),('gmail','gmail-accounts.mpe'),('canada','canada.mpe'),('pushpress','pushpress-crossfit-only.mpe'),('manager','manager-apkmirror.mpe'),('eufy','eufy-camera-only.mpe'),('tagthai','tagthai-text.mpe')]:
-    out=b/(name+'-classes');out.mkdir()
-    run(jdk/'javac','--release','8','-cp',t/'android.jar','-d',out,*root.glob(f'extensions/{name}/src/main/java/**/*.java'))
-    jar_tree(b/(name+'.jar'),out)
-    extensions['extensions/'+resource]=dex(b/(name+'.jar'),name+'-dex','28')
+for name,resource in [('updates','startup-updates.mpe'),('gmail','gmail-accounts.mpe'),('canada','canada.mpe'),('pushpress','pushpress-crossfit-only.mpe'),('manager','manager-apkmirror.mpe'),('eufy','eufy-camera-only.mpe'),('tagthai','tagthai-text.mpe'),('all/change-version-code','all/versioncode/change-version-code.mpe')]:
+    safe_name=name.replace('/','-')
+    out=b/(safe_name+'-classes');out.mkdir()
+    extension_cp=os.pathsep.join(map(str,[t/'android.jar',t/'annotation.jar',t/'morphe.jar']))
+    run(jdk/'javac','--release','8','-cp',extension_cp,'-d',out,*root.glob(f'extensions/{name}/src/main/java/**/*.java'))
+    jar_tree(b/(safe_name+'.jar'),out)
+    extensions['extensions/'+resource]=dex(b/(safe_name+'.jar'),safe_name+'-dex','28')
 test=b/'tests';test.mkdir()
 run(jdk/'javac','--release','8','-cp',str(b/'canada-classes')+os.pathsep+str(t/'android.jar'),'-d',test,root/'tests/walmart/LogicTest.java')
 run(java,'-cp',os.pathsep.join(map(str,[test,b/'canada-classes',t/'android.jar'])),'LogicTest')

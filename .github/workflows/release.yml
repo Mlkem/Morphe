@@ -48,6 +48,10 @@ jobs:
           python3 -m unittest discover -s tests/updates -p 'test_*.py'
           python3 scripts/test_walmart_logic.py
           python3 scripts/test_manager_urls.py
+      - name: Verify official Manager APKs and search hooks
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 scripts/test_manager_apks.py
       - name: Android UI regressions
         run: ./gradlew -p tests/walmart/android test --no-daemon
       - name: Restore generated files before semantic release

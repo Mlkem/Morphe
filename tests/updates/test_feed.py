@@ -32,6 +32,12 @@ class FeedTests(unittest.TestCase):
     refresh.fetch(url)
    request=opener.open.call_args.args[0]
    self.assertEqual('Bearer test-only' if authorized else None,request.get_header('Authorization'))
+ def test_universal_patch_changes_notify_all_apps(self):
+  before=catalog.revisions();p=ROOT/'extensions/all/change-version-code/src/main/java/revision_test.tmp'
+  try:
+   p.write_text('test');after=catalog.revisions()
+   for key in before:self.assertNotEqual(before[key],after[key],key)
+  finally:p.unlink(missing_ok=True)
  def test_redirects_cannot_forward_authorization(self):
   self.assertIsNone(refresh.NoRedirect().redirect_request(None,None,302,'',{},'https://other.example/'))
  def test_no_private_data_or_apk_urls(self):
