@@ -2,13 +2,38 @@
 
 ### 🐛 Bug Fixes
 
-* cover all app searches and support Manager 2.6 ([1f18c57](https://github.com/Mlkem/Morphe/commit/1f18c575f14c712901881520fc27468d4a99e064))
+* **Morphe Manager:** Fix APK search routing on Manager 2.6, add Gboard and Songsterr searches, and use official GitHub releases for Manager itself.
+* **Morphe Manager:** Include the optional `Disable Play Store updates` patch in shared update tracking and offline bundles; the patch remains off by default.
+* **Walmart Canada:** Include the optional `Disable Play Store updates` patch in shared update tracking and offline bundles; the patch remains off by default.
+* **Gmail:** Include the optional `Disable Play Store updates` patch in shared update tracking and offline bundles; the patch remains off by default.
+* **Gboard:** Include the optional `Disable Play Store updates` patch in shared update tracking and offline bundles; the patch remains off by default.
+* **Music League:** Include the optional `Disable Play Store updates` patch in shared update tracking and offline bundles; the patch remains off by default.
+* **Zoom Earth:** Include the optional `Disable Play Store updates` patch in shared update tracking and offline bundles; the patch remains off by default.
+* **Anker eufy:** Include the optional `Disable Play Store updates` patch in shared update tracking and offline bundles; the patch remains off by default.
+* **Open with:** Include the optional `Disable Play Store updates` patch in shared update tracking and offline bundles; the patch remains off by default.
+* **PushPress Members:** Include the optional `Disable Play Store updates` patch in shared update tracking and offline bundles; the patch remains off by default.
+* **GPS Emulator:** Include the optional `Disable Play Store updates` patch in shared update tracking and offline bundles; the patch remains off by default.
+* **Songsterr:** Include the optional `Disable Play Store updates` patch in shared update tracking and offline bundles; the patch remains off by default.
+* **TAGTHAi:** Include the optional `Disable Play Store updates` patch in shared update tracking and offline bundles; the patch remains off by default.
+* **Wongnai:** Include the optional `Disable Play Store updates` patch in shared update tracking and offline bundles; the patch remains off by default.
 
 ## [1.0.0-dev.32](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.31...v1.0.0-dev.32) (2026-11-13)
 
 ### ✨ New Features
 
-* add optional universal Play Store update blocker ([c910625](https://github.com/Mlkem/Morphe/commit/c910625f096bbe855a8ac487309f471a3f6184bc))
+* **Morphe Manager:** Add optional `Disable Play Store updates`; enable it when repatching to keep Play Store updates from replacing the patched installation.
+* **Walmart Canada:** Add optional `Disable Play Store updates`; enable it when repatching to keep Play Store updates from replacing the patched installation.
+* **Gmail:** Add optional `Disable Play Store updates`; enable it when repatching to keep Play Store updates from replacing the patched installation.
+* **Gboard:** Add optional `Disable Play Store updates`; enable it when repatching to keep Play Store updates from replacing the patched installation.
+* **Music League:** Add optional `Disable Play Store updates`; enable it when repatching to keep Play Store updates from replacing the patched installation.
+* **Zoom Earth:** Add optional `Disable Play Store updates`; enable it when repatching to keep Play Store updates from replacing the patched installation.
+* **Anker eufy:** Add optional `Disable Play Store updates`; enable it when repatching to keep Play Store updates from replacing the patched installation.
+* **Open with:** Add optional `Disable Play Store updates`; enable it when repatching to keep Play Store updates from replacing the patched installation.
+* **PushPress Members:** Add optional `Disable Play Store updates`; enable it when repatching to keep Play Store updates from replacing the patched installation.
+* **GPS Emulator:** Add optional `Disable Play Store updates`; enable it when repatching to keep Play Store updates from replacing the patched installation.
+* **Songsterr:** Add optional `Disable Play Store updates`; enable it when repatching to keep Play Store updates from replacing the patched installation.
+* **TAGTHAi:** Add optional `Disable Play Store updates`; enable it when repatching to keep Play Store updates from replacing the patched installation.
+* **Wongnai:** Add optional `Disable Play Store updates`; enable it when repatching to keep Play Store updates from replacing the patched installation.
 
 ## [1.0.0-dev.31](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.30...v1.0.0-dev.31) (2026-11-12)
 
