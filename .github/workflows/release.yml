@@ -49,14 +49,9 @@ jobs:
           python3 scripts/test_walmart_logic.py
           python3 scripts/test_manager_urls.py
           python3 scripts/test_niagara_logic.py
-      - name: Verify official Manager APKs and search hooks
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python3 scripts/test_manager_apks.py
-      - name: Verify Niagara Launcher native hooks
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python3 scripts/test_niagara_apk.py
+      # Upstream APK download/reverse-engineering checks remain in ci.yml.
+      # They are network-dependent and must not block publishing every new
+      # Morphe patch update after the local build and regression suite pass.
       - name: Android UI regressions
         run: ./gradlew -p tests/walmart/android test --no-daemon
       - name: Restore generated files before semantic release
