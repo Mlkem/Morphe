@@ -32,7 +32,7 @@ private fun Document.elements(tagName: String): List<Element> {
 val disableAdSdkManifestPatch = resourcePatch(
     name = "Disable ad SDK manifest components",
     description = "Disables bundled ad mediation components and removes ad identifier/ad services permissions.",
-    default = true,
+    default = false,
 ) {
     dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(MUSIC_LEAGUE)
