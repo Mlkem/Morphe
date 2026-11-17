@@ -11,5 +11,6 @@ val MUSIC_LEAGUE = Compatibility(
     appIconColor = 0x9E00C4,
     targets = listOf(
         AppTarget(version = "1.4.9"),
+        AppTarget(version = "1.4.11", isExperimental = true),
     ),
 )
