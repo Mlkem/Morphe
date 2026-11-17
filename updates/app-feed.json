@@ -75,9 +75,10 @@
     },
     "com.musicleague.app": {
       "name": "Music League",
-      "revision": "2fa9ae5468ab03a375fc7618aa366fd8c799f9abadf6c5a800066c472d21113c",
+      "revision": "b1421dc0c757dc960aafaf0d165b099d47ab7f3cb4400ae97c2db270aa2390e6",
       "supportedVersions": [
-        "1.4.9"
+        "1.4.9",
+        "1.4.11"
       ],
       "upstream": {
         "checkedAt": "2026-11-17T23:04:18.474427+00:00",
@@ -203,9 +204,8 @@
       }
     }
   },
-  "generatedAt": "2026-11-17T06:53:01.294497+00:00",
-  "releaseUrl": "https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.34",
-  "releaseVersion": "1.0.0-dev.34",
-  "schema": 1,
-  "upstreamCheckedAt": "2026-11-17T23:04:26.658118+00:00"
+  "generatedAt": "2026-11-17T23:16:40.222604+00:00",
+  "releaseUrl": "https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.35",
+  "releaseVersion": "1.0.0-dev.35",
+  "schema": 1
 }
