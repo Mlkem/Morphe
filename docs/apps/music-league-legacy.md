@@ -225,7 +225,7 @@ To isolate the issue before changing patch code:
 4. Keep **Hermes hide ad promo surfaces** disabled; it is known to cause startup hangs. Test launch before re-enabling other changes. Confirm architecture/density resources survive the patch and installation.
 5. Document which original install works, which patch selection fails, and any logcat exceptions before modifying bytecode or releasing a claimed fix.
 
-This is a diagnosis and installation guide, **not a verified patch fix**. No successful Android-device launch is established by this note.
+The Music League compatibility declaration was changed to `ApkFileType.XAPK` on the `dev` branch so the patch targets a split-container input instead of a standalone APK. This fixes the source/input format mismatch, but whether the patched application launches on Android still requires device testing. The original uploaded archive contains all four modules and was verified as a readable ZIP; use it with an `.xapk` extension in Morphe. No successful Android-device launch is established by this note.
 
 ## Testing
 
