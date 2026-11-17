@@ -24,6 +24,9 @@ public final class ApkMirrorUrlsTest {
             check("https".equals(uri.getScheme()), "catalogue route must use HTTPS");
             check(java.util.Arrays.asList("www.apkmirror.com", "www.google.com", "github.com").contains(uri.getHost()), "unexpected catalogue host");
         }
+        check(ApkMirrorUrls.forApp("bitpit.launcher", "1.16.37").equals(
+            "https://github.com/NiagaraLauncher/Niagara-Issues/releases/tag/v1.16.37"), "official Niagara version");
+        check(ApkMirrorUrls.forApp("bitpit.launcher", "../invalid") == null, "Niagara path injection rejected");
         String walmart = ApkMirrorUrls.forApp("ca.walmart.ecommerceapp", "26.31");
         check(new URI(walmart).getHost().equals("www.apkmirror.com"), "Walmart direct mirror page");
         check(walmart.endsWith("/walmart-grocery-shopping-26-31-android-apk-download/"), "Walmart verified build page");

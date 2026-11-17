@@ -60,6 +60,13 @@ with every app. It does not work with root-mounted patches. When later repatchin
 over the same installation, keep the blocker enabled to avoid a version-code
 downgrade error. [Behavior and limitations](docs/play-store-updates.md).
 
+## Niagara automatic folders
+
+The experimental **Automatic app folders** patch supports official Niagara **1.16.37**.
+New apps are placed in native category folders, then their standalone icons are hidden.
+Use **Niagara Settings → Productivity → Auto folders** for category switches,
+sorting existing apps, and restoring icons. See [Niagara details](docs/apps/niagara.md).
+
 ## Collection status
 
 | App / utility | Target | Included source | Status |

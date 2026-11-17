@@ -30,10 +30,15 @@ def dex(source,name,minapi):
     return out/'classes.dex'
 patchdex=dex(b/'patches.jar','patch-dex','26')
 extensions={}
-for name,resource in [('updates','startup-updates.mpe'),('gmail','gmail-accounts.mpe'),('canada','canada.mpe'),('pushpress','pushpress-crossfit-only.mpe'),('manager','manager-apkmirror.mpe'),('eufy','eufy-camera-only.mpe'),('tagthai','tagthai-text.mpe'),('all/change-version-code','all/versioncode/change-version-code.mpe')]:
+for name,resource in [('niagara','niagara-auto-folders.mpe'),('updates','startup-updates.mpe'),('gmail','gmail-accounts.mpe'),('canada','canada.mpe'),('pushpress','pushpress-crossfit-only.mpe'),('manager','manager-apkmirror.mpe'),('eufy','eufy-camera-only.mpe'),('tagthai','tagthai-text.mpe'),('all/change-version-code','all/versioncode/change-version-code.mpe')]:
     safe_name=name.replace('/','-')
     out=b/(safe_name+'-classes');out.mkdir()
     extension_cp=os.pathsep.join(map(str,[t/'android.jar',t/'annotation.jar',t/'morphe.jar']))
+    stubs = list(root.glob(f'extensions/{name}/src/compileOnly/java/**/*.java'))
+    if stubs:
+        stubout=b/(safe_name+'-stubs');stubout.mkdir()
+        run(jdk/'javac','--release','8','-d',stubout,*stubs)
+        extension_cp += os.pathsep + str(stubout)
     run(jdk/'javac','--release','8','-cp',extension_cp,'-d',out,*root.glob(f'extensions/{name}/src/main/java/**/*.java'))
     jar_tree(b/(safe_name+'.jar'),out)
     extensions['extensions/'+resource]=dex(b/(safe_name+'.jar'),safe_name+'-dex','28')
