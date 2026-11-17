@@ -25,6 +25,7 @@ def tap_node(n):
 def find(root,text):
     return next((n for n in root.iter('node') if n.get('text','').casefold()==text.casefold() or n.get('content-desc','').casefold()==text.casefold()),None)
 def onboard():
+    favorite_selected=False
     for i in range(30):
         root=snapshot('onboarding-%02d'%i)
         texts=[n.get('text','') for n in root.iter('node') if n.get('text')]
@@ -33,14 +34,22 @@ def onboard():
             time.sleep(3)
             continue
         chosen=None
-        for text in ['Got it','Agree & continue','Agree and continue','Get started','Start fresh','Not now','Skip','Continue','Done','Finish','Allow','No thanks']:
-            chosen=find(root,text)
+        # Select an existing app once, so the no-favorites confirmation cannot
+        # obscure Done. Dialog actions also take priority over background rows.
+        if find(root,'Your favorites') is not None and not favorite_selected:
+            chosen=find(root,'Chrome')
+            if chosen is not None: favorite_selected=True
+        for text in ['No thanks','Not now','Got it','Skip','Declutter my phone','Agree & continue','Agree and continue','Get started','Start fresh','Continue','Next',"Let's Go",'Done','Finish','Allow','Okay']:
             if chosen is not None: break
+            chosen=find(root,text)
+            if chosen is not None and chosen.get('enabled')=='false': chosen=None
         if chosen is None:
             # Favorite-selection completion is an icon button in some builds.
             chosen=next((n for n in root.iter('node') if n.get('clickable')=='true' and any(k in n.get('resource-id','').lower() for k in ['done','confirm','finish'])),None)
         if chosen is None: break
         tap_node(chosen);time.sleep(2)
+    else:
+        raise AssertionError('Onboarding did not complete; see onboarding screenshots')
 def sign(source,target):
     run(BT/'apksigner','sign','--ks',OUT/'test.jks','--ks-pass','pass:android','--key-pass','pass:android','--out',target,source)
 def fixture(suffix,label,category,version=1):
