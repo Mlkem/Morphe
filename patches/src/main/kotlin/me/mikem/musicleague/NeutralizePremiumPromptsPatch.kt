@@ -77,7 +77,7 @@ private fun mlPremiumBlank(value: String): String = " ".repeat(value.length)
 val neutralizePremiumPromptsPatch = resourcePatch(
     name = "Neutralize premium and reward-ad prompts",
     description = "Force-removes the remaining premium/reward banner strings from the bundled Hermes asset.",
-    default = true,
+    default = false,
 ) {
     dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(MUSIC_LEAGUE)
