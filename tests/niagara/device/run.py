@@ -9,7 +9,10 @@ BT=sorted((SDK/'build-tools').iterdir(),key=lambda p:tuple(int(x) if x.isdigit()
 AJ=SDK/'platforms/android-35/android.jar'
 if not AJ.is_file(): raise RuntimeError('The acceptance test requires Android SDK platform 35')
 def run(*args,check=True):
-    x=subprocess.run([str(v) for v in args],capture_output=True,check=check)
+    x=subprocess.run([str(v) for v in args],capture_output=True)
+    if check and x.returncode:
+        print(x.stdout.decode(errors='replace'),x.stderr.decode(errors='replace'),flush=True)
+        x.check_returncode()
     return x.stdout.decode(errors='replace').strip()
 def adb(*args,**kw): return run('adb',*args,**kw)
 def snapshot(name):
@@ -112,7 +115,11 @@ def check_sorted(pkg,title,hidden=True):
         is_hidden=bool(db.execute('select 1 from Feed where id=9 and type=0 and item_type=0 and item_id=?',(app[0],)).fetchone())
         assert is_hidden==hidden, ('Hidden state',is_hidden,hidden)
 def stop():
+    # Leave Home first. Android immediately restarts a force-stopped default
+    # launcher when Home is foreground, racing the database/WAL snapshot.
+    adb('shell','am','start','-a','android.settings.SETTINGS');time.sleep(2)
     adb('shell','am','force-stop','bitpit.launcher');time.sleep(1)
+    assert not adb('shell','pidof','bitpit.launcher',check=False),'Launcher restarted during database snapshot'
 def home():
     adb('shell','am','start','-a','android.intent.action.MAIN','-c','android.intent.category.HOME','-n','bitpit.launcher/.ui.HomeActivity');time.sleep(3)
     assert adb('shell','pidof','bitpit.launcher',check=False), 'Niagara failed to stay running; see logcat.txt'
