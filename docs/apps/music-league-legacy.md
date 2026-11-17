@@ -227,6 +227,16 @@ To isolate the issue before changing patch code:
 
 The Music League compatibility declaration was changed to `ApkFileType.XAPK` on the `dev` branch so the patch targets a split-container input instead of a standalone APK. This fixes the source/input format mismatch, but whether the patched application launches on Android still requires device testing. The original uploaded archive contains all four modules and was verified as a readable ZIP; use it with an `.xapk` extension in Morphe. No successful Android-device launch is established by this note.
 
+## 1.4.11 forensic finding — native-library recovery screen
+
+The supplied 1.4.11 split archive was inspected directly (not just inferred from the UI). Its `classes10.dex` embeds the exact `RecoveryActivity` heading and body from the reported screenshot. `com.musicleague.app.MainApplication` contains `firstMissingCriticalNativeLib(Context)`, `tagBrokenInstall(String)`, `markInstallBroken(Context,String)`, and an `onCreate()` path with `native_lib_missing:` and `previously_marked_broken`. Both `libhermes.so` and `libreactnative.so` are present in the original ARM64 split, so the available evidence favors a **post-merge installation/extraction path issue** over missing source modules.
+
+`Extract native libraries for merged XAPK` sets `android:extractNativeLibs=true` and is enabled by default for compatible targets. It requests that Android place .so files on disk, where the application's native-library guard expects them. This patch deliberately does not remove the guard or forge subscription state.
+
+**Validation required:** produce a new Morphe beta `.mpp` and patch the original 1.4.11 XAPK, with only the extraction patch enabled. Install and test the launch; collect `adb logcat -d -s AndroidRuntime ActivityTaskManager SoLoader` and app logs if startup still routes to RecoveryActivity. App data may retain a previously-broken marker, so clear data only after backing up local state and verifying a clean install is necessary.
+
+**Ad / paid-tier scope:** the old seven patches are 1.4.9-era ad/promo UI and configuration changes; several mutate a Hermes binary and cannot be declared 1.4.11-stable from patch-success logs. All are opt-in pending runtime testing. Paid account entitlements may depend on Music League servers and cannot be established by local APK-string edits. Do not advertise all premium features as working without per-feature tests against an authorized subscription.
+
 ## Testing
 
 Always patch the original APK, not an APK already modified by an earlier failed patch attempt.
