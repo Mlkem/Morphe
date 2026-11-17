@@ -126,7 +126,7 @@ private fun mlBlankSameLength(value: String): String = " ".repeat(value.length)
 val neutralizeAdUnitIdsPatch = resourcePatch(
     name = "Neutralize bundled ad unit IDs and premium banners",
     description = "Replaces bundled ad unit IDs and premium/reward banner copy in the Hermes bundle with same-length non-serving/blank values while leaving the AdMob app ID intact.",
-    default = true,
+    default = false,
 ) {
     dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(MUSIC_LEAGUE)
