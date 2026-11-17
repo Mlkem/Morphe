@@ -54,7 +54,7 @@ private fun ByteArray.mlRemoteBlankEncodedText(
     charset: Charset,
 ): Pair<ByteArray, Int> {
     val searchBytes = search.toByteArray(charset)
-    val replacementBytes = ByteArray(searchBytes.size) { 0x20.toByte() }
+    val replacementBytes = " ".repeat(search.length).toByteArray(charset)
     return mlRemoteReplaceBytes(searchBytes, replacementBytes)
 }
 
@@ -75,7 +75,7 @@ private fun mlRemoteBlackholePosthogKey(value: String): String {
 val disableAdRemoteConfigPatch = resourcePatch(
     name = "Disable ad and promo remote config",
     description = "Blackholes ad/paywall/reward feature-flag keys and remote promo payload keys so the app cannot enable ad or upsell surfaces from remote config.",
-    default = true,
+    default = false,
 ) {
     dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(MUSIC_LEAGUE)
