@@ -5,7 +5,8 @@ ROOT=Path(__file__).resolve().parents[3]
 OUT=ROOT/'build/niagara-device';OUT.mkdir(parents=True,exist_ok=True)
 SDK=Path(os.environ.get('ANDROID_HOME') or os.environ['ANDROID_SDK_ROOT'])
 BT=sorted((SDK/'build-tools').iterdir(),key=lambda p:tuple(int(x) if x.isdigit() else 0 for x in p.name.split('.')))[-1]
-AJ=sorted((SDK/'platforms').glob('android-*/android.jar'),key=lambda p:int(p.parent.name.split('-')[-1]))[-1]
+AJ=SDK/'platforms/android-35/android.jar'
+if not AJ.is_file(): raise RuntimeError('The acceptance test requires Android SDK platform 35')
 def run(*args,check=True):
     x=subprocess.run([str(v) for v in args],capture_output=True,check=check)
     return x.stdout.decode(errors='replace').strip()
