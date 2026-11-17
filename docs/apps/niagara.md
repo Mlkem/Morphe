@@ -10,7 +10,8 @@ The patch is opt-in and its target remains experimental until tested on a physic
 
 ## Behavior
 
-Open Niagara Home once. Sorting is enabled for subsequent installations, including
+Complete Niagara's initial setup and open Home once. Sorting waits for Niagara's
+saved setup state before creating folders. It handles subsequent installations, including
 apps installed while Niagara was not running (checked on return to Home). Ordinary
 updates do not re-sort existing apps. No always-running service or polling loop.
 

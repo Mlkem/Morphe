@@ -26,10 +26,13 @@ def find(root,text):
     return next((n for n in root.iter('node') if n.get('text','').casefold()==text.casefold() or n.get('content-desc','').casefold()==text.casefold()),None)
 def onboard():
     favorite_selected=False
+    goal_selected=False
     for i in range(30):
         root=snapshot('onboarding-%02d'%i)
         texts=[n.get('text','') for n in root.iter('node') if n.get('text')]
         print('UI:',texts,flush=True)
+        prefs=adb('shell','cat','/data/user/0/bitpit.launcher/shared_prefs/*.xml',check=False)
+        if re.search(r'<int name="bitpit.launcher.key.BOOT_STATE" value="1"',prefs): return
         if not list(root.iter('node')):
             time.sleep(3)
             continue
@@ -37,16 +40,21 @@ def onboard():
         # Select an existing app once, so the no-favorites confirmation cannot
         # obscure Done. Dialog actions also take priority over background rows.
         if find(root,'Your favorites') is not None and not favorite_selected:
-            chosen=find(root,'Chrome')
+            chosen=find(root,'Phone')
             if chosen is not None: favorite_selected=True
-        for text in ['No thanks','Not now','Got it','Skip','Declutter my phone','Agree & continue','Agree and continue','Get started','Start fresh','Continue','Next',"Let's Go",'Done','Finish','Allow','Okay']:
+        if chosen is None and not goal_selected:
+            chosen=find(root,'Declutter my phone')
+            if chosen is not None: goal_selected=True
+        for text in ['No thanks','Not now','Got it','Skip','Agree & continue','Agree and continue','Get started','Start fresh','Continue','Next',"Let's Go",'Done','Finish','Allow','Okay']:
             if chosen is not None: break
             chosen=find(root,text)
             if chosen is not None and chosen.get('enabled')=='false': chosen=None
         if chosen is None:
             # Favorite-selection completion is an icon button in some builds.
             chosen=next((n for n in root.iter('node') if n.get('clickable')=='true' and any(k in n.get('resource-id','').lower() for k in ['done','confirm','finish'])),None)
-        if chosen is None: break
+        if chosen is None:
+            time.sleep(3)
+            continue
         tap_node(chosen);time.sleep(2)
     else:
         raise AssertionError('Onboarding did not complete; see onboarding screenshots')
@@ -95,7 +103,7 @@ def check_sorted(pkg,title,hidden=True):
 def stop():
     adb('shell','am','force-stop','bitpit.launcher');time.sleep(1)
 def home():
-    adb('shell','am','start','-n','bitpit.launcher/.ui.HomeActivity');time.sleep(3)
+    adb('shell','am','start','-a','android.intent.action.MAIN','-c','android.intent.category.HOME','-n','bitpit.launcher/.ui.HomeActivity');time.sleep(3)
     assert adb('shell','pidof','bitpit.launcher',check=False), 'Niagara failed to stay running; see logcat.txt'
 def main():
     run('keytool','-genkeypair','-keystore',OUT/'test.jks','-storepass','android','-keypass','android','-alias','test','-dname','CN=Disposable Niagara Test','-keyalg','RSA','-validity','2')
@@ -103,7 +111,8 @@ def main():
     adb('root');adb('wait-for-device')
     adb('shell','settings','put','secure','immersive_mode_confirmations','confirmed')
     adb('install',OUT/'launcher.apk')
-    adb('shell','cmd','package','set-home-activity','bitpit.launcher/.ui.HomeActivity',check=False)
+    adb('shell','cmd','role','add-role-holder','--user','0','android.app.role.HOME','bitpit.launcher')
+    print('HOME ROLE',adb('shell','cmd','role','get-role-holders','android.app.role.HOME'),flush=True)
     home();time.sleep(5);onboard();time.sleep(4)
     # The name fallback is intentional: this synthetic Truckful declares no category.
     games=fixture('games','Truckful',None)

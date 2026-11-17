@@ -3,6 +3,7 @@ package ca.mlkem.niagara;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ComponentName;
+import android.content.SharedPreferences;
 import android.os.UserHandle;
 import java.lang.reflect.*;
 import java.util.*;
@@ -17,6 +18,10 @@ public final class NativeBridge {
         controller = owner;
         repository = field(owner, "S3wX241M0r7dtme");
         feeds = field(owner, "T6TlZjUmR83SSjbLrA");
+    }
+    public boolean ready() throws Exception {
+        return ((SharedPreferences) field(repository, "F0o2ptD8ZHQLbx1bWQj"))
+            .getInt("bitpit.launcher.key.BOOT_STATE", 0) == 1;
     }
     public static Class<?> type(String name) throws Exception { return Class.forName(name, false, NativeBridge.class.getClassLoader()); }
     public static Object field(Object target, String name) throws Exception {

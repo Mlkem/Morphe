@@ -68,6 +68,10 @@ public final class AutoFolders {
         if (bridge == null || prefs == null) return;
         if (running || scanning) { scanAgain = true; return; }
         try {
+            if (!bridge.ready()) {
+                status = "Finish Niagara's initial setup to start automatic sorting.";
+                return;
+            }
             recoverRemovedFolders();
             List<Object> apps = bridge.apps();
             Set<Object> hidden = new HashSet<>(bridge.hidden()), favorites = new HashSet<>(bridge.favorites());
