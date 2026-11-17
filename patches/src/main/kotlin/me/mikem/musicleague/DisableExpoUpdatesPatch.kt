@@ -26,7 +26,7 @@ private fun Element.removeExpoAndroidAttr(name: String) {
 val disableExpoUpdatesPatch = resourcePatch(
     name = "Disable Expo updates and backup restore",
     description = "Forces the app to use the bundled local Hermes asset instead of cached Expo OTA updates or restored app data.",
-    default = true,
+    default = false,
 ) {
     dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(MUSIC_LEAGUE)
