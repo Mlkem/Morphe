@@ -34,6 +34,7 @@ jobs:
           python3 -m unittest discover -s tests/updates -p 'test_*.py'
           python3 scripts/test_walmart_logic.py
           python3 scripts/test_manager_urls.py
+          python3 scripts/test_niagara_logic.py
       - name: Apply three Eufy 6.1.30 patches to original APKM (candidate branch only)
         if: github.event_name == 'pull_request' && github.head_ref == 'fix/eufy-mobile-data-2026-11-12'
         run: |
@@ -68,6 +69,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python3 scripts/test_manager_apks.py
+      - name: Verify Niagara Launcher native hooks
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 scripts/test_niagara_apk.py
       - name: Android UI regressions
         run: ./gradlew -p tests/walmart/android test --no-daemon
       - uses: actions/upload-artifact@v4

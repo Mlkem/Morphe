@@ -11,6 +11,13 @@ public final class ApkMirrorUrls {
         if (!supported(packageName)) return null;
         String requested = version == null ? "" : version.trim();
 
+        if ("bitpit.launcher".equals(packageName)) {
+            String releases = "https://github.com/NiagaraLauncher/Niagara-Issues/releases";
+            if (requested.isEmpty()) return releases;
+            if (!requested.matches("[0-9]+(?:\\.[0-9]+)*")) return null;
+            return releases + "/tag/v" + requested;
+        }
+
         // Manager is distributed by its developer on GitHub, not APKMirror.
         // Keep the requested release; never silently replace it with latest.
         if ("app.morphe.manager".equals(packageName)) {
@@ -61,7 +68,8 @@ public final class ApkMirrorUrls {
     }
 
     private static boolean supported(String packageName) {
-        return "com.oceanwing.battery.cam".equals(packageName)
+        return "bitpit.launcher".equals(packageName)
+            || "com.oceanwing.battery.cam".equals(packageName)
             || "com.google.android.gm".equals(packageName)
             || "com.google.android.inputmethod.latin".equals(packageName)
             || "com.songsterr".equals(packageName)

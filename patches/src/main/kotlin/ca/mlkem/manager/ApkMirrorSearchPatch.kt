@@ -17,7 +17,7 @@ val apkMirrorSearch = bytecodePatch(
     description = "Changes Morphe Manager's download links for this collection's supported apps. " +
         "Walmart Canada 26.31, Anker eufy 6.1.20_31181/6.1.30_32823 and Gmail 2026.10.26.1012468012.Release open verified APKMirror APKM pages; other versions/apps, including Gboard and Songsterr, " +
         "use a package-and-version Google search restricted to APKMirror, without nodpi. " +
-        "Manager itself opens its official GitHub release. Apps outside the collection keep Manager's resolver. Does not download files automatically.",
+        "Niagara Launcher and Manager itself open their official GitHub releases. Apps outside the collection keep Manager's resolver. Does not download files automatically.",
     default = false
 ) {
     dependsOn(ca.mlkem.updates.startupUpdates)

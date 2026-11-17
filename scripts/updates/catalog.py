@@ -3,6 +3,7 @@ from pathlib import Path
 import hashlib,json,sys,time
 ROOT=Path(__file__).resolve().parents[2]
 PATHS={
+ 'bitpit.launcher':['patches/src/main/kotlin/ca/mlkem/niagara','extensions/niagara'],
  'app.morphe.manager':['patches/src/main/kotlin/ca/mlkem/manager','extensions/manager'],
  'ca.walmart.ecommerceapp':['patches/src/main/kotlin/app/canada','extensions/canada'],
  'com.google.android.gm':['patches/src/main/kotlin/ca/mlkem/gmail','extensions/gmail'],
