@@ -27,6 +27,7 @@ def find(root,text):
 def onboard():
     favorite_selected=False
     goal_selected=False
+    alphabet_gestures=0
     for i in range(30):
         root=snapshot('onboarding-%02d'%i)
         texts=[n.get('text','') for n in root.iter('node') if n.get('text')]
@@ -53,6 +54,16 @@ def onboard():
             # Favorite-selection completion is an icon button in some builds.
             chosen=next((n for n in root.iter('node') if n.get('clickable')=='true' and any(k in n.get('resource-id','').lower() for k in ['done','confirm','finish'])),None)
         if chosen is None:
+            wave=next((n for n in root.iter('node') if n.get('resource-id','').endswith('/alphabet_wave_view')),None)
+            if wave is not None and alphabet_gestures<3:
+                # The alphabet tutorial is drawn on a canvas without accessible
+                # buttons. Follow its animated finger along the right edge.
+                x1,y1,x2,y2=map(int,re.findall(r'\d+',wave.get('bounds','')))
+                x=x2-20
+                adb('shell','input','swipe',x,(y1+y2)//2,x,y1+(y2-y1)*3//4,800)
+                alphabet_gestures+=1
+                time.sleep(2)
+                continue
             time.sleep(3)
             continue
         tap_node(chosen);time.sleep(2)
