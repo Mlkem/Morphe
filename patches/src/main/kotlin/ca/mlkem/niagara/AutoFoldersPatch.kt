@@ -7,6 +7,7 @@ import app.morphe.patcher.patch.*
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
+import com.android.tools.smali.dexlib2.iface.instruction.TwoRegisterInstruction
 
 private const val HOOK = "Lca/mlkem/niagara/AutoFolders;"
 private const val CONTROLLER = "Lb/uXEn98dBZyHFNcs4SNt;"
@@ -63,10 +64,15 @@ val autoFolders = bytecodePatch(
         val builderCall = settings.instructions.elementAt(builderIndex) as FiveRegisterInstruction
         check(builderCall.opcode == Opcode.INVOKE_DIRECT && builderCall.registerCount == 3)
         val builderRegister = builderCall.registerC
-        // Single-register range calls work even when p0 or the builder is > v15.
-        init.instructions.withIndex().filter { it.value.opcode == Opcode.RETURN_VOID }.map { it.index }.reversed().forEach {
-            init.addInstruction(it, "invoke-static/range {p0 .. p0}, $HOOK->attach(Ljava/lang/Object;)V")
+        // R8 reuses p0 as an integer near the return. Attach after the final field
+        // initialization while its receiver is still live. attach posts to Main,
+        // so repository access starts only after this constructor has completed.
+        val initialized = init.instructions.withIndex().single {
+            it.value.opcode == Opcode.IPUT_OBJECT && (it.value as? ReferenceInstruction)?.reference.toString() ==
+                "$CONTROLLER->uP3MjWikAhbpaogvi8rIfV8OZg4pk:Lb/naks8ZxpaWirE;"
         }
+        val ownerRegister = (initialized.value as TwoRegisterInstruction).registerB
+        init.addInstruction(initialized.index + 1, "invoke-static/range {v$ownerRegister .. v$ownerRegister}, $HOOK->attach(Ljava/lang/Object;)V")
         feedChanged.addInstruction(0, "invoke-static {}, $HOOK->changed()V")
         changed.addInstruction(0, "invoke-static {}, $HOOK->changed()V")
         resume.addInstruction(0, "invoke-static/range {p0 .. p0}, $HOOK->resume(Landroid/app/Activity;)V")

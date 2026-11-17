@@ -93,7 +93,13 @@ public final class VerifyNiagaraMpp {
                         check(r.getRegisterCount()==1 && r.getStartRegister()<updated.getImplementation().getRegisterCount(), "Valid hook register");
                         String ref=((ReferenceInstruction)i).getReference().toString();
                         int p0=updated.getImplementation().getRegisterCount()-updated.getParameterTypes().size()-1;
-                        check(r.getStartRegister()==(ref.contains("->settings(")?3:p0), "Correct hook argument");
+                        if (ref.contains("->attach(")) {
+                            Instruction previous = kept.get(kept.size()-1);
+                            check(previous.getOpcode()==Opcode.IPUT_OBJECT && previous instanceof TwoRegisterInstruction &&
+                                ((ReferenceInstruction)previous).getReference().toString().equals("Lb/uXEn98dBZyHFNcs4SNt;->uP3MjWikAhbpaogvi8rIfV8OZg4pk:Lb/naks8ZxpaWirE;"),
+                                "Attach runs at the last initialization, before R8 reuses p0");
+                            check(r.getStartRegister()==((TwoRegisterInstruction)previous).getRegisterB(), "Attach uses the live controller receiver");
+                        } else check(r.getStartRegister()==(ref.contains("->settings(")?3:p0), "Correct hook argument");
                     }
                 } else kept.add(i);
             }

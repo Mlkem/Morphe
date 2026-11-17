@@ -81,6 +81,7 @@ def stop():
     adb('shell','am','force-stop','bitpit.launcher');time.sleep(1)
 def home():
     adb('shell','am','start','-n','bitpit.launcher/.ui.HomeActivity');time.sleep(3)
+    assert adb('shell','pidof','bitpit.launcher',check=False), 'Niagara failed to stay running; see logcat.txt'
 def main():
     run('keytool','-genkeypair','-keystore',OUT/'test.jks','-storepass','android','-keypass','android','-alias','test','-dname','CN=Disposable Niagara Test','-keyalg','RSA','-validity','2')
     sign(ROOT/'build/niagara-apk-validation/niagara-patched-unsigned.apk',OUT/'launcher.apk')
