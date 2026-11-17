@@ -6,7 +6,7 @@ import app.morphe.patcher.patch.resourcePatch
 val pinLocalExpoConfigPatch = resourcePatch(
     name = "Pin local Expo config",
     description = "Neutralizes Expo OTA update configuration in the bundled Expo config so the APK prefers local bundled assets.",
-    default = true,
+    default = false,
 ) {
     dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(MUSIC_LEAGUE)
