@@ -1,6 +1,7 @@
 """Disposable emulator acceptance test. Uses synthetic apps and a fresh launcher."""
 from pathlib import Path
-import os, re, sqlite3, subprocess, time, xml.etree.ElementTree as ET, zipfile, json
+import os, re, sqlite3, subprocess, time, xml.etree.ElementTree as ET, zipfile, json, tempfile
+from contextlib import closing
 ROOT=Path(__file__).resolve().parents[3]
 OUT=ROOT/'build/niagara-device';OUT.mkdir(parents=True,exist_ok=True)
 SDK=Path(os.environ.get('ANDROID_HOME') or os.environ['ANDROID_SDK_ROOT'])
@@ -24,12 +25,15 @@ def tap_node(n):
 def find(root,text):
     return next((n for n in root.iter('node') if n.get('text','').casefold()==text.casefold() or n.get('content-desc','').casefold()==text.casefold()),None)
 def onboard():
-    for i in range(14):
+    for i in range(30):
         root=snapshot('onboarding-%02d'%i)
         texts=[n.get('text','') for n in root.iter('node') if n.get('text')]
         print('UI:',texts,flush=True)
+        if not list(root.iter('node')):
+            time.sleep(3)
+            continue
         chosen=None
-        for text in ['Agree & continue','Agree and continue','Get started','Start fresh','Not now','Skip','Continue','Done','Finish','Allow','No thanks']:
+        for text in ['Got it','Agree & continue','Agree and continue','Get started','Start fresh','Not now','Skip','Continue','Done','Finish','Allow','No thanks']:
             chosen=find(root,text)
             if chosen is not None: break
         if chosen is None:
@@ -55,7 +59,8 @@ def fixture(suffix,label,category,version=1):
     adb('install','-r',signed)
     return pkg
 def database():
-    target=OUT/'db';target.mkdir(exist_ok=True)
+    # Never combine a fresh database with a WAL left over from an earlier pull.
+    target=Path(tempfile.mkdtemp(prefix='db-',dir=OUT))
     adb('pull','/data/user/0/bitpit.launcher/databases/.',target)
     for path in target.iterdir():
         if path.name.endswith(('-wal','-shm','-journal')): continue
@@ -67,10 +72,11 @@ def database():
         except sqlite3.DatabaseError: pass
     raise AssertionError('Native launcher database not found')
 def check_sorted(pkg,title,hidden=True):
-    with database() as db:
+    with closing(database()) as db:
         app=db.execute('select id from App where package_name=?',(pkg,)).fetchone()
         assert app, 'App not discovered: '+pkg
         folders=db.execute('select id from Shortcut where label=? and type=3',(title,)).fetchall()
+        print('CHECK',pkg,title,'folders',folders,'shortcuts',db.execute('select id,label,type from Shortcut').fetchall(),flush=True)
         assert len(folders)==1, ('Expected one folder',title,folders)
         fid=folders[0][0]
         assert db.execute('select 1 from Feed where id=? and type=1 and item_type=0 and item_id=?',(fid+(2<<24),app[0])).fetchone(),'App missing from folder'
@@ -86,9 +92,10 @@ def main():
     run('keytool','-genkeypair','-keystore',OUT/'test.jks','-storepass','android','-keypass','android','-alias','test','-dname','CN=Disposable Niagara Test','-keyalg','RSA','-validity','2')
     sign(ROOT/'build/niagara-apk-validation/niagara-patched-unsigned.apk',OUT/'launcher.apk')
     adb('root');adb('wait-for-device')
+    adb('shell','settings','put','secure','immersive_mode_confirmations','confirmed')
     adb('install',OUT/'launcher.apk')
     adb('shell','cmd','package','set-home-activity','bitpit.launcher/.ui.HomeActivity',check=False)
-    home();onboard();time.sleep(4)
+    home();time.sleep(5);onboard();time.sleep(4)
     # The name fallback is intentional: this synthetic Truckful declares no category.
     games=fixture('games','Truckful',None)
     home();time.sleep(8);snapshot('sorted-games');stop();check_sorted(games,'Games')
