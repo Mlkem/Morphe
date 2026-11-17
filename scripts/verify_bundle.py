@@ -4,7 +4,7 @@ import json, zipfile
 root=Path(__file__).resolve().parents[1]
 patches=json.loads((root/'patches-list.json').read_text())['patches']
 names=[p['name'] for p in patches]
-assert len(patches)==45, f'Expected 45 patches, found {len(patches)}'
+assert len(patches)==46, f'Expected 46 patches, found {len(patches)}'
 assert len(names)==len(set(names)), 'Duplicate patch names'
 packages={c['packageName'] for p in patches for c in (p.get('compatiblePackages') or [])}
 expected={'bitpit.launcher','com.google.android.gm','com.oceanwing.battery.cam','com.google.android.inputmethod.latin','com.songsterr','com.musicleague.app','ca.walmart.ecommerceapp','com.wongnai.android','com.neave.zoomearth','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','com.thaidigitalplatform.tagthai','app.morphe.manager'}
@@ -102,6 +102,13 @@ playstore=next(p for p in patches if p['name']=='Disable Play Store updates')
 assert playstore['default'] is False, 'Play Store update blocker must be opt-in'
 assert playstore['compatiblePackages'] is None, 'Play Store update blocker must remain universal'
 assert playstore['options'] == [], 'Play Store update blocker should not show extra UI options'
+music_libs=next(p for p in patches if p['name']=='Extract native libraries for merged XAPK')
+assert music_libs['default'] is True, 'Music League split-install repair must be enabled by default'
+assert len(music_libs['compatiblePackages']) == 1
+music_target=music_libs['compatiblePackages'][0]
+assert music_target['packageName'] == 'com.musicleague.app'
+assert music_target['apkFileType'] == 'XAPK'
+assert any(t['version'] == '1.4.11' and t['isExperimental'] for t in music_target['targets'])
 merge=next(p for p in patches if p['name']=='Merge XAPK only')
 assert merge['default'] is False and merge['compatiblePackages'] is None
 for p in patches:
