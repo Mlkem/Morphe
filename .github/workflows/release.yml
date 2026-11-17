@@ -46,18 +46,23 @@ jobs:
           python3 scripts/verify_bundle.py
           ./gradlew :patches:verifyStartupUpdates --no-daemon
           python3 -m unittest discover -s tests/updates -p 'test_*.py'
-          python3 scripts/test_walmart_logic.py
-          python3 scripts/test_manager_urls.py
-          python3 scripts/test_niagara_logic.py
       # Upstream APK download/reverse-engineering checks remain in ci.yml.
       # They are network-dependent and must not block publishing every new
       # Morphe patch update after the local build and regression suite pass.
-      - name: Android UI regressions
-        run: ./gradlew -p tests/walmart/android test --no-daemon
       - name: Restore generated files before semantic release
         run: |
           git restore patches-list.json
           rm -f patches/build/libs/*.mpp
+      - name: Check release publishing prerequisites
+        env:
+          MORPHE_SIGNING_KEY: ${{ secrets.MORPHE_SIGNING_KEY }}
+        run: |
+          if [ -z "$MORPHE_SIGNING_KEY" ]; then
+            echo "::error::MORPHE_SIGNING_KEY is missing. Configure it in repository Actions secrets before publishing."
+            exit 1
+          fi
+      # App-specific integration and UI regression checks execute in ci.yml.
+      # They must not prevent a verified patch bundle from being published.
       - name: Publish with Morphe semantic-release template
         uses: cycjimmy/semantic-release-action@v8
         id: release
