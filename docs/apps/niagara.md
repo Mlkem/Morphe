@@ -64,9 +64,11 @@ parsed every output DEX method, preserved 56,669 original methods and all 1,953
 non-manifest/resource-table/non-DEX archive entries, and verified no compile-only
 native stub was injected. Category and install-policy regressions cover Truckful,
 updates, disabled categories, duplicate processing, favorites, manual hides and
-profile isolation. A separate Niagara emulator acceptance workflow is prepared for
-synthetic new installs, two categories, an app update and the live Games toggle.
-That workflow has not run for this candidate; no device runtime pass is claimed.
+profile isolation. The [Android 15 / API 35 emulator acceptance run](https://github.com/Mlkem/Morphe/actions/runs/44032872368)
+passed with synthetic Truckful and Social apps: native folder creation, Favorites
+access, persisted hidden icons, restart persistence, app update without duplicate
+folders, and the live Games toggle restoring Games icons while Social stays hidden.
+The emulator completed Niagara's initial setup through its normal interface.
 
 Physical phone testing, existing large setups, OEM background behavior and future
 Niagara versions still require verification. Do not widen version compatibility
