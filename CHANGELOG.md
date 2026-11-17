@@ -1,3 +1,9 @@
+## [1.0.0-dev.34](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.33...v1.0.0-dev.34) (2026-11-17)
+
+### ✨ New Features
+
+* add Niagara automatic category folders and hidden icons ([3da1893](https://github.com/Mlkem/Morphe/commit/3da18936fc7d4564bcd9a624aa6f5a0fbea4bb1d))
+
 ## [1.0.0-dev.33](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.32...v1.0.0-dev.33) (2026-11-16)
 
 ### 🐛 Bug Fixes

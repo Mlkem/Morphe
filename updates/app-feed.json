@@ -20,7 +20,7 @@
     },
     "bitpit.launcher": {
       "name": "Niagara Launcher",
-      "revision": "6f75d9c597ec6226315a6b7a5a3ec5ff997550a2f471a55f03055a01190b5e79",
+      "revision": "b4256ab53a5d2e899ffa8901302d0cca71facdccf705f6d58f09beefb1b60ca5",
       "supportedVersions": [
         "1.16.37"
       ],
@@ -199,7 +199,7 @@
       }
     }
   },
-  "generatedAt": "2026-11-17T05:30:41.239947+00:00",
+  "generatedAt": "2026-11-17T06:53:01.294497+00:00",
   "releaseUrl": "https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.34",
   "releaseVersion": "1.0.0-dev.34",
   "schema": 1

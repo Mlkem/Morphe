@@ -131,7 +131,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.33](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.33)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;44 patches total
+> **[v1.0.0-dev.34](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.34)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;45 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -168,7 +168,7 @@ provide privacy.
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [APKMirror search for collection apps](#apkmirror-search-for-collection-apps) | Changes Morphe Manager's download links for this collection's supported apps. Walmart Canada 26.31, Anker eufy 6.1.20_31181/6.1.30_32823 and Gmail 2026.10.26.1012468012.Release open verified APKMirror APKM pages; other versions/apps, including Gboard and Songsterr, use a package-and-version Google search restricted to APKMirror, without nodpi. Manager itself opens its official GitHub release. Apps outside the collection keep Manager's resolver. Does not download files automatically. |  |
+| [APKMirror search for collection apps](#apkmirror-search-for-collection-apps) | Changes Morphe Manager's download links for this collection's supported apps. Walmart Canada 26.31, Anker eufy 6.1.20_31181/6.1.30_32823 and Gmail 2026.10.26.1012468012.Release open verified APKMirror APKM pages; other versions/apps, including Gboard and Songsterr, use a package-and-version Google search restricted to APKMirror, without nodpi. Niagara Launcher and Manager itself open their official GitHub releases. Apps outside the collection keep Manager's resolver. Does not download files automatically. |  |
 
 </details>
 
@@ -237,6 +237,23 @@ provide privacy.
 | [Auto-confirm Eufy mobile-data streaming](#auto-confirm-eufy-mobile-data-streaming) | Accepts only the exact Mobile Data Consuming streaming prompt. Checks Don't show again when exposed as a standard checkbox; other prompts, Wi-Fi and camera transport are unchanged. A brief prompt flash is possible. Phone testing pending. |  |
 | [Hide Eufy Discover, Smart and Shop](#hide-eufy-discover-smart-and-shop) | Hides Discover, Smart and Shop in the main bottom navigation, retaining original tab indices. Restored hidden tabs return to Home. Other Smart controls, cameras, events and Profile are preserved. Phone testing pending. |  |
 | [Hide Eufy promotions](#hide-eufy-promotions) | Collapses the identified camera-home marketing and AI offer banners and promotional inbox cards, and closes the identified shopping and solar-panel offer popups. No network blocking or notification filtering; remote/React Native offers may remain. Phone testing pending. |  |
+
+</details>
+
+<details>
+<summary>📦 Niagara Launcher&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
+
+**Package name:** `bitpit.launcher`
+
+**🎯 Supported versions:**
+
+| 🧪&nbsp;1.16.37 |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Automatic app folders](#automatic-app-folders) | Automatically sorts newly installed apps into native Niagara folders in Favorites, then hides their separate app-list icons after saving. Ten local categories with live switches in Settings > Productivity > Auto folders. Includes sort-existing and restore controls. Unknown apps go to Other Apps. Preserves pinned favorites, manually hidden apps and other profiles. Niagara 1.16.37 only; phone testing pending. |  |
 
 </details>
 
