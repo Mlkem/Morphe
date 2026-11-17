@@ -211,6 +211,22 @@ settings.gradle.kts
 patches-bundle.png
 ```
 
+## Split-package reinstall warning (November 2026)
+
+A user-supplied file named `com.musicleague.app.apk` was inspected and found to be a **ZIP container** containing these four actual APKs at its top level: `base.apk`, `config.arm64_v8a.apk`, `config.en.apk`, and `config.xxhdpi.apk`. The filename extension is misleading; it must not be installed as a standalone APK or treated as the base module alone.
+
+The observed warning reads: **“Reinstall Required — Music League is missing required components on this device.”** Missing split installation is a strong possibility, but the warning alone does not prove it; other checks may also produce it.
+
+To isolate the issue before changing patch code:
+
+1. Keep the original package as a split archive and install all four modules together via `adb install-multiple base.apk config.arm64_v8a.apk config.en.apk config.xxhdpi.apk` from the extracted directory. This installs the original modules, without Morphe patching; official signature consistency is required. If the existing installation was signed with a different key, do **not** uninstall until the user has backed up local app data.
+2. Launch the unmodified app. If it still displays the warning, inspect app logs and the app's missing-component checks rather than assuming Morphe caused the issue.
+3. In Morphe, select the original multi-APK archive using **Select other apps** and confirm the manager recognizes it as a split container. Do not patch only `base.apk`. The `Merge XAPK only` utility documents the merge path, but merging/re-signing may trigger app-integrity checks and is not guaranteed to solve this warning.
+4. Keep **Hermes hide ad promo surfaces** disabled; it is known to cause startup hangs. Test launch before re-enabling other changes. Confirm architecture/density resources survive the patch and installation.
+5. Document which original install works, which patch selection fails, and any logcat exceptions before modifying bytecode or releasing a claimed fix.
+
+This is a diagnosis and installation guide, **not a verified patch fix**. No successful Android-device launch is established by this note.
+
 ## Testing
 
 Always patch the original APK, not an APK already modified by an earlier failed patch attempt.
