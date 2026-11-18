@@ -68,8 +68,8 @@ private fun ByteArray.mlPatchReturnNull(functionOffset: Int) {
 
 @Suppress("unused")
 val hermesHideAdPromoSurfacesPatch = resourcePatch(
-    name = "Hermes hide ad promo surfaces",
-    description = "Experimental Hermes bytecode edit: makes ad-card components return null. May prevent startup; opt in only for testing.",
+    name = "Remove Music League ad card container",
+    description = "Experimental 1.4.11 fix for the empty home-screen ad card. Returns null from AdsCard to remove its container and spacing; opt in after backing up app data.",
     default = false,
 ) {
     dependsOn(ca.mlkem.updates.startupUpdates)
@@ -108,28 +108,10 @@ val hermesHideAdPromoSurfacesPatch = resourcePatch(
             stringStorageOffset = stringStorageOffset,
         )
 
-val targetFunctionNames = setOf(
-    "AdsCard",
-    "AdBanner",
-
-    // Remaining top reward / zero-ads banner.
-    "AdsRewardBanner",
-    "AdRewardBanner",
-    "RewardAdBanner",
-    "RewardedAdBanner",
-    "RewardedAdsBanner",
-    "RewardBanner",
-    "RewardedBanner",
-    "ZeroAdsBanner",
-    "ZeroAdBanner",
-    "AdFreeBanner",
-    "AdFreeRewardBanner",
-    "SixHoursBanner",
-    "SixHoursZeroAdsBanner",
-    "FreeAdsRewardBanner",
-    "PromoBanner",
-    "PremiumBanner",
-)
+        // The home-screen blank rectangle is the AdsCard component. Avoid
+        // touching reward banners, premium screens or other functions: the
+        // older wide match set caused startup regressions on this app.
+        val targetFunctionNames = setOf("AdsCard")
 
         val patched = original.copyOf()
         val patchedNames = mutableSetOf<String>()
@@ -161,8 +143,8 @@ val targetFunctionNames = setOf(
             }
         }
 
-        if (patchedNames.isEmpty()) {
-            throw PatchException("No target Hermes ad UI functions were found")
+        if (patchedNames != targetFunctionNames) {
+            throw PatchException("Could not safely locate the exact AdsCard function in Hermes 96. No bundle modifications were written.")
         }
 
         bundleFile.writeBytes(patched)
