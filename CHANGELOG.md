@@ -1,3 +1,9 @@
+## [1.0.0-dev.36](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.35...v1.0.0-dev.36) (2026-11-18)
+
+### 🐛 Bug Fixes
+
+* **music-league:** limit ad-container removal to home AdsCard only ([3d622db](https://github.com/Mlkem/Morphe/commit/3d622dba416136a58c773726b40b7a2891cc0e51))
+
 ## [1.0.0-dev.35](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.34...v1.0.0-dev.35) (2026-11-17)
 
 ### 🐛 Bug Fixes

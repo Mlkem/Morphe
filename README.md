@@ -131,7 +131,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.35](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.35)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;46 patches total
+> **[v1.0.0-dev.36](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.36)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;46 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -274,10 +274,10 @@ provide privacy.
 | [Disable ad SDK manifest components](#disable-ad-sdk-manifest-components) | Disables bundled ad mediation components and removes ad identifier/ad services permissions. |  |
 | [Disable ad and promo remote config](#disable-ad-and-promo-remote-config) | Blackholes ad/paywall/reward feature-flag keys and remote promo payload keys so the app cannot enable ad or upsell surfaces from remote config. |  |
 | [Extract native libraries for merged XAPK](#extract-native-libraries-for-merged-xapk) | Fixes the 1.4.11 missing-components startup path by requiring Android to extract bundled native libraries to disk. Does not bypass integrity or premium checks. |  |
-| [Hermes hide ad promo surfaces](#hermes-hide-ad-promo-surfaces) | Experimental Hermes bytecode edit: makes ad-card components return null. May prevent startup; opt in only for testing. |  |
 | [Neutralize bundled ad unit IDs and premium banners](#neutralize-bundled-ad-unit-ids-and-premium-banners) | Replaces bundled ad unit IDs and premium/reward banner copy in the Hermes bundle with same-length non-serving/blank values while leaving the AdMob app ID intact. |  |
 | [Neutralize premium and reward-ad prompts](#neutralize-premium-and-reward-ad-prompts) | Force-removes the remaining premium/reward banner strings from the bundled Hermes asset. |  |
 | [Pin local Expo config](#pin-local-expo-config) | Neutralizes Expo OTA update configuration in the bundled Expo config so the APK prefers local bundled assets. |  |
+| [Remove Music League ad card container](#remove-music-league-ad-card-container) | Experimental 1.4.11 fix for the empty home-screen ad card. Returns null from AdsCard to remove its container and spacing; opt in after backing up app data. |  |
 
 </details>
 
