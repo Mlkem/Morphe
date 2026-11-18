@@ -18,7 +18,7 @@ public final class OpenWithProPatch {
 
     public static final BytecodePatch ENABLE_PRO = PatchKt.bytecodePatch(
         "Enable Pro file-type handling",
-        "Open with 1.2.1 (11) local test: enables the shared Pro flag used by " +
+        "Open with 1.2.1 (11) and 1.4 (20) local test: enables the shared Pro flag used by " +
         "file-type settings and routing, and removes the two Play installation " +
         "licence startup calls for a re-signed build. Phone testing pending.",
         false,
@@ -27,16 +27,25 @@ public final class OpenWithProPatch {
             builder.compatibleWith(new Compatibility(
                 "com.openwith.app", "Open with", "Pro file-type handling test",
                 ApkFileType.APK, (Integer)null, null,
-                Collections.singletonList(new AppTarget("1.2.1", Collections.emptyMap(),
-                    true, 32, "Version code 11; phone testing pending")), FormFactor.MOBILE));
+                Arrays.asList(new AppTarget("1.2.1", Collections.emptyMap(),
+                    true, 32, "Version code 11; phone testing pending"),
+                    new AppTarget("1.4", Collections.emptyMap(),
+                    true, 32, "Version code 20; phone testing pending")), FormFactor.MOBILE));
             builder.execute(context -> {
+                String version = context.getPackageMetadata().getVersionName();
+                String versionCode = context.getPackageMetadata().getVersionCode();
+                boolean legacy = "1.2.1".equals(version) && "11".equals(versionCode);
+                boolean current = "1.4".equals(version) && "20".equals(versionCode);
                 if (!"com.openwith.app".equals(context.getPackageMetadata().getPackageName()) ||
-                    !"1.2.1".equals(context.getPackageMetadata().getVersionName()) ||
-                    !"11".equals(context.getPackageMetadata().getVersionCode())) {
-                    throw new IllegalArgumentException("Requires Open with 1.2.1, version code 11.");
+                    !(legacy || current)) {
+                    throw new IllegalArgumentException(
+                        "Requires Open with 1.2.1 (11) or 1.4 (20).");
                 }
 
-                MutableMethod pro = method(context, "Lel0;", "c", "Z", "Landroid/content/Context;");
+                // Obfuscated owner changed in 1.4; retain exact version/code guards
+                // and validate the preference-reader instructions below for both.
+                MutableMethod pro = method(context, legacy ? "Lel0;" : "Leo0;",
+                    "c", "Z", "Landroid/content/Context;");
                 MutableMethod app = method(context, "Lcom/pairip/application/Application;",
                     "attachBaseContext", "V", "Landroid/content/Context;");
                 MutableMethod provider = method(context, "Lcom/pairip/licensecheck/LicenseContentProvider;",

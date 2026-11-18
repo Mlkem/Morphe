@@ -89,7 +89,7 @@ assert openwith['default'] is False, 'Open with must remain opt-in'
 assert len(openwith['compatiblePackages']) == 1
 openwith_target=openwith['compatiblePackages'][0]
 assert openwith_target['packageName'] == 'com.openwith.app'
-assert [t['version'] for t in openwith_target['targets']] == ['1.2.1']
+assert [t['version'] for t in openwith_target['targets']] == ['1.2.1', '1.4']
 assert all(t['minSdk'] == 32 for t in openwith_target['targets'])
 manager=next(p for p in patches if p['name']=='APKMirror search for collection apps')
 assert manager['default'] is False, 'Manager search must remain opt-in'

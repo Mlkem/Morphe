@@ -1,7 +1,7 @@
 # Open with
 
 The optional **Enable Pro file-type handling** patch targets `com.openwith.app`
-**1.2.1, version code 11**, on Android API 32 or later. It is an experimental beta;
+**1.2.1 (version code 11)** and **1.4 (version code 20)**, on Android API 32 or later. It is an experimental beta;
 phone testing is pending.
 
 ## Install
@@ -11,7 +11,7 @@ versions**, select the original Open with app, and choose **Enable Pro file-type
 handling**. Patch and install with Morphe. Keep all configuration splits if using
 an exported app; `base.apk` alone is not the complete installation.
 
-The independently validated standalone bundle is also available:
+The older standalone bundle supports **1.2.1 only**:
 [openwith-pro-v1.0.0-beta.1.mpp](../../prebuilt/openwith/openwith-pro-v1.0.0-beta.1.mpp).
 Use either the combined source or the standalone source for this app to avoid
 duplicate patch entries.
@@ -54,13 +54,25 @@ Results: [standalone verification](openwith-validation/standalone.json) and
 The collection verifier requires the Open with patch in both JVM and Android
 DEX form, checks its opt-in setting, and keeps its target experimental.
 
+## Open with 1.4 validation
+
+The supplied APKCube split bundle identifies as `com.openwith.app` 1.4 (20).
+Its shared Pro preference reader moved from `Lel0;->c` to `Leo0;->c`; the
+preference key, result/return sequence and both installation-licence startup
+hooks were checked against the supplied original before adding support.
+The combined patch applied and rebuilt the complete split input successfully
+with Morphe Desktop 1.20.0 / Patcher 2.1.0. Android installation and phone
+behavior remain untested. The old standalone bundle is unchanged.
+All three hooks and 21,609 implemented methods passed structural checks;
+reapplying the patch also succeeded. Results: [1.4 validation](openwith-validation/1.4.json).
+
 The integration harness accepts a locally supplied original or merged APK and a
 standalone or combined MPP:
 
 ```sh
 javac -cp "$MORPHE_JAR" -d build/openwith-tests tests/openwith/VerifyOpenWithMpp.java
 java -cp "build/openwith-tests:$MORPHE_JAR" VerifyOpenWithMpp \
-  /path/to/original-merged.apk /path/to/patches.mpp build/openwith-validation
+  /path/to/original-merged.apk /path/to/patches.mpp build/openwith-validation 1.4
 ```
 
 No APK inputs, patched apps, signing keys, account details or private backups are

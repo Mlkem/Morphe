@@ -22,6 +22,7 @@ public class VerifyOpenWithMpp {
     }
     public static void main(String[] args) throws Exception {
         Path input = Path.of(args[0]), mpp = Path.of(args[1]), root = Path.of(args[2]);
+        String expectedVersion = args.length > 3 ? args[3] : "1.2.1";
         Files.createDirectories(root);
         try (ZipFile z = new ZipFile(mpp.toFile())) {
             check(z.getEntry("classes.dex") != null, "MPP contains Android patch DEX");
@@ -43,7 +44,7 @@ public class VerifyOpenWithMpp {
         check(patch.getCompatibility().size() == 1 &&
             patch.getCompatibility().get(0).getPackageName().equals("com.openwith.app"),
             "Patch package restriction is correct");
-        check(patch.getCompatibility().get(0).getTargets().get(0).getVersion().equals("1.2.1"),
+        check(patch.getCompatibility().get(0).getTargets().stream().anyMatch(t -> t.getVersion().equals(expectedVersion)),
             "Patch version restriction is correct");
         PatcherConfig config = new PatcherConfig(input.toFile(), root.resolve("temp").toFile(),
             Set.of(), BytecodeMode.STRIP_FAST, NoOpDexVerifier.INSTANCE,
@@ -65,7 +66,8 @@ public class VerifyOpenWithMpp {
             Files.copy(input, output, StandardCopyOption.REPLACE_EXISTING);
             ApkUtils.INSTANCE.applyTo(result, output.toFile());
         }
-        int classes = 0, methods = 0;
+        int classes = 0, methods = 0, verifiedHooks = 0;
+        String proOwner = expectedVersion.equals("1.4") ? "Leo0;" : "Lel0;";
         try (ZipFile z = new ZipFile(output.toFile())) {
             for (ZipEntry entry : Collections.list(z.entries())) {
                 if (!entry.getName().matches("classes[0-9]*\\.dex")) continue;
@@ -75,10 +77,33 @@ public class VerifyOpenWithMpp {
                     classes++;
                     for (Method m : c.getMethods()) if (m.getImplementation() != null) {
                         new MutableMethodImplementation(m.getImplementation()); methods++;
+                        if (c.getType().equals(proOwner) && m.getName().equals("c") &&
+                            m.getReturnType().equals("Z")) {
+                            var instructions = new MutableMethodImplementation(m.getImplementation()).getInstructions();
+                            boolean forced = false;
+                            for (int i = 0; i + 1 < instructions.size(); i++) {
+                                var a = instructions.get(i); var b = instructions.get(i + 1);
+                                if (a.getOpcode() == Opcode.CONST_4 && b.getOpcode() == Opcode.RETURN &&
+                                    ((com.android.tools.smali.dexlib2.iface.instruction.NarrowLiteralInstruction)a).getNarrowLiteral() == 1 &&
+                                    ((com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction)a).getRegisterA() ==
+                                    ((com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction)b).getRegisterA()) forced = true;
+                            }
+                            check(forced, "Shared Pro reader returns true"); verifiedHooks++;
+                        }
+                        if ((c.getType().equals("Lcom/pairip/application/Application;") && m.getName().equals("attachBaseContext")) ||
+                            (c.getType().equals("Lcom/pairip/licensecheck/LicenseContentProvider;") && m.getName().equals("onCreate"))) {
+                            for (var instruction : m.getImplementation().getInstructions())
+                                if (instruction instanceof com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction)
+                                    check(!((com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction)instruction).getReference().toString()
+                                        .equals("Lcom/pairip/licensecheck/LicenseClient;->checkLicense(Landroid/content/Context;)V"),
+                                        "Installation-licence startup call removed");
+                            verifiedHooks++;
+                        }
                     }
                 }
             }
         }
+        check(verifiedHooks == 3, "All three patch hooks verified");
         check(methods > 20000, "Rebuilt app method structures valid: " + classes + " classes, " + methods + " methods");
         System.out.println("OUTPUT " + output);
         System.out.println("Android import/install/runtime testing remains pending.");
