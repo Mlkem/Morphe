@@ -120,9 +120,10 @@
     },
     "com.openwith.app": {
       "name": "Open with",
-      "revision": "4ef81b58fc87987880b37554494d9ac1bd1eccd5ae1a081f35ff0be6168d5714",
+      "revision": "d9adf3092dd50ba2912524760528e1f60c63447c09dc2558f5201270e610e26e",
       "supportedVersions": [
-        "1.2.1"
+        "1.2.1",
+        "1.4"
       ],
       "upstream": {
         "checkedAt": "2026-11-18T11:24:22.386635+00:00",
@@ -204,9 +205,8 @@
       }
     }
   },
-  "generatedAt": "2026-11-18T11:23:41.139217+00:00",
-  "releaseUrl": "https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.36",
-  "releaseVersion": "1.0.0-dev.36",
-  "schema": 1,
-  "upstreamCheckedAt": "2026-11-18T11:24:27.538801+00:00"
+  "generatedAt": "2026-11-18T18:09:02.324004+00:00",
+  "releaseUrl": "https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.37",
+  "releaseVersion": "1.0.0-dev.37",
+  "schema": 1
 }

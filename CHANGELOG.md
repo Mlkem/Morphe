@@ -1,3 +1,9 @@
+## [1.0.0-dev.37](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.36...v1.0.0-dev.37) (2026-11-18)
+
+### 🐛 Bug Fixes
+
+* **Open with:** support version 1.4 (20) with validated bytecode hooks ([36b3586](https://github.com/Mlkem/Morphe/commit/36b358604f038a02587b11f2e3ffe666235a5687))
+
 ## [1.0.0-dev.36](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.35...v1.0.0-dev.36) (2026-11-18)
 
 ### 🐛 Bug Fixes

@@ -131,7 +131,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.36](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.36)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;46 patches total
+> **[v1.0.0-dev.37](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.37)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;46 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -341,13 +341,13 @@ provide privacy.
 
 **🎯 Supported versions:**
 
-| 🧪&nbsp;1.2.1 |
-| :---: |
-| Version code 11; phone testing pending |
+| 🧪&nbsp;1.2.1 | 🧪&nbsp;1.4 |
+| :---: | :---: |
+| Version code 11; phone testing pending | Version code 20; phone testing pending |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [Enable Pro file-type handling](#enable-pro-file-type-handling) | Open with 1.2.1 (11) local test: enables the shared Pro flag used by file-type settings and routing, and removes the two Play installation licence startup calls for a re-signed build. Phone testing pending. |  |
+| [Enable Pro file-type handling](#enable-pro-file-type-handling) | Open with 1.2.1 (11) and 1.4 (20) local test: enables the shared Pro flag used by file-type settings and routing, and removes the two Play installation licence startup calls for a re-signed build. Phone testing pending. |  |
 
 </details>
 
