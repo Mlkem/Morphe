@@ -14,7 +14,10 @@ The workflow uses Morphe's official semantic-release template. It generates the
 version, changelog, `patches-bundle.json`, `patches-list.json` and release assets.
 Only `dev` automatically publishes prereleases. `main` builds in CI, and its manual
 Release workflow requires a matching phone-test approval before a stable release.
-There is no stable manifest until that approval. Beta users add the `dev` source.
+There is no stable release until that approval. Beta users add the `dev` source.
+The default source can mirror an already published beta by copying its generated
+`patches-bundle.json` and `patches-list.json` unchanged; this does not promote it
+to stable or publish another build.
 
 Preserve generated release commits and tags. Merge reviewed source updates from
 `dev` into `main` before approving and publishing a stable version. Afterward,

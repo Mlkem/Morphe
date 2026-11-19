@@ -9,6 +9,15 @@ assert len(names)==len(set(names)), 'Duplicate patch names'
 packages={c['packageName'] for p in patches for c in (p.get('compatiblePackages') or [])}
 expected={'bitpit.launcher','com.google.android.gm','com.oceanwing.battery.cam','com.google.android.inputmethod.latin','com.songsterr','com.musicleague.app','ca.walmart.ecommerceapp','com.wongnai.android','com.neave.zoomearth','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','com.thaidigitalplatform.tagthai','app.morphe.manager'}
 assert expected.issubset(packages), f'Missing expected apps: {expected - packages}'
+amazon=next(p for p in patches if p['name']=='Aeroplan shopping')
+assert amazon['default'] is False, 'Untested Aeroplan shopping must remain opt-in'
+assert len(amazon['compatiblePackages']) == 1
+amazon_target=amazon['compatiblePackages'][0]
+assert amazon_target['packageName'] == 'com.amazon.mShop.android.shopping'
+assert amazon_target['apkFileType'] == 'APKM'
+assert [t['version'] for t in amazon_target['targets']] == ['32.20.0.100']
+assert all(t['isExperimental'] and t['minSdk'] == 31 for t in amazon_target['targets'])
+assert amazon['options'] == [], 'Aeroplan account values belong only in device settings'
 niagara=next(p for p in patches if p['name']=='Automatic app folders')
 assert not niagara['default']
 assert niagara['compatiblePackages'][0]['packageName']=='bitpit.launcher'
@@ -125,6 +134,13 @@ for p in bundles:
         assert len(files)==len(set(files))
         assert z.read('classes.dex').startswith(b'dex\n')
         assert any(f.endswith('.class') for f in files)
+        assert 'ca/mlkem/amazon/AeroplanPatchKt.class' in files
+        assert b'Lca/mlkem/amazon/AeroplanPatchKt;' in z.read('classes.dex')
+        amazon_extension=z.read('extensions/amazon-aeroplan.mpe')
+        assert amazon_extension.startswith(b'dex\n')
+        for name in ['AeroplanBridge','AeroplanActivity','ProfileStore','SessionRules','AutofillScript']:
+            assert ('Lca/mlkem/amazon/'+name+';').encode() in amazon_extension
+        assert b'Lkotlin/' not in amazon_extension
         assert 'ca/mlkem/niagara/AutoFoldersPatchKt.class' in files
         assert b'Lca/mlkem/niagara/AutoFolders;' in z.read('extensions/niagara-auto-folders.mpe')
         assert b'Lca/mlkem/niagara/NativeContinuation;' in z.read('extensions/niagara-auto-folders.mpe')

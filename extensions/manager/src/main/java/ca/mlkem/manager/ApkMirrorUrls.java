@@ -69,6 +69,7 @@ public final class ApkMirrorUrls {
 
     private static boolean supported(String packageName) {
         return "bitpit.launcher".equals(packageName)
+            || "com.amazon.mShop.android.shopping".equals(packageName)
             || "com.oceanwing.battery.cam".equals(packageName)
             || "com.google.android.gm".equals(packageName)
             || "com.google.android.inputmethod.latin".equals(packageName)

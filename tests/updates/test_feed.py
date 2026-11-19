@@ -41,6 +41,15 @@ class FeedTests(unittest.TestCase):
  def test_redirects_cannot_forward_authorization(self):
   self.assertIsNone(refresh.NoRedirect().redirect_request(None,None,302,'',{},'https://other.example/'))
  def test_no_private_data_or_apk_urls(self):
-  data=json.loads((ROOT/'updates/app-feed.json').read_text());self.assertEqual(1,data['schema']);self.assertEqual(set(catalog.PATHS),set(data['apps']))
+  # Validate the next generated feed. The checked-in feed represents the previous
+  # release and can legitimately lack an app being added in this source change.
+  current_revisions=catalog.revisions()
+  with tempfile.TemporaryDirectory() as tmp:
+   target=Path(tmp);(target/'updates').mkdir()
+   (target/'patches-list.json').write_text((ROOT/'patches-list.json').read_text())
+   (target/'updates/app-feed.json').write_text((ROOT/'updates/app-feed.json').read_text())
+   with patch.object(catalog,'ROOT',target),patch.object(catalog,'revisions',return_value=current_revisions):catalog.release()
+   data=json.loads((target/'updates/app-feed.json').read_text())
+  self.assertEqual(1,data['schema']);self.assertEqual(set(catalog.PATHS),set(data['apps']))
   self.assertLess(len(json.dumps(data)),128*1024)
 if __name__=='__main__':unittest.main()

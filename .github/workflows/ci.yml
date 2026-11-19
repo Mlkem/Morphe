@@ -34,6 +34,7 @@ jobs:
           python3 -m unittest discover -s tests/updates -p 'test_*.py'
           python3 scripts/test_walmart_logic.py
           python3 scripts/test_manager_urls.py
+          python3 scripts/test_amazon_aeroplan.py
           python3 scripts/test_niagara_logic.py
       - name: Apply three Eufy 6.1.30 patches to original APKM (candidate branch only)
         if: github.event_name == 'pull_request' && github.head_ref == 'fix/eufy-mobile-data-2026-11-12'

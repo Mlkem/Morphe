@@ -2,7 +2,7 @@
 
 # mlkemac patches
 
-A single Morphe source for Gmail, Anker eufy, Music League, Walmart Canada, Wongnai, Zoom Earth,
+A single Morphe source for Amazon Shopping, Gmail, Anker eufy, Music League, Walmart Canada, Wongnai, Zoom Earth,
 PushPress, Open with, GPS Emulator, TAGTHAi, Songsterr, Gboard, an optional Morphe Manager APKMirror search fix, and the XAPK
 merge-only utility.
 
@@ -20,11 +20,11 @@ phone testing yet. In Morphe, open **Sources → + → Remote** and paste:
 https://github.com/Mlkem/Morphe/tree/dev
 ```
 
-An explicit `dev` source enables prerelease updates from the start. This collection
-has no `main/patches-bundle.json` stable feed: adding the bare repository URL with
-pre-releases disabled will not find an update. Enable **Pre-release patches** on
+An explicit `dev` source enables prerelease updates from the start. The default
+source may also mirror a published beta; it does not represent a phone-tested
+stable release. Enable **Pre-release patches** on
 **mlkemac patches itself**; Morphe Manager's own pre-release setting is separate. Enable
-**Experimental app versions** for Walmart Canada, Zoom Earth 6.3.3, PushPress, Open with, GPS Emulator, TAGTHAi, Songsterr, Gboard, Anker eufy, Gmail, and the Manager patch. Choose
+**Experimental app versions** for Amazon Shopping, Walmart Canada, Zoom Earth 6.3.3, PushPress, Open with, GPS Emulator, TAGTHAi, Songsterr, Gboard, Anker eufy, Gmail, and the Manager patch. Choose
 the original app APK/APKM/XAPK, select patches, then patch and install. Keep your existing Morphe
 APK signing key so future patched apps can update in place.
 
@@ -71,6 +71,7 @@ sorting existing apps, and restoring icons. See [Niagara details](docs/apps/niag
 
 | App / utility | Target | Included source | Status |
 | --- | --- | --- | --- |
+| Amazon Shopping | `com.amazon.mShop.android.shopping` 32.20.0.100 (1243260206) | Aeroplan settings and official eStore shopping window | Opt-in experimental; [setup and limits](docs/apps/amazon-aeroplan.md) |
 | Gmail | `com.google.android.gm` 2026.10.26.1012468012.Release | Account visibility setting; separate GmsCore copy | Experimental; [setup and limits](docs/apps/gmail.md) |
 | Anker eufy | `com.oceanwing.battery.cam` 6.1.20_31181 | Camera-focused tabs and native promotion cleanup | Experimental; [scope and phone checks](docs/apps/eufy.md) |
 | Music League | `com.musicleague.app` 1.4.9 | Recovered patch sources | Combined bundle awaits phone testing |
@@ -86,7 +87,7 @@ sorting existing apps, and restoring icons. See [Niagara details](docs/apps/niag
 | Morphe Manager | `app.morphe.manager` 2.4.0-dev.1–dev.4 | APKMirror search for collection apps | Opt-in; phone testing pending |
 | Merge XAPK only | Universal | Merge-only 1.0.0 | Opt-in; uses Morphe's merge/sign flow |
 
-The Music League Hermes patch, Walmart Remove Shop patch and universal merge utility
+The Amazon Aeroplan patch, Music League Hermes patch, Walmart Remove Shop patch and universal merge utility
 are off by default, as are the Open with and GPS Emulator Pro patches and all three
 TAGTHAi patches. Songsterr premium is also opt-in; see [input, features and limits](docs/apps/songsterr.md). The six Zoom Earth 6.3.3 patches are also opt-in;
 use the [working LiteAPKs input instructions](docs/apps/zoom-earth-liteapks.md)
@@ -425,6 +426,7 @@ local `gpr.user` / `gpr.key` properties. GitHub Actions supplies its scoped toke
 ./gradlew :patches:buildAndroid :patches:generatePatchesList --no-daemon
 python3 scripts/verify_bundle.py
 python3 scripts/test_walmart_logic.py
+python3 scripts/test_amazon_aeroplan.py
 ./gradlew -p tests/walmart/android test --no-daemon
 ```
 

@@ -3,6 +3,15 @@
 The combined collection has **not** passed a full physical-device test yet.
 Compilation and static inspection do not establish phone behavior.
 
+Amazon Shopping 32.20.0.100 (1243260206) has an opt-in **Aeroplan shopping** patch.
+Desktop patching and offline tests do not establish its phone behavior or points
+attribution. Test launch/skip, blank profile settings, save/edit/clear, secure
+storage after restart, launcher shortcut, official form autofill, Back/history,
+eStore-to-Amazon window handling, and a planned eligible purchase completed in
+the helper window. Record points separately when Aeroplan posts them. Do not put
+account numbers, names, cookies, or purchase details in public test records.
+See [Amazon instructions](apps/amazon-aeroplan.md).
+
 Record the app version, phone/Android version, options, launch/login result,
 patched feature checks, and update-over-existing-install result for each app.
 Test Music League intro and Spotify connection, Zoom Earth popups, PushPress
