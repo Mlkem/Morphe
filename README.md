@@ -138,7 +138,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.40](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.40)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;48 patches total
+> **[v1.0.0-dev.41](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.41)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;48 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -192,7 +192,7 @@ provide privacy.
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [Aeroplan shopping](#aeroplan-shopping) | Adds encrypted, device-local Aeroplan settings and an in-app eStore shopping window for Amazon.ca. Review and continue through the official referral before adding items. Native checkout tracking and points credit are not verified. |  |
+| [Aeroplan shopping](#aeroplan-shopping) | Keeps Aeroplan details encrypted on this device, opens the official eStore referral, then returns shopping and checkout to the Amazon app. Passes the complete Amazon.ca destination link to the native app. Points credit after handoff is not verified. |  |
 
 </details>
 

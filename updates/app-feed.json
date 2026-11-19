@@ -49,7 +49,7 @@
     },
     "com.amazon.mShop.android.shopping": {
       "name": "Amazon Shopping",
-      "revision": "b53c652f867f314bd878890bb469d9cfe39964ad61b09f6d64224156c7d67d1c",
+      "revision": "7a09b3ebea2c455dc5576cd4c1db6583eac00f782c30dc3de586fe8e3e613aec",
       "supportedVersions": [
         "32.20.0.100",
         "32.19.0.100"
@@ -220,9 +220,8 @@
       }
     }
   },
-  "generatedAt": "2026-11-19T18:24:19.883808+00:00",
-  "releaseUrl": "https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.40",
-  "releaseVersion": "1.0.0-dev.40",
-  "schema": 1,
-  "upstreamCheckedAt": "2026-11-19T18:25:11.246055+00:00"
+  "generatedAt": "2026-11-19T19:37:48.309075+00:00",
+  "releaseUrl": "https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.41",
+  "releaseVersion": "1.0.0-dev.41",
+  "schema": 1
 }

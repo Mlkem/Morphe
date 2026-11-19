@@ -1,3 +1,9 @@
+## [1.0.0-dev.41](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.40...v1.0.0-dev.41) (2026-11-19)
+
+### 🐛 Bug Fixes
+
+* **amazon:** return Aeroplan referral shopping to the native app ([345ae77](https://github.com/Mlkem/Morphe/commit/345ae77b7b6819143df9e0afcd09af4b47e23eff))
+
 ## [1.0.0-dev.40](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.39...v1.0.0-dev.40) (2026-11-19)
 
 ### ✨ New Features
