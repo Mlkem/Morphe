@@ -15,7 +15,7 @@ assert len(amazon['compatiblePackages']) == 1
 amazon_target=amazon['compatiblePackages'][0]
 assert amazon_target['packageName'] == 'com.amazon.mShop.android.shopping'
 assert amazon_target['apkFileType'] == 'APKM'
-assert [t['version'] for t in amazon_target['targets']] == ['32.20.0.100']
+assert [t['version'] for t in amazon_target['targets']] == ['32.20.0.100', '32.19.0.100']
 assert all(t['isExperimental'] and t['minSdk'] == 31 for t in amazon_target['targets'])
 assert amazon['options'] == [], 'Aeroplan account values belong only in device settings'
 niagara=next(p for p in patches if p['name']=='Automatic app folders')

@@ -13,6 +13,10 @@ private const val AMAZON_MAIN = "Lcom/amazon/mShop/navigation/MainActivity;"
 private const val BRIDGE = "Lca/mlkem/amazon/AeroplanBridge;"
 private const val SHOPPING_ACTIVITY = "ca.mlkem.amazon.AeroplanActivity"
 private const val ANDROID = "http://schemas.android.com/apk/res/android"
+private val reviewedVersions = mapOf(
+    "32.20.0.100" to "1243260206",
+    "32.19.0.100" to "1243250306",
+)
 
 private val amazonMainResume = Fingerprint(
     definingClass = AMAZON_MAIN,
@@ -60,15 +64,17 @@ val aeroplanShoppingPatch = bytecodePatch(
         packageName = PACKAGE,
         apkFileType = ApkFileType.APKM,
         appIconColor = 0xFF9900,
-        targets = listOf(AppTarget(version = "32.20.0.100", minSdk = 31, isExperimental = true)),
+        targets = reviewedVersions.keys.map { AppTarget(version = it, minSdk = 31, isExperimental = true) },
     ))
     dependsOn(ca.mlkem.updates.startupUpdates, aeroplanManifest)
     extendWith("extensions/amazon-aeroplan.mpe")
 
     execute {
-        check(packageMetadata.packageName == PACKAGE && packageMetadata.versionName == "32.20.0.100"
-            && packageMetadata.versionCode == "1243260206") {
-            "Requires original Amazon Shopping 32.20.0.100 (1243260206)."
+        val expectedVersionCode = reviewedVersions[packageMetadata.versionName]
+        check(packageMetadata.packageName == PACKAGE && expectedVersionCode != null
+            && packageMetadata.versionCode == expectedVersionCode) {
+            "Requires original Amazon Shopping " +
+                reviewedVersions.entries.joinToString(" or ") { "${it.key} (${it.value})" } + "."
         }
         check(classDefBy(AMAZON_MAIN).superclass == "Lcom/amazon/mShop/core/MigrationActivity;") {
             "Amazon MainActivity has an unexpected superclass."

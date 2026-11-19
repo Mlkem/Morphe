@@ -3,7 +3,8 @@
 The combined collection has **not** passed a full physical-device test yet.
 Compilation and static inspection do not establish phone behavior.
 
-Amazon Shopping 32.20.0.100 (1243260206) has an opt-in **Aeroplan shopping** patch.
+Amazon Shopping 32.20.0.100 (1243260206) and 32.19.0.100 (1243250306) have an
+opt-in **Aeroplan shopping** patch. Test each version separately.
 Desktop patching and offline tests do not establish its phone behavior or points
 attribution. Test launch/skip, blank profile settings, save/edit/clear, secure
 storage after restart, launcher shortcut, official form autofill, Back/history,

@@ -1,8 +1,15 @@
 # Amazon Shopping: Aeroplan eStore
 
 **Aeroplan shopping** is opt-in and experimental. It targets the original
-`com.amazon.mShop.android.shopping` **32.20.0.100**, version code **1243260206**,
-Android 12 or newer. Supply the full APKM, including its ABI and density splits.
+`com.amazon.mShop.android.shopping` on Android 12 or newer:
+
+| Version | Version code |
+| --- | --- |
+| 32.20.0.100 | 1243260206 |
+| 32.19.0.100 | 1243250306 |
+
+Supply the full APKM, including its ABI and density splits. Each version name must
+match its reviewed version code; other builds are rejected.
 
 ## Setup and use
 
@@ -64,7 +71,9 @@ for the official eStore and Amazon.ca flow, with the same cookie store across it
 page-opened windows. This does not establish native-checkout attribution.
 
 Input APKM SHA-256:
-`a2cea13fb065ef909272d038fb8a0ec9fa050198d360527232de94361d80b9b8`.
+
+- 32.20.0.100: `a2cea13fb065ef909272d038fb8a0ec9fa050198d360527232de94361d80b9b8`
+- 32.19.0.100: `632a190f76d58007f06ef7eab673936d3142ffd854df58535b6e6ca70d79c0fe`
 
 The standalone 0.1.0 helper was compiled and applied with Morphe Desktop validation.
 The collection adds the shared startup-update dependency and adapts the patch to
@@ -74,6 +83,15 @@ collection's Amazon patch to the supplied full APKM with validation enabled;
 patching and rebuilding both passed. Inspection of the output confirmed the
 single guarded hook, all five helper classes, the non-exported helper activity,
 and the shared update provider. This was an unsigned build check, not a phone test.
+
+The 32.19.0.100 input was compared on the same date. Its superclass and
+`MainActivity.onResume()V` instructions match 32.20.0.100 after removing debug
+line numbers: four registers, the `GW.onResume` marker, and one final return.
+The updated whole collection was then applied to both complete original APKMs
+with Morphe Desktop 1.20.0 validation enabled. Both patched and rebuilt
+successfully. Output inspection confirmed the hook, all five helper classes,
+the private helper activity and the update provider in each version. No app was
+installed and no account was used for these checks.
 Run these checks for the collection:
 
 ```sh
