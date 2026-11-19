@@ -1,3 +1,9 @@
+## [1.0.0-dev.40](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.39...v1.0.0-dev.40) (2026-11-19)
+
+### ✨ New Features
+
+* **niagara:** add opt-in local Pro patch for 1.16.37 ([8d01271](https://github.com/Mlkem/Morphe/commit/8d012715df5876dfd489aee846ca980f50c2da45))
+
 ## [1.0.0-dev.39](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.38...v1.0.0-dev.39) (2026-11-19)
 
 ### 🐛 Bug Fixes
