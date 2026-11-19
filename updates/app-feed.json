@@ -2,7 +2,7 @@
   "apps": {
     "app.morphe.manager": {
       "name": "Morphe Manager",
-      "revision": "069b1797bff8cb962c2a0305d1ae980888f959057251debbe2976b511bab1891",
+      "revision": "a3eeb2d84214104c961625dfedd741c368063ae93ef491c8845bd4221efdb923",
       "supportedVersions": [
         "2.6.0",
         "2.4.0-dev.1",
@@ -20,7 +20,7 @@
     },
     "bitpit.launcher": {
       "name": "Niagara Launcher",
-      "revision": "b4256ab53a5d2e899ffa8901302d0cca71facdccf705f6d58f09beefb1b60ca5",
+      "revision": "edd2fa04c6ef4816a0bf46b0dbda3b370e16f79342b4e522fe2104178899ee6e",
       "supportedVersions": [
         "1.16.37"
       ],
@@ -34,7 +34,7 @@
     },
     "ca.walmart.ecommerceapp": {
       "name": "Walmart Canada",
-      "revision": "6ce26b6dddd92897388394703c5ea4811dff13834599886984dce5417a9fb386",
+      "revision": "24504ae3b1676bdfe53bbdbef07b997c8f127a1a808e0a20ac39c19039aad986",
       "supportedVersions": [
         "26.41.2",
         "26.31"
@@ -47,9 +47,19 @@
         "version": "26.41.2"
       }
     },
+    "com.amazon.mShop.android.shopping": {
+      "name": "Amazon Shopping",
+      "revision": "58b0dd96e744ab543a15fa16a7c004fb2407ccb6ec880ea59b1a4bd00cb5fc38",
+      "supportedVersions": [
+        "32.20.0.100"
+      ],
+      "upstream": {
+        "status": "not_checked"
+      }
+    },
     "com.google.android.gm": {
       "name": "Gmail",
-      "revision": "fb61e45bd0fe3ce325169c1442ed980c784761fc5ed7ecc0d3edad35fa36ded6",
+      "revision": "b783cc6111cf6af95732e9e950bd7d403f5714be2b4fa5e9c7e6f8a3badd62e7",
       "supportedVersions": [
         "2026.10.26.1012468012.Release"
       ],
@@ -62,7 +72,7 @@
     },
     "com.google.android.inputmethod.latin": {
       "name": "Gboard",
-      "revision": "7ea922f762fb69cef430f084ced3f5eb52f7bca5dc5bd9faf516fe55906503d0",
+      "revision": "dcf1454e38cb49835ce0ac806f68597fba01cb9d167b75886258941ac5baf09f",
       "supportedVersions": [
         "18.5.4.993608717-release-arm64-v8a"
       ],
@@ -75,7 +85,7 @@
     },
     "com.musicleague.app": {
       "name": "Music League",
-      "revision": "3bbc9e6d4190214e9ae6f7951326d16570ce85cb92d39b8e564526b6bb95bcdc",
+      "revision": "8180aada29a3beebbb04fa003760ecff478af837c36ba690ee1bfa5288b785b6",
       "supportedVersions": [
         "1.4.9",
         "1.4.11"
@@ -90,7 +100,7 @@
     },
     "com.neave.zoomearth": {
       "name": "Zoom Earth",
-      "revision": "db95cf35a22222fe359bcb8a341aa02aa7218d86869123e3684de67521d399b2",
+      "revision": "681ed169c80619a10999273fb35e76867414edc232e1589da91814b3f2cf1201",
       "supportedVersions": [
         "6.3.3",
         "6.1"
@@ -105,7 +115,7 @@
     },
     "com.oceanwing.battery.cam": {
       "name": "Anker eufy",
-      "revision": "46612b391e9a7e9651f03c5595c8661768472ba93ff83dff55564d7a61686773",
+      "revision": "363a939e53ba126342542a127a0c763fdabb66809f82c013c05da75107e261ad",
       "supportedVersions": [
         "6.1.20_31181",
         "6.1.30_32823"
@@ -120,7 +130,7 @@
     },
     "com.openwith.app": {
       "name": "Open with",
-      "revision": "d9adf3092dd50ba2912524760528e1f60c63447c09dc2558f5201270e610e26e",
+      "revision": "169cd4268cd101722b7906493c00df64847fa48b94592df42b7523afa1e9ff80",
       "supportedVersions": [
         "1.2.1",
         "1.4"
@@ -134,7 +144,7 @@
     },
     "com.pushpress.memberportal": {
       "name": "PushPress Members",
-      "revision": "9b95843d988b1b045e7d2dfe372ed77334c3c6e21f04a26a7c486784b8e746df",
+      "revision": "500761f9f559b26c0f2c7a957091dfbf8179342f5e379247de2ab253c181c57d",
       "supportedVersions": [
         "3.42.0",
         "3.44.0",
@@ -150,7 +160,7 @@
     },
     "com.rosteam.gpsemulator": {
       "name": "GPS Emulator",
-      "revision": "bd8f8ef181f02c0970fcfaeb8e708d48af25405dc81af66d03de5ead3b503d22",
+      "revision": "51d488da6edf203d52403489269c3f722d738ad319e214bac415e5d6f1476157",
       "supportedVersions": [
         "3.36"
       ],
@@ -164,7 +174,7 @@
     },
     "com.songsterr": {
       "name": "Songsterr",
-      "revision": "ff6d01b8303a1b6daaa4f8800dfe1aaeda75f2b7cc265e478970df949cfcb0f5",
+      "revision": "31b5a607b6afcb482c5a178d999a5754602c1420411e8e924749f1f9dc23036e",
       "supportedVersions": [
         "7.1.6"
       ],
@@ -178,7 +188,7 @@
     },
     "com.thaidigitalplatform.tagthai": {
       "name": "TAGTHAi",
-      "revision": "c1ee7ef55df09edd6694a475d7f9b55cc81e9a6e61bb537439fc8137f892eb56",
+      "revision": "2b7dfe4871626b9f69cfb7c2728009254e8cbd9e9eeab2e44b718f5a68d26c52",
       "supportedVersions": [
         "4.25.1"
       ],
@@ -192,7 +202,7 @@
     },
     "com.wongnai.android": {
       "name": "Wongnai",
-      "revision": "f7919e3931cd7bca51e60899c5ad2d3fbe0b699d80fbade15202803348330aa5",
+      "revision": "ff496289590bfb186f25501770b57c48aa1f3e559ccd187bccc29624fe8e469d",
       "supportedVersions": [
         "12.11.0"
       ],
@@ -205,9 +215,8 @@
       }
     }
   },
-  "generatedAt": "2026-11-18T18:09:02.324004+00:00",
-  "releaseUrl": "https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.37",
-  "releaseVersion": "1.0.0-dev.37",
-  "schema": 1,
-  "upstreamCheckedAt": "2026-11-19T07:38:11.818909+00:00"
+  "generatedAt": "2026-11-19T15:57:39.877268+00:00",
+  "releaseUrl": "https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.38",
+  "releaseVersion": "1.0.0-dev.38",
+  "schema": 1
 }

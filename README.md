@@ -132,7 +132,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.37](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.37)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;46 patches total
+> **[v1.0.0-dev.38](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.38)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;47 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -170,6 +170,23 @@ provide privacy.
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
 | [APKMirror search for collection apps](#apkmirror-search-for-collection-apps) | Changes Morphe Manager's download links for this collection's supported apps. Walmart Canada 26.31, Anker eufy 6.1.20_31181/6.1.30_32823 and Gmail 2026.10.26.1012468012.Release open verified APKMirror APKM pages; other versions/apps, including Gboard and Songsterr, use a package-and-version Google search restricted to APKMirror, without nodpi. Niagara Launcher and Manager itself open their official GitHub releases. Apps outside the collection keep Manager's resolver. Does not download files automatically. |  |
+
+</details>
+
+<details>
+<summary>📦 Amazon Shopping&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
+
+**Package name:** `com.amazon.mShop.android.shopping`
+
+**🎯 Supported versions:**
+
+| 🧪&nbsp;32.20.0.100 |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Aeroplan shopping](#aeroplan-shopping) | Adds encrypted, device-local Aeroplan settings and an in-app eStore shopping window for Amazon.ca. Review and continue through the official referral before adding items. Native checkout tracking and points credit are not verified. |  |
 
 </details>
 

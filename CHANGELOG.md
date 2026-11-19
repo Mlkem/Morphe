@@ -1,3 +1,9 @@
+## [1.0.0-dev.38](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.37...v1.0.0-dev.38) (2026-11-19)
+
+### ✨ New Features
+
+* **amazon:** add Aeroplan eStore shopping helper ([f243deb](https://github.com/Mlkem/Morphe/commit/f243debe0e14a657729f3542b169f188bcd8ecd2))
+
 ## [1.0.0-dev.37](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.36...v1.0.0-dev.37) (2026-11-18)
 
 ### 🐛 Bug Fixes
