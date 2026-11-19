@@ -7,6 +7,7 @@ older repository commit history was transferred.
 | Component | Source |
 | --- | --- |
 | Build/release infrastructure | MorpheApp/morphe-patches-template commit `f4da72f66e008c5bb021a9f19b33dcf5f0523772` |
+| Niagara Pro | Fresh patch from static analysis of supplied 1.16.37 (1643), whose app entries match the official GitHub release; [input hashes and scope](apps/niagara-pro.md) |
 | Amazon Aeroplan | Fresh standalone helper 0.1.0, integrated into the collection's Patcher 2.1 API; exact supplied 32.20.0.100 input and privacy/validation notes in [app notes](apps/amazon-aeroplan.md) |
 | Music League and Zoom Earth | Recovered local source snapshot; original commit `03d95d9` |
 | Walmart Canada | Saved 26.31 / 1.5.0-beta.1 source archive; R2bEEaton upstream attribution retained |

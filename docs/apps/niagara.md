@@ -1,5 +1,8 @@
 # Niagara Launcher: Automatic app folders
 
+For the separate **Enable Niagara Pro** option, see [local Pro features](niagara-pro.md).
+Both patches can be selected together; automatic folders also works on its own.
+
 Experimental Morphe patch for the **official Niagara Launcher 1.16.37 APK, build 1643**.
 Original APK: https://github.com/NiagaraLauncher/Niagara-Issues/releases/tag/v1.16.37
 SHA-256: `974d3e82aaa82bc4de4ef76834aade5e2888464929b6b208730a5d88bd6a4b76`.
@@ -46,7 +49,8 @@ checker remains included.
 The adapter is pinned to reviewed native methods and fields. It uses Niagara's own
 item transaction, native folder entity, observable feed collections, persistence
 and relocated coroutine runtime. Compile-only superclass signatures are excluded
-from the extension DEX. There are no direct SQL writes or premium-unlock changes.
+from the extension DEX. Automatic folders makes no direct SQL writes or changes
+to Pro status; the separate Pro option has its own reviewed hook.
 
 Five hooks: controller creation, native item events, native feed events, Home
 resume, and the Productivity settings builder. Wrong package/build and previously

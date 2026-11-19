@@ -4,7 +4,7 @@ import json, zipfile
 root=Path(__file__).resolve().parents[1]
 patches=json.loads((root/'patches-list.json').read_text())['patches']
 names=[p['name'] for p in patches]
-assert len(patches)>=46, f'Expected at least 46 patches, found {len(patches)}'
+assert len(patches)>=48, f'Expected at least 48 patches, found {len(patches)}'
 assert len(names)==len(set(names)), 'Duplicate patch names'
 packages={c['packageName'] for p in patches for c in (p.get('compatiblePackages') or [])}
 expected={'bitpit.launcher','com.google.android.gm','com.oceanwing.battery.cam','com.google.android.inputmethod.latin','com.songsterr','com.musicleague.app','ca.walmart.ecommerceapp','com.wongnai.android','com.neave.zoomearth','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','com.thaidigitalplatform.tagthai','app.morphe.manager'}
@@ -23,6 +23,13 @@ assert not niagara['default']
 assert niagara['compatiblePackages'][0]['packageName']=='bitpit.launcher'
 assert [t['version'] for t in niagara['compatiblePackages'][0]['targets']]==['1.16.37']
 assert niagara['compatiblePackages'][0]['targets'][0]['isExperimental']
+niagara_pro=next(p for p in patches if p['name']=='Enable Niagara Pro')
+assert niagara_pro['default'] is False and niagara_pro['options']==[]
+assert len(niagara_pro['compatiblePackages'])==1
+niagara_pro_target=niagara_pro['compatiblePackages'][0]
+assert niagara_pro_target['packageName']=='bitpit.launcher' and niagara_pro_target['apkFileType']=='APK'
+assert [t['version'] for t in niagara_pro_target['targets']]==['1.16.37']
+assert all(t['isExperimental'] and t['minSdk']==26 for t in niagara_pro_target['targets'])
 legacy_zoom=next(p for p in patches if p['name']=='Remove LiteAPKS nag')
 assert legacy_zoom['default'] is False, 'Legacy 6.1 popup patch must be opt-in'
 assert len(legacy_zoom['compatiblePackages']) == 1
@@ -142,6 +149,8 @@ for p in bundles:
             assert ('Lca/mlkem/amazon/'+name+';').encode() in amazon_extension
         assert b'Lkotlin/' not in amazon_extension
         assert 'ca/mlkem/niagara/AutoFoldersPatchKt.class' in files
+        assert 'ca/mlkem/niagara/ProPatchKt.class' in files
+        assert b'Lca/mlkem/niagara/ProPatchKt;' in z.read('classes.dex')
         assert b'Lca/mlkem/niagara/AutoFolders;' in z.read('extensions/niagara-auto-folders.mpe')
         assert b'Lca/mlkem/niagara/NativeContinuation;' in z.read('extensions/niagara-auto-folders.mpe')
         assert 'ca/mlkem/eufy/EufyPatchesKt.class' in files

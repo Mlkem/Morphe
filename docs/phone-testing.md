@@ -3,6 +3,12 @@
 The combined collection has **not** passed a full physical-device test yet.
 Compilation and static inspection do not establish phone behavior.
 
+Niagara Launcher 1.16.37 (1643) has a separate opt-in **Enable Niagara Pro** patch.
+Test launch/restart, Pro settings, custom fonts and wallpaper themes, with and
+without **Automatic app folders**. The earlier auto-folder emulator acceptance
+does not cover Pro. Online-service authorization and quotas remain separate;
+record their results without exposing account data. [Pro scope](apps/niagara-pro.md).
+
 Amazon Shopping 32.20.0.100 (1243260206) and 32.19.0.100 (1243250306) have an
 opt-in **Aeroplan shopping** patch. Test each version separately.
 Desktop patching and offline tests do not establish its phone behavior or points

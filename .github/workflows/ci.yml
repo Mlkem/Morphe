@@ -83,4 +83,5 @@ jobs:
             patches/build/libs/*.mpp
             patches-list.json
             build/manager-apk-regressions/*/validation.json
+            build/niagara-apk-validation/**/validation.json
           if-no-files-found: error

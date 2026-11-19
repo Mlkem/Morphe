@@ -2,7 +2,7 @@
 
 # mlkemac patches
 
-A single Morphe source for Amazon Shopping, Gmail, Anker eufy, Music League, Walmart Canada, Wongnai, Zoom Earth,
+A single Morphe source for Niagara Launcher, Amazon Shopping, Gmail, Anker eufy, Music League, Walmart Canada, Wongnai, Zoom Earth,
 PushPress, Open with, GPS Emulator, TAGTHAi, Songsterr, Gboard, an optional Morphe Manager APKMirror search fix, and the XAPK
 merge-only utility.
 
@@ -24,7 +24,7 @@ An explicit `dev` source enables prerelease updates from the start. The default
 source may also mirror a published beta; it does not represent a phone-tested
 stable release. Enable **Pre-release patches** on
 **mlkemac patches itself**; Morphe Manager's own pre-release setting is separate. Enable
-**Experimental app versions** for Amazon Shopping, Walmart Canada, Zoom Earth 6.3.3, PushPress, Open with, GPS Emulator, TAGTHAi, Songsterr, Gboard, Anker eufy, Gmail, and the Manager patch. Choose
+**Experimental app versions** for Niagara Launcher, Amazon Shopping, Walmart Canada, Zoom Earth 6.3.3, PushPress, Open with, GPS Emulator, TAGTHAi, Songsterr, Gboard, Anker eufy, Gmail, and the Manager patch. Choose
 the original app APK/APKM/XAPK, select patches, then patch and install. Keep your existing Morphe
 APK signing key so future patched apps can update in place.
 
@@ -60,7 +60,12 @@ with every app. It does not work with root-mounted patches. When later repatchin
 over the same installation, keep the blocker enabled to avoid a version-code
 downgrade error. [Behavior and limitations](docs/play-store-updates.md).
 
-## Niagara automatic folders
+## Niagara Launcher
+
+**Enable Niagara Pro** is a separate, opt-in patch for **1.16.37 (1643)**. It
+enables the shared local Pro flag used by fonts, wallpaper themes and other
+features. Online services retain their normal account authorization. Phone
+testing is pending. [Pro setup and limits](docs/apps/niagara-pro.md).
 
 The experimental **Automatic app folders** patch supports official Niagara **1.16.37**.
 New apps are placed in native category folders, then their standalone icons are hidden.
@@ -71,6 +76,7 @@ sorting existing apps, and restoring icons. See [Niagara details](docs/apps/niag
 
 | App / utility | Target | Included source | Status |
 | --- | --- | --- | --- |
+| Niagara Launcher | `bitpit.launcher` 1.16.37 (1643) | Independent local Pro and automatic-folder options | Opt-in experimental; [Pro](docs/apps/niagara-pro.md) / [folders](docs/apps/niagara.md) |
 | Amazon Shopping | `com.amazon.mShop.android.shopping` 32.20.0.100 (1243260206), 32.19.0.100 (1243250306) | Aeroplan settings and official eStore shopping window | Opt-in experimental; [setup and limits](docs/apps/amazon-aeroplan.md) |
 | Gmail | `com.google.android.gm` 2026.10.26.1012468012.Release | Account visibility setting; separate GmsCore copy | Experimental; [setup and limits](docs/apps/gmail.md) |
 | Anker eufy | `com.oceanwing.battery.cam` 6.1.20_31181 | Camera-focused tabs and native promotion cleanup | Experimental; [scope and phone checks](docs/apps/eufy.md) |

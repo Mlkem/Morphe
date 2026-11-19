@@ -16,4 +16,5 @@ version=json.loads((root/'patches-list.json').read_text())['version']
 mpp=root/f'patches/build/libs/patches-{version}.mpp'
 classes=out/'harness';classes.mkdir(exist_ok=True)
 subprocess.run(['javac','-cp',str(desktop),'-d',str(classes),str(root/'tests/niagara/VerifyNiagaraMpp.java')],check=True)
-subprocess.run(['java','-Xmx3g','-cp',os.pathsep.join(map(str,[classes,desktop])),'VerifyNiagaraMpp',str(apk),str(mpp),str(out)],check=True)
+for mode,directory in [('auto',out),('pro',out/'pro'),('both',out/'pro-and-folders')]:
+    subprocess.run(['java','-Xmx3g','-cp',os.pathsep.join(map(str,[classes,desktop])),'VerifyNiagaraMpp',str(apk),str(mpp),str(directory),mode],check=True)
