@@ -2,6 +2,7 @@ rootProject.name = "mlkemac-patches"
 
 pluginManagement {
     repositories {
+        mavenCentral()
         gradlePluginPortal()
         google()
         maven {
