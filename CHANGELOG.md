@@ -1,3 +1,9 @@
+## [1.0.0-dev.39](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.38...v1.0.0-dev.39) (2026-11-19)
+
+### 🐛 Bug Fixes
+
+* **amazon:** support Shopping 32.19.0.100 alongside 32.20 ([4cd45c5](https://github.com/Mlkem/Morphe/commit/4cd45c5d4cd1d3f97c578b3cea6be23eb9cc2bf9))
+
 ## [1.0.0-dev.38](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.37...v1.0.0-dev.38) (2026-11-19)
 
 ### ✨ New Features
