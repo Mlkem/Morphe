@@ -1,6 +1,6 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.0.0-dev.39",
+  "version": "1.0.0-dev.40",
   "patches": [
     {
       "name": "100 Zoom Earth favourites",
@@ -547,6 +547,33 @@
               "isExperimental": true,
               "minSdk": 29,
               "description": "Version code 336; phone testing pending"
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Enable Niagara Pro",
+      "description": "Enables local Pro features in Niagara Launcher 1.16.37. Works independently of Automatic app folders. Online services still require their normal account authorization. Phone testing pending.",
+      "default": false,
+      "category": null,
+      "compatiblePackages": [
+        {
+          "packageName": "bitpit.launcher",
+          "name": "Niagara Launcher",
+          "description": "Reviewed Niagara Launcher 1.16.37 (1643); official GitHub and supplied APKMirror APKs contain identical app entries.",
+          "apkFileType": "APK",
+          "appIconColor": null,
+          "signatures": null,
+          "formFactor": "MOBILE",
+          "targets": [
+            {
+              "version": "1.16.37",
+              "versionCodes": null,
+              "isExperimental": true,
+              "minSdk": 26,
+              "description": null
             }
           ]
         }
