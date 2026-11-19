@@ -20,28 +20,38 @@ a normal installation may require removing the Amazon-signed app first, which
 erases its local app data and sign-in. No installation is performed by the source
 or build process.
 
-1. Open patched Amazon. The startup offer includes **Settings**, **Start shopping**,
+1. Open patched Amazon. The startup offer includes **Settings**, **Start referral**,
    and **Continue in Amazon**.
 2. In Settings, enter your own Aeroplan number and last name. Both fields start
    blank. The optional automatic setting opens the portal when Amazon starts.
-3. Start shopping, review the official Amazon.ca offer, and tap **Sign in to earn**.
+3. Start the referral, review the official Amazon.ca offer, and tap **Sign in to earn**.
    The helper fills the blank form. Review the account, tap **Continue**, then
    follow **Shop & earn**. If already signed in, check the account on the eStore.
-4. Add eligible items after following that referral, then finish checkout in this
-   shopping window. Switching to native Amazon checkout has not been verified.
+4. When the referral reaches Amazon.ca, the helper passes the complete destination
+   URL to Amazon's native link handler and closes. Shop and complete checkout in
+   the **Amazon app**.
 
-The helper opens the real eStore flow; it does not submit orders or silently
-activate native checkout. The automatic setting opens the portal and still
-leaves the Continue/Shop steps to you. Existing cart items are not made eligible.
+The helper is now an eStore sign-in/referral window. Amazon shopping and checkout
+open in the native app. The automatic setting opens the portal and still leaves
+the Continue/Shop steps to you. Existing cart items are not made eligible.
 Aeroplan's [current Amazon conditions](https://aeroplan.rewardops.com/en-CA/affiliate-details/amazon)
 govern categories, exclusions, cookies, the shopping session and timing. No
-helper status claims that points are confirmed.
+helper status claims that points are confirmed. **Passing the referral URL to
+the app does not establish that Aeroplan will credit native-app purchases.**
 
-Settings remain at the top of the shopping window. Where supported and space is
+Settings remain at the top of the referral window. **Return to Amazon app** is
+always available; using it before completing the eStore referral skips that
+referral. If the native handoff fails, the helper keeps the destination in memory
+and offers an explicit retry or a fresh eStore visit. It does not replace a failed
+referral with an untracked home-page link automatically.
+
+Where supported and space is
 available, long-press the Amazon launcher icon for an **Aeroplan** shortcut.
 The startup prompt runs once per app process; fully closing/force-stopping Amazon
 and reopening it brings the prompt back. Returning from the helper does not loop
-back into the prompt.
+back into the prompt, including when the referral started from the launcher
+shortcut before Amazon's main screen was opened. Installing a repatched APK as
+an update with the same signing key retains the existing encrypted profile.
 
 ## Privacy
 
@@ -64,11 +74,27 @@ The collection uses a dedicated `extensions/amazon` module and
 `MainActivity.onResume()V` adds the startup entry. Package, version name/code,
 superclass, fingerprint, register count and single final return are checked.
 The activity is non-exported and retains explicit Back handling on Android 16.
+The patch also requires the reviewed native link handler to be present and enabled.
 
-Amazon's normal MASH WebView restricts some third-party requests and redirects
-navigation through Amazon-specific handlers. The helper uses a standard WebView
-for the official eStore and Amazon.ca flow, with the same cookie store across its
-page-opened windows. This does not establish native-checkout attribution.
+Amazon's normal MASH WebView restricts some third-party requests. The helper uses
+a standard WebView for official eStore sign-in and intermediate referral redirects.
+Top-level Amazon destinations, including popup/redirect callbacks, are intercepted
+and sent through a fresh `ACTION_VIEW`/`BROWSABLE` intent explicitly targeting
+`com.amazon.mShop.httpUrlDeepLink.DeepLinkingActivity` in the same app package.
+Amazon's handler was inspected in both supported versions and owns its warm/cold
+launch routing. Directly targeting `MainActivity` would not route the URL.
+
+The full encoded URL, including query and fragment, is preserved. Only HTTPS
+Amazon Canada destinations on `amazon.ca`, `www.amazon.ca`, `m.amazon.ca` and
+`dl.amazon.ca` are accepted, without user-info or nonstandard ports. Android
+`intent://` links contribute only a validated URL or validated browser fallback;
+their components, extras, actions and flags are discarded. Subframes cannot launch
+Amazon. A latch prevents duplicate handoffs and the startup offer is suppressed
+before launching. No account details, referral URLs or cookies are written to logs.
+
+Amazon may subsequently change its routing or parameters; the helper cannot
+establish how the native app and affiliate service attribute a purchase. There
+is no cookie copying, purchase submission or points-activation claim.
 
 Input APKM SHA-256:
 
@@ -92,6 +118,15 @@ with Morphe Desktop 1.20.0 validation enabled. Both patched and rebuilt
 successfully. Output inspection confirmed the hook, all five helper classes,
 the private helper activity and the update provider in each version. No app was
 installed and no account was used for these checks.
+
+The native-handoff revision was rebuilt as part of the complete collection and
+applied to both original APKMs with validation enabled. Both patched and rebuilt
+successfully. Inspection confirmed all six helper classes, the single startup
+hook, the private helper activity and the enabled native Amazon link handler.
+All 22 isolated Android tests passed, covering URL preservation, safe intent
+construction, startup suppression, main-frame and popup handoffs, duplicate
+callbacks, failure handling and explicit retry.
+
 Run these checks for the collection:
 
 ```sh
@@ -101,10 +136,14 @@ python3 scripts/verify_bundle.py
 python3 scripts/test_amazon_aeroplan.py
 ```
 
-The 24 account/origin checks and 12 JavaScript scenarios cover spoofed hosts,
+The 35 account/origin checks and 12 JavaScript scenarios cover spoofed hosts,
 frames, hidden/disabled forms, quoted names, user edits, cleared inputs and
 replacement login modals. Test values are synthetic and never sent to a website.
 
-Phone launch, Android Keystore behavior, WebView sign-in, checkout, and points
-posting remain unverified. Keep the patch experimental until the
+`./gradlew -p tests/amazon/android test --no-daemon` checks actual Android Intent
+parsing, native handoff URL preservation, discarded external intent controls,
+startup-offer suppression and callback/failure behavior under Robolectric.
+
+Phone launch, Android Keystore behavior, live eStore-to-native handoff, checkout,
+and points posting remain unverified. Keep the patch experimental until the
 [phone checks](../phone-testing.md) have actual results.

@@ -34,6 +34,14 @@ public final class RulesTest {
         check(SessionRules.isAmazon("https://www.amazon.ca/dp/EXAMPLE123?tag=test"), "Recognize Amazon Canada");
         check(!SessionRules.isAmazon("https://www.amazon.ca.evil.test/"), "Reject spoofed Amazon host");
         check(!SessionRules.isAmazon("https://www.amazon.com/"), "Only Amazon Canada is supported");
+        check(SessionRules.isAmazon("https://amazon.ca/?tag=example&ascsubtag=a%2Fb%3Dc#saved"), "Preserve referral-shaped Amazon URLs");
+        check(SessionRules.isAmazon("https://m.amazon.ca/gp/aw/"), "Allow Canadian mobile destination");
+        check(SessionRules.isAmazon("https://dl.amazon.ca/?tag=example"), "Allow Canadian app-link host");
+        for (String url : new String[] {
+                "https://amazon.ca.evil.test/", "https://evil.test@amazon.ca/",
+                "https://amazon.ca@evil.test/", "https://www.amazon.ca:444/", "http://www.amazon.ca/",
+                "https://www.amazon.ca./", "javascript:alert(1)", "https://www.amazon.ca\\@evil.test/"
+        }) check(!SessionRules.isAmazon(url), "Reject unsafe handoff destination");
         String hostileName = "Example\";globalThis.pwned=true;//\\\u2028";
         Files.createDirectories(Paths.get(args[0]));
         Files.write(Paths.get(args[0], "autofill-fixture.js"),

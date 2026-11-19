@@ -14,8 +14,10 @@ opt-in **Aeroplan shopping** patch. Test each version separately.
 Desktop patching and offline tests do not establish its phone behavior or points
 attribution. Test launch/skip, blank profile settings, save/edit/clear, secure
 storage after restart, launcher shortcut, official form autofill, Back/history,
-eStore-to-Amazon window handling, and a planned eligible purchase completed in
-the helper window. Record points separately when Aeroplan posts them. Do not put
+and eStore-to-native-Amazon handoff on both warm and cold starts. Check that the
+helper closes, Amazon receives the referral URL, and the startup prompt does not
+reopen. Check popup redirects and retry after a failed launch. Shopping and
+checkout now take place in the Amazon app. Record points separately when Aeroplan posts them. Do not put
 account numbers, names, cookies, or purchase details in public test records.
 See [Amazon instructions](apps/amazon-aeroplan.md).
 

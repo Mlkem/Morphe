@@ -77,7 +77,7 @@ sorting existing apps, and restoring icons. See [Niagara details](docs/apps/niag
 | App / utility | Target | Included source | Status |
 | --- | --- | --- | --- |
 | Niagara Launcher | `bitpit.launcher` 1.16.37 (1643) | Independent local Pro and automatic-folder options | Opt-in experimental; [Pro](docs/apps/niagara-pro.md) / [folders](docs/apps/niagara.md) |
-| Amazon Shopping | `com.amazon.mShop.android.shopping` 32.20.0.100 (1243260206), 32.19.0.100 (1243250306) | Aeroplan settings and official eStore shopping window | Opt-in experimental; [setup and limits](docs/apps/amazon-aeroplan.md) |
+| Amazon Shopping | `com.amazon.mShop.android.shopping` 32.20.0.100 (1243260206), 32.19.0.100 (1243250306) | Aeroplan settings and official eStore referral, then shopping in the Amazon app | Opt-in experimental; [setup and limits](docs/apps/amazon-aeroplan.md) |
 | Gmail | `com.google.android.gm` 2026.10.26.1012468012.Release | Account visibility setting; separate GmsCore copy | Experimental; [setup and limits](docs/apps/gmail.md) |
 | Anker eufy | `com.oceanwing.battery.cam` 6.1.20_31181 | Camera-focused tabs and native promotion cleanup | Experimental; [scope and phone checks](docs/apps/eufy.md) |
 | Music League | `com.musicleague.app` 1.4.9 | Recovered patch sources | Combined bundle awaits phone testing |

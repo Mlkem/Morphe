@@ -145,7 +145,7 @@ for p in bundles:
         assert b'Lca/mlkem/amazon/AeroplanPatchKt;' in z.read('classes.dex')
         amazon_extension=z.read('extensions/amazon-aeroplan.mpe')
         assert amazon_extension.startswith(b'dex\n')
-        for name in ['AeroplanBridge','AeroplanActivity','ProfileStore','SessionRules','AutofillScript']:
+        for name in ['AeroplanBridge','AeroplanActivity','ProfileStore','SessionRules','AutofillScript','NativeAmazon']:
             assert ('Lca/mlkem/amazon/'+name+';').encode() in amazon_extension
         assert b'Lkotlin/' not in amazon_extension
         assert 'ca/mlkem/niagara/AutoFoldersPatchKt.class' in files

@@ -12,6 +12,7 @@ private const val PACKAGE = "com.amazon.mShop.android.shopping"
 private const val AMAZON_MAIN = "Lcom/amazon/mShop/navigation/MainActivity;"
 private const val BRIDGE = "Lca/mlkem/amazon/AeroplanBridge;"
 private const val SHOPPING_ACTIVITY = "ca.mlkem.amazon.AeroplanActivity"
+private const val AMAZON_LINK_ACTIVITY = "com.amazon.mShop.httpUrlDeepLink.DeepLinkingActivity"
 private const val ANDROID = "http://schemas.android.com/apk/res/android"
 private val reviewedVersions = mapOf(
     "32.20.0.100" to "1243260206",
@@ -33,6 +34,11 @@ private val aeroplanManifest = resourcePatch {
             val application = manifest.getElementsByTagName("application").item(0) as? Element
                 ?: throw PatchException("Expected an application in the Amazon manifest.")
             val activities = application.getElementsByTagName("activity")
+            check((0 until activities.length).any {
+                val item = activities.item(it) as Element
+                item.getAttributeNS(ANDROID, "name") == AMAZON_LINK_ACTIVITY &&
+                    item.getAttributeNS(ANDROID, "enabled") != "false"
+            }) { "Amazon's reviewed native link handler is missing or disabled." }
             check((0 until activities.length).none {
                 (activities.item(it) as Element).getAttributeNS(ANDROID, "name") == SHOPPING_ACTIVITY
             }) { "Aeroplan shopping is already present. Select the original Amazon APKM." }
@@ -40,11 +46,11 @@ private val aeroplanManifest = resourcePatch {
             mapOf(
                 "name" to SHOPPING_ACTIVITY,
                 "exported" to "false",
-                "label" to "Aeroplan shopping",
+                "label" to "Aeroplan referral",
                 "theme" to "@android:style/Theme.Material.Light.NoActionBar",
                 "configChanges" to "keyboardHidden|orientation|screenSize",
                 "hardwareAccelerated" to "true",
-                // Preserve history and leave confirmation on Android 16 / target 36.
+                // Preserve the helper's explicit Back handling on Android 16 / target 36.
                 "enableOnBackInvokedCallback" to "false",
             ).forEach { (name, value) -> activity.setAttributeNS(ANDROID, "android:$name", value) }
             application.appendChild(activity)
@@ -55,8 +61,8 @@ private val aeroplanManifest = resourcePatch {
 @Suppress("unused")
 val aeroplanShoppingPatch = bytecodePatch(
     name = "Aeroplan shopping",
-    description = "Adds encrypted, device-local Aeroplan settings and an in-app eStore shopping window for Amazon.ca. " +
-        "Review and continue through the official referral before adding items. Native checkout tracking and points credit are not verified.",
+    description = "Keeps Aeroplan details encrypted on this device, opens the official eStore referral, then returns shopping and checkout to the Amazon app. " +
+        "Passes the complete Amazon.ca destination link to the native app. Points credit after handoff is not verified.",
     default = false,
 ) {
     compatibleWith(Compatibility(

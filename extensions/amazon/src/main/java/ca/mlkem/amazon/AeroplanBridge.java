@@ -13,6 +13,8 @@ public final class AeroplanBridge {
     private static boolean offered;
     private AeroplanBridge() {}
 
+    static void suppressStartupOffer() { offered = true; }
+
     public static void onResume(Activity activity) {
         if (offered || activity == null || activity.isFinishing() || activity.isDestroyed()) return;
         offered = true;
@@ -30,8 +32,8 @@ public final class AeroplanBridge {
                 new AlertDialog.Builder(activity)
                         .setTitle("Shop with Aeroplan")
                         .setMessage("Start through the eStore before adding items to your cart. "
-                                + "Complete your order in the Aeroplan shopping window. Eligible purchases only.")
-                        .setPositiveButton("Start shopping", (dialog, which) -> open(activity, true))
+                                + "After Shop & earn, shopping opens in the Amazon app. Points credit is not verified.")
+                        .setPositiveButton("Start referral", (dialog, which) -> open(activity, true))
                         .setNeutralButton("Settings", (dialog, which) -> open(activity, false))
                         .setNegativeButton("Continue in Amazon", null)
                         .show();
@@ -53,7 +55,7 @@ public final class AeroplanBridge {
             if (manager == null || manager.isRateLimitingActive()) return;
             ShortcutInfo shortcut = new ShortcutInfo.Builder(activity, "aeroplan_helper_settings")
                     .setShortLabel("Aeroplan")
-                    .setLongLabel("Aeroplan shopping and settings")
+                    .setLongLabel("Aeroplan referral and settings")
                     .setIcon(Icon.createWithResource(activity, android.R.drawable.ic_menu_compass))
                     .setIntent(new Intent(activity, AeroplanActivity.class).setAction(AeroplanActivity.ACTION_SETTINGS))
                     .build();

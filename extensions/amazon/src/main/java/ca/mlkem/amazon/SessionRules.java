@@ -38,7 +38,9 @@ public final class SessionRules {
     public static boolean isAmazon(String url) {
         URI uri = parse(url);
         return isHttps(url) && ("amazon.ca".equalsIgnoreCase(uri.getHost())
-                || "www.amazon.ca".equalsIgnoreCase(uri.getHost()));
+                || "www.amazon.ca".equalsIgnoreCase(uri.getHost())
+                || "m.amazon.ca".equalsIgnoreCase(uri.getHost())
+                || "dl.amazon.ca".equalsIgnoreCase(uri.getHost()));
     }
 
     public static String host(String url) {

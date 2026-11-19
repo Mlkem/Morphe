@@ -34,7 +34,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-/** A visible, standard WebView keeps the real eStore flow and Amazon purchase together. */
+/** The eStore is visible for sign-in; its Amazon destination opens in the native app. */
 public final class AeroplanActivity extends Activity {
     public static final String ACTION_START = "ca.mlkem.amazon.START";
     public static final String ACTION_SETTINGS = "ca.mlkem.amazon.SETTINGS";
@@ -47,12 +47,14 @@ public final class AeroplanActivity extends Activity {
     private Button fillButton;
     private ProfileStore.Profile profile = ProfileStore.empty();
     private boolean settingsVisible, resumed, loadingProfileFailed;
+    private boolean handoffAttempted;
+    private String pendingAmazonUrl;
     private int fillAttempts;
 
     private final Runnable fillPoll = new Runnable() {
         @Override public void run() {
             WebView view = current();
-            if (!resumed || settingsVisible || view == null || !SessionRules.canAutofill(view.getUrl())) return;
+            if (!resumed || settingsVisible || handoffAttempted || view == null || !SessionRules.canAutofill(view.getUrl())) return;
             if (++fillAttempts > 120) return;
             fill(view, false);
             handler.postDelayed(this, 1000);
@@ -61,12 +63,12 @@ public final class AeroplanActivity extends Activity {
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
-        // Do not save account fields or purchase pages in Android's activity-state bundle.
+        // Do not save account fields or referral URLs in Android's activity-state bundle.
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         loadProfile();
         buildChrome();
         if (state != null) {
-            showHome("The previous window was closed. Start a new eStore session before adding new items.");
+            showHome("The previous referral window was closed. Start a new eStore visit before shopping.");
         } else if (ACTION_START.equals(getIntent().getAction()) && profile.configured()) {
             startSession();
         } else {
@@ -89,7 +91,7 @@ public final class AeroplanActivity extends Activity {
         bar.setPadding(dp(8), dp(4), dp(8), dp(4));
         Button back = button("Back", v -> back());
         bar.addView(back, new LinearLayout.LayoutParams(dp(70), dp(48)));
-        TextView title = text("Aeroplan shopping", 17);
+        TextView title = text("Aeroplan referral", 17);
         title.setGravity(Gravity.CENTER);
         bar.addView(title, new LinearLayout.LayoutParams(0, dp(48), 1));
         Button settings = button("Settings", v -> showSettings());
@@ -107,6 +109,7 @@ public final class AeroplanActivity extends Activity {
         root.addView(fillButton, new LinearLayout.LayoutParams(-1, dp(44)));
         content = new FrameLayout(this);
         root.addView(content, new LinearLayout.LayoutParams(-1, 0, 1));
+        root.addView(button("Return to Amazon app", v -> leave()), new LinearLayout.LayoutParams(-1, dp(48)));
         setContentView(root);
     }
 
@@ -138,11 +141,10 @@ public final class AeroplanActivity extends Activity {
         paragraph(body, note);
         paragraph(body, "1. Open the eStore and review the eligible Amazon categories.\n\n"
                 + "2. Tap Sign in to earn. Review your details, tap Continue, then Shop & earn.\n\n"
-                + "3. Add eligible items and complete checkout in this window. Items already in your cart do not qualify.");
+                + "3. The referral opens the Amazon app automatically. Shop and check out there. Items already in your cart do not qualify.");
         body.addView(button("Start a new session", v -> confirmNewSession()));
-        if (current() != null) body.addView(button("Return to shopping window", v -> showWindow(current())));
+        if (current() != null && !handoffAttempted) body.addView(button("Return to eStore", v -> showWindow(current())));
         body.addView(button("Edit Aeroplan settings", v -> showSettings()));
-        body.addView(button(isTaskRoot() ? "Close" : "Return to Amazon app", v -> leave()));
     }
 
     private void showSettings() {
@@ -181,7 +183,7 @@ public final class AeroplanActivity extends Activity {
         automatic.setChecked(profile.autoOpen);
         automatic.setPadding(0, dp(16), 0, dp(12));
         body.addView(automatic);
-        paragraph(body, "You review and continue on the eStore. This helper cannot verify or guarantee points. Finish shopping in this window rather than switching to native checkout.");
+        paragraph(body, "Review your account and tap Shop & earn on the eStore. Shopping then opens in the Amazon app. This helper cannot verify or guarantee points after the handoff.");
         body.addView(button("Save settings", v -> {
             String normalized = SessionRules.normalizeNumber(number.getText().toString());
             String familyName = lastName.getText().toString().trim();
@@ -202,11 +204,11 @@ public final class AeroplanActivity extends Activity {
                 toast("Could not save securely. Your details have not been saved.");
             }
         }));
-        if (current() != null) body.addView(button("Return to shopping window", v -> showWindow(current())));
+        if (current() != null && !handoffAttempted) body.addView(button("Return to eStore", v -> showWindow(current())));
         if (profile.configured()) body.addView(button("Start a new eStore session", v -> confirmNewSession()));
         body.addView(button("Clear saved details", v -> new AlertDialog.Builder(this)
                 .setTitle("Clear saved Aeroplan details?")
-                .setMessage("This removes the helper's saved profile and closes its shopping window. Website sign-ins are managed separately by the eStore and Amazon.")
+                .setMessage("This removes the helper's saved profile and closes its eStore window. Website sign-ins are managed separately by the eStore and Amazon.")
                 .setNegativeButton("Cancel", null)
                 .setPositiveButton("Clear", (dialog, which) -> {
                     try {
@@ -215,14 +217,13 @@ public final class AeroplanActivity extends Activity {
                         destroyWindows(); showSettings(); toast("Saved details cleared");
                     } catch (Exception error) { toast("Could not completely clear the saved profile. Try again."); }
                 }).show()));
-        body.addView(button(isTaskRoot() ? "Close" : "Return to Amazon app", v -> leave()));
         paragraph(body, "For another visit, long-press the Amazon app icon and choose Aeroplan if your launcher has room for the shortcut. The startup prompt also returns after Amazon fully restarts.");
     }
 
     private void confirmNewSession() {
         if (current() == null) { startSession(); return; }
         new AlertDialog.Builder(this).setTitle("Start a new session?")
-                .setMessage("This closes the current shopping window. Items already in your cart are not made eligible by starting again.")
+                .setMessage("This restarts the eStore referral. Items already in your cart are not made eligible by starting again.")
                 .setNegativeButton("Keep current", null)
                 .setPositiveButton("Start new", (dialog, which) -> startSession()).show();
     }
@@ -230,6 +231,8 @@ public final class AeroplanActivity extends Activity {
     private void startSession() {
         if (!profile.configured()) { showSettings(); return; }
         destroyWindows();
+        handoffAttempted = false;
+        pendingAmazonUrl = null;
         WebView view = createWebView();
         windows.add(view);
         showWindow(view);
@@ -250,18 +253,24 @@ public final class AeroplanActivity extends Activity {
         settings.setSupportMultipleWindows(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(false);
         settings.setSafeBrowsingEnabled(true);
-        // Referral tracking uses cookies; keep the same cookie store through the purchase.
+        // Preserve the eStore sign-in and referral redirect session until native handoff.
         CookieManager.getInstance().setAcceptCookie(true);
         CookieManager.getInstance().setAcceptThirdPartyCookies(view, true);
         view.setWebViewClient(new WebViewClient() {
             @Override public boolean shouldOverrideUrlLoading(WebView source, WebResourceRequest request) {
                 if (!request.isForMainFrame()) return false;
-                return blockNonHttps(request.getUrl().toString());
+                return handleNavigation(source, request.getUrl().toString());
             }
             @Override public boolean shouldOverrideUrlLoading(WebView source, String url) {
-                return blockNonHttps(url);
+                return handleNavigation(source, url);
             }
             @Override public void onPageStarted(WebView source, String url, android.graphics.Bitmap icon) {
+                // Redirects and window.open navigations can also arrive here.
+                if (handoffAttempted || NativeAmazon.destination(url) != null) {
+                    source.stopLoading();
+                    handleNavigation(source, url);
+                    return;
+                }
                 if (source == current()) {
                     handler.removeCallbacks(fillPoll);
                     fillAttempts = 0;
@@ -269,6 +278,11 @@ public final class AeroplanActivity extends Activity {
                 }
             }
             @Override public void onPageFinished(WebView source, String url) {
+                if (handoffAttempted || NativeAmazon.destination(url) != null) {
+                    source.stopLoading();
+                    handleNavigation(source, url);
+                    return;
+                }
                 CookieManager.getInstance().flush();
                 if (source == current()) {
                     updateStatus(url);
@@ -277,10 +291,10 @@ public final class AeroplanActivity extends Activity {
             }
             @Override public void onReceivedSslError(WebView source, SslErrorHandler ssl, SslError error) {
                 ssl.cancel();
-                if (source == current()) status.setText("Connection could not be verified. This page was blocked.");
+                if (!handoffAttempted && source == current()) status.setText("Connection could not be verified. This page was blocked.");
             }
             @Override public void onReceivedError(WebView source, WebResourceRequest request, WebResourceError error) {
-                if (request.isForMainFrame() && source == current()) {
+                if (!handoffAttempted && request.isForMainFrame() && source == current()) {
                     handler.removeCallbacks(fillPoll);
                     status.setText("Page could not load. Use Back or start a new session from Settings.");
                 }
@@ -288,7 +302,8 @@ public final class AeroplanActivity extends Activity {
         });
         view.setWebChromeClient(new WebChromeClient() {
             @Override public boolean onCreateWindow(WebView source, boolean dialog, boolean userGesture, Message result) {
-                if (!userGesture || windows.size() >= 5) return false;
+                if (!userGesture || settingsVisible || handoffAttempted || isFinishing()
+                        || !windows.contains(source) || windows.size() >= 5) return false;
                 WebView child = createWebView();
                 windows.add(child);
                 showWindow(child);
@@ -296,18 +311,54 @@ public final class AeroplanActivity extends Activity {
                 result.sendToTarget();
                 return true;
             }
-            @Override public void onCloseWindow(WebView target) { closeWindow(target); }
+            @Override public void onCloseWindow(WebView target) {
+                if (!handoffAttempted && !isFinishing()) closeWindow(target);
+            }
         });
         return view;
     }
 
-    private boolean blockNonHttps(String url) {
+    private boolean handleNavigation(WebView source, String url) {
+        if (handoffAttempted || isFinishing() || isDestroyed() || !windows.contains(source)) return true;
+        String destination = NativeAmazon.destination(url);
+        if (destination != null) {
+            openAmazon(destination);
+            return true;
+        }
+        if ("about:blank".equals(url)) return false; // Empty popup before its referral destination arrives.
         if (SessionRules.isHttps(url)) return false;
-        toast("Stay in this secure shopping window. External app links are not opened.");
+        toast("This link could not be opened. Continue through the eStore or return to Amazon.");
         return true;
     }
 
+    private void openAmazon(String destination) {
+        if (handoffAttempted || isFinishing() || isDestroyed()) return;
+        handoffAttempted = true;
+        pendingAmazonUrl = destination;
+        handler.removeCallbacks(fillPoll);
+        fillButton.setVisibility(View.GONE);
+        for (WebView view : windows) view.stopLoading();
+        CookieManager.getInstance().flush();
+        status.setText("Opening the referral in the Amazon app…");
+        if (NativeAmazon.open(this, destination)) {
+            finish();
+            return;
+        }
+        settingsVisible = true;
+        status.setText("Amazon could not open the referral link");
+        LinearLayout body = page();
+        body.addView(text("Open Amazon to continue", 25));
+        paragraph(body, "The referral has not been handed to Amazon. Try opening it again, or restart the eStore visit. Returning to Amazon with the button below skips this link.");
+        body.addView(button("Try opening Amazon again", v -> {
+            String retry = pendingAmazonUrl;
+            handoffAttempted = false;
+            openAmazon(retry);
+        }));
+        body.addView(button("Restart eStore referral", v -> startSession()));
+    }
+
     private void showWindow(WebView view) {
+        if (handoffAttempted) { showHome("Start a new eStore visit to try the referral again."); return; }
         if (view == null) { showHome("Start a fresh visit through the official eStore."); return; }
         settingsVisible = false;
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
@@ -323,15 +374,14 @@ public final class AeroplanActivity extends Activity {
         boolean portal = SessionRules.canAutofill(url);
         fillButton.setVisibility(portal ? View.VISIBLE : View.GONE);
         if (portal) status.setText("aeroplan.rewardops.com · Review the account and offer, then continue through the eStore.");
-        else if (SessionRules.isAmazon(url)) status.setText("" + SessionRules.host(url) + " · Keep shopping here. Points remain subject to the eStore's conditions.");
-        else status.setText(SessionRules.host(url).isEmpty() ? "Opening secure shopping page…" : SessionRules.host(url));
+        else status.setText(SessionRules.host(url).isEmpty() ? "Opening eStore referral…" : SessionRules.host(url));
     }
 
     private void fill(WebView view, boolean manual) {
-        if (!profile.configured() || !SessionRules.canAutofill(view.getUrl())) return;
+        if (handoffAttempted || !profile.configured() || !SessionRules.canAutofill(view.getUrl())) return;
         // A second origin check runs inside the document, covering navigation races.
         view.evaluateJavascript(AutofillScript.create(profile.number, profile.lastName, manual), result -> {
-            if (view != current() || settingsVisible || !SessionRules.canAutofill(view.getUrl())) return;
+            if (handoffAttempted || view != current() || settingsVisible || !SessionRules.canAutofill(view.getUrl())) return;
             if ("\"filled\"".equals(result)) {
                 status.setText("Details filled on aeroplan.rewardops.com. Review them and tap Continue.");
             } else if (manual && "\"waiting\"".equals(result)) {
@@ -345,13 +395,13 @@ public final class AeroplanActivity extends Activity {
     private void restartFillPoll() {
         handler.removeCallbacks(fillPoll);
         fillAttempts = 0;
-        if (resumed && !settingsVisible) handler.post(fillPoll);
+        if (resumed && !settingsVisible && !handoffAttempted) handler.post(fillPoll);
     }
 
     private WebView current() { return windows.isEmpty() ? null : windows.get(windows.size() - 1); }
 
     private void closeWindow(WebView view) {
-        windows.remove(view);
+        if (!windows.remove(view)) return;
         if (view.getParent() instanceof ViewGroup) ((ViewGroup) view.getParent()).removeView(view);
         view.stopLoading(); view.destroy();
         showWindow(current());
@@ -366,18 +416,16 @@ public final class AeroplanActivity extends Activity {
 
     private void back() {
         WebView view = current();
-        if (settingsVisible && view != null) { showWindow(view); return; }
+        if (settingsVisible && view != null && !handoffAttempted) { showWindow(view); return; }
         if (!settingsVisible && view != null && view.canGoBack()) { view.goBack(); return; }
         if (!settingsVisible && windows.size() > 1) { closeWindow(view); return; }
         leave();
     }
 
     private void leave() {
-        if (current() == null) { finish(); return; }
-        new AlertDialog.Builder(this).setTitle("Leave Aeroplan shopping?")
-                .setMessage("Continue checkout in this window to preserve the shopping flow. Returning to the native Amazon app has not been verified for points tracking.")
-                .setNegativeButton("Keep shopping", (dialog, which) -> showWindow(current()))
-                .setPositiveButton("Leave", (dialog, which) -> finish()).show();
+        AeroplanBridge.suppressStartupOffer();
+        if (isTaskRoot() && !NativeAmazon.openHome(this)) toast("Open Amazon from your launcher to continue.");
+        finish();
     }
 
     @Override public void onBackPressed() { back(); }
