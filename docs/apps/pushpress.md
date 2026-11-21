@@ -1,14 +1,13 @@
 # PushPress Members — Force CrossFit class
 
-Morphe patch for PushPress Members 3.42.0, 3.44.0 and 3.45.0 XAPK. Only the original 3.42.0 XAPK was inspected; 3.44.0 and 3.45.0 remain experimental compatibility targets.
+Use the original PushPress Members XAPK. Morphe lists the Google Play release 3.46.0 as experimental. Patching that version and selecting CrossFit on a phone still need verification.
 
 ## Target
 
 - App: PushPress Members
 - Package: `com.pushpress.memberportal`
-- Versions targeted: `3.42.0`, `3.44.0`, `3.45.0` (all experimental)
-- XAPK version code inspected: `1780597459`
-- Architecture inspected: `arm64-v8a`
+- Versions targeted: `3.46.0`, `3.45.0`, `3.44.0`, `3.42.0` (all experimental)
+- Original inputs inspected: 3.42.0 (`1780597459`, arm64-v8a) and 3.45.0 (`1850257266`, armeabi-v7a)
 - Patch name in Morphe: **Workouts: force CrossFit class**
 
 ## What it does
@@ -28,7 +27,7 @@ The November 13 diagnostic version confirms the app's constructor hook executes,
 
 The patch reads Flutter's semantics tree using its provider's node IDs. Earlier versions of the patch failed to handle FlutterView returning a null public accessibility provider when Android accessibility was disabled. The updated implementation tries FlutterView's internal `accessibilityBridge` field, and periodically retries enabling semantics when no nodes have appeared. This avoids requiring the user to enable TalkBack. The reflection strategy is dependent on Flutter internals and still requires a physical-device test. If Flutter changes its internal semantics implementation, this version may need adjustment.
 
-**Validation:** The user's phone displayed the previous hook diagnostic while the dropdown remained unchanged; this establishes that the constructor hook ran, not that Flutter semantics or selection worked. The type-based discovery revision is untested on a phone and remains experimental; automated compilation alone is not functional validation. No supplied 3.45.0 original XAPK or physical-device results are available, so applying the fingerprint and selecting CrossFit on 3.45.0 are not yet verified.
+**Validation:** The user's phone displayed the previous hook diagnostic while the dropdown remained unchanged; this establishes that the constructor hook ran, not that Flutter semantics or selection worked. The type-based discovery revision is untested on a phone and remains experimental; automated compilation alone is not functional validation.
 
 ## Build on Windows
 
@@ -59,4 +58,4 @@ Use the resulting `.mpp` with Morphe CLI, or publish the repository as a custom 
 
 ## Validation status
 
-The package, version, split layout, MainActivity constructor, Flutter view class, Flutter engine field, and Flutter semantics methods were verified for the original **3.42.0** XAPK. The 3.44.0 and 3.45.0 versions have not had their binaries inspected. The Java extension source was syntax-checked separately. A complete Morphe build and on-device interaction test could not be run in this offline environment, so the first installed build should be treated as a test release.
+The package, version, split layout, MainActivity constructor, Flutter view class, Flutter engine field, and Flutter semantics methods were verified for the original **3.42.0** XAPK. Morphe Desktop applied the CrossFit patch to the original 3.45.0 XAPK and rebuilt the APK. The original 3.44.0 and 3.46.0 binaries and on-device class selection remain unverified.

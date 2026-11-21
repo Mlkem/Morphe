@@ -84,7 +84,7 @@ sorting existing apps, and restoring icons. See [Niagara details](docs/apps/niag
 | Walmart Canada | `ca.walmart.ecommerceapp` 26.41.2 (26410201), 26.31 | 14 patches; stock quantities by fulfilment, easier tools menu | Beta; exact-count response and phone testing pending |
 | Wongnai | `com.wongnai.android` 12.11.1, 12.11.0 | Ad fix 1.0.0 | Phone testing pending |
 | Zoom Earth | `com.neave.zoomearth` 6.3.3 (52); legacy 6.1 | Local Pro, no ads, 100 favourites, quiet prompts; cleanup for the supplied working LiteAPKs APK | Attached failing dev.11 APK uses the original Play input; LiteAPKs-based phone retest still pending |
-| PushPress Members | `com.pushpress.memberportal` 3.45.0, 3.44.0, 3.42.0 | CrossFit-only selector | Experimental; phone testing pending |
+| PushPress Members | `com.pushpress.memberportal` 3.46.0, 3.45.0, 3.44.0, 3.42.0 | CrossFit-only selector | Experimental; phone testing pending |
 | Open with | `com.openwith.app` 1.2.1 (11), 1.4 (20) | Pro file-type handling | Opt-in beta; phone testing pending |
 | GPS Emulator | `com.rosteam.gpsemulator` 3.36 (336) | Fresh Pro patch; 1,000 favourites | Opt-in beta; phone testing pending |
 | TAGTHAi | `com.thaidigitalplatform.tagthai` 4.26.1 (text selection), 4.25.1 | Accessibility, screenshots, text panel | Known white-screen launch failure in dev.7 and dev.8; diagnosis pending |
