@@ -33,7 +33,6 @@ jobs:
           ./gradlew :patches:verifyStartupUpdates --no-daemon
           python3 -m unittest discover -s tests/updates -p 'test_*.py'
           python3 scripts/test_walmart_logic.py
-          python3 scripts/test_manager_urls.py
           python3 scripts/test_amazon_aeroplan.py
           python3 scripts/test_niagara_logic.py
       - name: Apply three Eufy 6.1.30 patches to original APKM (candidate branch only)
@@ -65,11 +64,6 @@ jobs:
             --unsigned --validate --striplibs arm64-v8a -o "$PATCHED" \
             -r "$RUNNER_TEMP/eufy-32823-binary-qa/patch-result-31181.json"
           python3 tests/eufy/verify_apk.py "$ORIGINAL" "$PATCHED" 31181
-      - name: Verify official Manager APKs and search hooks
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          python3 scripts/test_manager_apks.py
       - name: Verify Niagara Launcher native hooks
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -84,6 +78,5 @@ jobs:
           path: |
             patches/build/libs/*.mpp
             patches-list.json
-            build/manager-apk-regressions/*/validation.json
             build/niagara-apk-validation/**/validation.json
           if-no-files-found: error

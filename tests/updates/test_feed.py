@@ -25,7 +25,7 @@ class FeedTests(unittest.TestCase):
     if key!='ca.walmart.ecommerceapp':self.assertEqual(before[key],after[key])
   finally:p.unlink(missing_ok=True)
  def test_token_is_only_attached_to_github_api(self):
-  for url,authorized in [('https://api.github.com/repos/MorpheApp/morphe-manager/releases/latest',True),('https://play.google.com/store/apps/details?id=test.app',False)]:
+  for url,authorized in [('https://api.github.com/repos/NiagaraLauncher/Niagara-Issues/releases/latest',True),('https://play.google.com/store/apps/details?id=test.app',False)]:
    response=MagicMock();response.__enter__.return_value=response;response.url=url;response.read.return_value=b'{}'
    opener=MagicMock();opener.open.return_value=response
    with patch.dict(refresh.os.environ,{'GITHUB_TOKEN':'test-only'}),patch.object(refresh.urllib.request,'build_opener',return_value=opener):

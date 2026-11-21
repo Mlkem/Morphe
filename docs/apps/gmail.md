@@ -17,8 +17,7 @@ replace that build. The corrected bridge uses the menu's own account converter.
 - APKM SHA-256: `bf3b4c2ccbcc9c7779f7f9e038fe2a42ccfa79a81a81e42f86e40cfe7c1c1274`
 
 Use the complete original bundle. Other versions and changed required hooks are
-rejected. The installed clone is not a compatible input; always repatch the original. The optional Manager APKMirror search patch links
-this exact version directly; other requested versions retain normal search.
+rejected. The installed clone is not a compatible input; always repatch the original.
 
 ## Install and use
 

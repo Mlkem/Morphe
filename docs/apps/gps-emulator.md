@@ -74,8 +74,4 @@ feature behavior remain untested. Desktop validation is not a phone-test approva
 
 ## Finding the original APK
 
-The optional [Manager APKMirror patch](morphe-manager.md) now recognizes
-`com.rosteam.gpsemulator`. It searches APKMirror by the exact package and version
-without excluding split bundles or particular display densities. That change
-requires repatching Manager; updating this patch source alone does not replace
-the Manager app. The supplied original 3.36 APKM can be selected directly.
+Select the matching original 3.36 APKM in Morphe.

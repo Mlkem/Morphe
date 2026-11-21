@@ -4,10 +4,11 @@ import json, zipfile
 root=Path(__file__).resolve().parents[1]
 patches=json.loads((root/'patches-list.json').read_text())['patches']
 names=[p['name'] for p in patches]
-assert len(patches)>=48, f'Expected at least 48 patches, found {len(patches)}'
+assert len(patches)>=47, f'Expected at least 47 patches, found {len(patches)}'
 assert len(names)==len(set(names)), 'Duplicate patch names'
 packages={c['packageName'] for p in patches for c in (p.get('compatiblePackages') or [])}
-expected={'bitpit.launcher','com.google.android.gm','com.oceanwing.battery.cam','com.google.android.inputmethod.latin','com.songsterr','com.musicleague.app','ca.walmart.ecommerceapp','com.wongnai.android','com.neave.zoomearth','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','com.thaidigitalplatform.tagthai','app.morphe.manager'}
+expected={'bitpit.launcher','com.google.android.gm','com.oceanwing.battery.cam','com.google.android.inputmethod.latin','com.songsterr','com.musicleague.app','ca.walmart.ecommerceapp','com.wongnai.android','com.neave.zoomearth','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','com.thaidigitalplatform.tagthai'}
+assert 'app.morphe.manager' not in packages, 'Manager must not be a patch target'
 assert expected.issubset(packages), f'Missing expected apps: {expected - packages}'
 amazon=next(p for p in patches if p['name']=='Aeroplan shopping')
 assert amazon['default'] is False, 'Untested Aeroplan shopping must remain opt-in'
@@ -107,13 +108,6 @@ openwith_target=openwith['compatiblePackages'][0]
 assert openwith_target['packageName'] == 'com.openwith.app'
 assert [t['version'] for t in openwith_target['targets']] == ['1.2.1', '1.4']
 assert all(t['minSdk'] == 32 for t in openwith_target['targets'])
-manager=next(p for p in patches if p['name']=='APKMirror search for collection apps')
-assert manager['default'] is False, 'Manager search must remain opt-in'
-assert len(manager['compatiblePackages']) == 1
-manager_target=manager['compatiblePackages'][0]
-assert manager_target['packageName'] == 'app.morphe.manager'
-assert [t['version'] for t in manager_target['targets']] == ['2.6.0','2.4.0-dev.1','2.4.0-dev.2','2.4.0-dev.3','2.4.0-dev.4']
-assert all(t['minSdk'] == 26 for t in manager_target['targets'])
 playstore=next(p for p in patches if p['name']=='Disable Play Store updates')
 assert playstore['default'] is False, 'Play Store update blocker must be opt-in'
 assert playstore['compatiblePackages'] is None, 'Play Store update blocker must remain universal'
@@ -130,7 +124,7 @@ assert merge['default'] is False and merge['compatiblePackages'] is None
 for p in patches:
     if 'Hermes hide' in p['name']: assert p['default'] is False
     for c in p.get('compatiblePackages') or []:
-        if c['packageName'] in {'ca.walmart.ecommerceapp','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','com.thaidigitalplatform.tagthai','app.morphe.manager'}:
+        if c['packageName'] in {'ca.walmart.ecommerceapp','com.pushpress.memberportal','com.openwith.app','com.rosteam.gpsemulator','com.thaidigitalplatform.tagthai'}:
             assert all(t['isExperimental'] for t in c['targets']), 'Unverified target must stay experimental'
 bundles=[p for p in (root/'patches/build/libs').glob('*.mpp')
          if not any(kind in p.name for kind in ('-sources', '-javadoc'))]
@@ -172,17 +166,15 @@ for p in bundles:
         assert b'Lca/mlkem/gps/GpsEmulatorProPatch;' in z.read('classes.dex')
         assert 'ca/mlkem/openwith/OpenWithProPatch.class' in files
         assert b'Lca/mlkem/openwith/OpenWithProPatch;' in z.read('classes.dex')
-        assert 'ca/mlkem/manager/ApkMirrorSearchPatchKt.class' in files
-        assert b'Lca/mlkem/manager/ApkMirrorSearchPatchKt;' in z.read('classes.dex')
         assert 'app/morphe/patches/all/misc/updates/DisablePlayStoreUpdatesPatchKt.class' in files
         assert b'Lapp/morphe/extension/all/versioncode/DisablePlayStoreUpdatesPatch;' in z.read('extensions/all/versioncode/change-version-code.mpe')
         assert z.read('extensions/all/versioncode/change-version-code.mpe').startswith(b'dex\n')
         assert 'updates/revisions.properties' in files
         assert b'Lca/mlkem/updates/UpdateProvider;' in z.read('extensions/startup-updates.mpe')
-        for name in ['extensions/startup-updates.mpe','extensions/gmail-accounts.mpe','extensions/canada.mpe','extensions/pushpress-crossfit-only.mpe','extensions/manager-apkmirror.mpe','extensions/tagthai-text.mpe','extensions/eufy-camera-only.mpe']:
+        for name in ['extensions/startup-updates.mpe','extensions/gmail-accounts.mpe','extensions/canada.mpe','extensions/pushpress-crossfit-only.mpe','extensions/tagthai-text.mpe','extensions/eufy-camera-only.mpe']:
             assert z.read(name).startswith(b'dex\n'), name
             assert b'Lkotlin/' not in z.read(name), f'Unexpected Kotlin runtime in Java extension: {name}'
-        assert b'Lca/mlkem/manager/ApkMirrorUrls;' in z.read('extensions/manager-apkmirror.mpe')
+        assert 'extensions/manager-apkmirror.mpe' not in files
         assert not any(f.startswith(('kotlin/','app/morphe/patcher/')) for f in files)
         assert not any(f.endswith(('.key','.keystore','.jks','.apk','.xapk')) for f in files)
         manifest=z.read('META-INF/MANIFEST.MF').decode()

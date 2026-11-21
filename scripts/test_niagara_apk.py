@@ -10,7 +10,7 @@ if not apk.exists() or hashlib.sha256(apk.read_bytes()).hexdigest()!=expected:
     with urllib.request.urlopen(url,timeout=120) as response: apk.write_bytes(response.read())
 assert hashlib.sha256(apk.read_bytes()).hexdigest()==expected,'Official Niagara APK digest mismatch'
 # Reuse the audited official Desktop download helper.
-from test_manager_apks import asset
+from official_morphe_asset import asset
 desktop=asset('morphe-desktop','1.20.0','morphe-desktop-1.20.0-all.jar')
 version=json.loads((root/'patches-list.json').read_text())['version']
 mpp=root/f'patches/build/libs/patches-{version}.mpp'

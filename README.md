@@ -3,7 +3,7 @@
 # mlkemac patches
 
 A single Morphe source for Niagara Launcher, Amazon Shopping, Gmail, Anker eufy, Music League, Walmart Canada, Wongnai, Zoom Earth,
-PushPress, Open with, GPS Emulator, TAGTHAi, Songsterr, Gboard, an optional Morphe Manager APKMirror search fix, and the XAPK
+PushPress, Open with, GPS Emulator, TAGTHAi, Songsterr, Gboard, and the XAPK
 merge-only utility.
 
 **[Set up the beta source](#install-and-update)** ·
@@ -90,7 +90,6 @@ sorting existing apps, and restoring icons. See [Niagara details](docs/apps/niag
 | TAGTHAi | `com.thaidigitalplatform.tagthai` 4.25.1 (4251001) | Accessibility, screenshots, text panel | Known white-screen launch failure in dev.7 and dev.8; diagnosis pending |
 | Songsterr | `com.songsterr` 7.1.6 (2012282388) | Highest local premium tier; player/UI/ad gates | Opt-in; server features and phone runtime unverified |
 | Gboard | `com.google.android.inputmethod.latin` 18.5.4 arm64 | Optional floating and one-handed mode block alongside standard Gboard patches | Opt-in beta; phone testing pending |
-| Morphe Manager | `app.morphe.manager` 2.4.0-dev.1–dev.4 | APKMirror search for collection apps | Opt-in; phone testing pending |
 | Merge XAPK only | Universal | Merge-only 1.0.0 | Opt-in; uses Morphe's merge/sign flow |
 
 The Amazon Aeroplan patch, Music League Hermes patch, Walmart Remove Shop patch and universal merge utility
@@ -108,12 +107,6 @@ For Gboard, select the **original stock Gboard 18.5.4 arm64 APK**, then add
 See [Gboard installation and compatibility](docs/apps/gboard.md).
 
 ### Finding the original APK
-
-The [APKMirror search patch](docs/apps/morphe-manager.md) applies to **Morphe
-Manager itself**. Updating this source alone cannot change the stock Manager's
-search. It opens the verified Walmart Canada 26.31 and Anker eufy 6.1.20_31181 and Gmail 2026.10.26.1012468012.Release APKM pages directly and uses a
-package/version search restricted to APKMirror for the collection's other apps,
-without a `nodpi` filter. See the setup instructions before replacing Manager.
 
 [Download the tested Walmart Canada 26.31 (26310017) APKM](https://www.apkmirror.com/apk/walmart/walmart-shopping-made-easy/walmart-grocery-shopping-26-31-release/walmart-grocery-shopping-26-31-android-apk-download/).
 The 26.41.2 update was verified against the original ARM64 APKPure XAPK (26410201); select that original local file for this version. The direct APKMirror link above remains the legacy 26.31 input.

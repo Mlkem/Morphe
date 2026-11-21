@@ -64,12 +64,6 @@ briefly appear before their Close action runs. There is no background polling.
    cannot update a Play-signed installation in place. Uninstalling the original
    clears its local app data; know your login and two-factor recovery method first.
 
-The collection's optional **APKMirror search for collection apps** patch now
-supports Manager **2.4.0-dev.1–dev.4** and opens the exact Eufy APKM page for
-`6.1.20_31181`. Apply that patch to **Manager itself** if you want its download
-button changed. Updating the patch source alone cannot alter stock Manager's
-resolver. The direct link above works without modifying Manager.
-
 ## Validation and limits
 
 The original signing certificate SHA-256 matches APKMirror:

@@ -36,8 +36,8 @@ def fetch(url):
   return data.decode('utf-8')
 def check(package):
  checked=datetime.now(timezone.utc).isoformat()
- if package=='app.morphe.manager':
-  source='GitHub';url='https://github.com/MorpheApp/morphe-manager/releases/latest';api='https://api.github.com/repos/MorpheApp/morphe-manager/releases/latest'
+ if package=='bitpit.launcher':
+  source='GitHub';url='https://github.com/NiagaraLauncher/Niagara-Issues/releases/latest';api='https://api.github.com/repos/NiagaraLauncher/Niagara-Issues/releases/latest'
  else:
   source='Google Play';url=f'https://play.google.com/store/apps/details?id={package}&hl=en&gl=CA';api=url
  try:

@@ -30,7 +30,7 @@ def dex(source,name,minapi):
     return out/'classes.dex'
 patchdex=dex(b/'patches.jar','patch-dex','26')
 extensions={}
-for name,resource in [('amazon','amazon-aeroplan.mpe'),('niagara','niagara-auto-folders.mpe'),('updates','startup-updates.mpe'),('gmail','gmail-accounts.mpe'),('canada','canada.mpe'),('pushpress','pushpress-crossfit-only.mpe'),('manager','manager-apkmirror.mpe'),('eufy','eufy-camera-only.mpe'),('tagthai','tagthai-text.mpe'),('all/change-version-code','all/versioncode/change-version-code.mpe')]:
+for name,resource in [('amazon','amazon-aeroplan.mpe'),('niagara','niagara-auto-folders.mpe'),('updates','startup-updates.mpe'),('gmail','gmail-accounts.mpe'),('canada','canada.mpe'),('pushpress','pushpress-crossfit-only.mpe'),('eufy','eufy-camera-only.mpe'),('tagthai','tagthai-text.mpe'),('all/change-version-code','all/versioncode/change-version-code.mpe')]:
     safe_name=name.replace('/','-')
     out=b/(safe_name+'-classes');out.mkdir()
     extension_cp=os.pathsep.join(map(str,[t/'android.jar',t/'annotation.jar',t/'morphe.jar']))
@@ -49,7 +49,6 @@ testcp=os.pathsep.join(map(str,[test,b/'canada-classes',t/'android.jar']))
 run(jdk/'javac','--release','8','-cp',testcp,'-d',test,*root.glob('tests/walmart/fixtures/**/*.java'),root/'tests/walmart/FeatureTest.java',root/'tests/walmart/AdHistoryTest.java')
 run(java,'-cp',testcp,'FeatureTest')
 run(java,'-cp',testcp,'AdHistoryTest')
-run('python3',root/'scripts/test_manager_urls.py',env={**os.environ,'JAVA_HOME':str(jdk.parent)})
 run('python3',root/'scripts/test_amazon_aeroplan.py',env={**os.environ,'JAVA_HOME':str(jdk.parent)})
 manifest='\r\n'.join(['Manifest-Version: 1.0','Name: mlkemac patches','Description: Public community patches maintained by mlkemac','Version: '+a.version,'Timestamp: '+str(int(time.time()*1000)),'Author: mlkemac','License: GPLv3','Patcher-Version: 2.1.0','',''])
 libs=root/'patches/build/libs';libs.mkdir(parents=True,exist_ok=True)

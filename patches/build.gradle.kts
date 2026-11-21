@@ -13,7 +13,7 @@ tasks.withType<JavaCompile>().configureEach {
 patches {
     about {
         name = "mlkemac patches"
-        description = "Community patches for Amazon Shopping, Niagara Launcher, Gmail, Anker eufy, Gboard, Music League, Walmart Canada, Wongnai, Zoom Earth, PushPress, Open with, GPS Emulator, TAGTHAi, Songsterr, Morphe Manager APKMirror searches, and XAPK merging."
+        description = "Community patches for Amazon Shopping, Niagara Launcher, Gmail, Anker eufy, Gboard, Music League, Walmart Canada, Wongnai, Zoom Earth, PushPress, Open with, GPS Emulator, TAGTHAi, Songsterr, and XAPK merging."
         source = "https://github.com/Mlkem/Morphe"
         author = "mlkemac"
         contact = "https://github.com/Mlkem/Morphe/issues"
