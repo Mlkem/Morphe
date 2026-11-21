@@ -12,7 +12,8 @@ The separate accessory panel and Floating Web Search feature are outside its sco
 
 - Package: `com.google.android.inputmethod.latin`
 - ARM64 full APKs: `18.6.7.1002251336-release-arm64-v8a` (176071990) and `18.5.4.993608717-release-arm64-v8a` (176049702). [18.6.7 download](https://www.apkmirror.com/apk/google-inc/gboard/gboard-the-google-keyboard-18-6-7-1002251336-release/)
-- The floating/one-handed patch was applied to both originals. Testing with third-party GboardWu patches and testing the new build on a phone remain pending.
+- Optional beta input: `18.8.0.1022711984-beta-arm64-v8a` (176124766), Android 8+. Use the full nodpi ARM64 APK. SHA-256 `d1406caa270011aaea2a58bf828a3ffd94a58927a53688dc7bcd26e537c4d34b`. [Original 18.8.0 beta APK](https://www.apkmirror.com/apk/google-inc/gboard/gboard-the-google-keyboard-18-8-0-1022711984-release/gboard-the-google-keyboard-18-8-0-1022711984-beta-arm64-v8a-android-apk-download/)
+- Morphe Desktop rebuilt the 18.8.0 beta APK. Desktop checks covered 49 restored-mode combinations, 11 requested modes and 144 long-press menu cases. The current stable target is 18.6.7. On-device behavior and composition with third-party patches on the beta still need testing.
 - Use the original Google-signed Gboard APK, before applying other patches.
 
 1. Update **mlkemac patches** to dev.17 or later; enable **Experimental app

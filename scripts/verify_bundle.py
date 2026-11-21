@@ -65,7 +65,7 @@ assert not gboard['default'] and len(gboard['compatiblePackages'])==1
 assert gboard['description'].find('original Gboard APK') >= 0
 gboard_target=gboard['compatiblePackages'][0]
 assert gboard_target['packageName']=='com.google.android.inputmethod.latin'
-assert [t['version'] for t in gboard_target['targets']]==['18.6.7.1002251336-release-arm64-v8a', '18.5.4.993608717-release-arm64-v8a']
+assert [t['version'] for t in gboard_target['targets']]==['18.6.7.1002251336-release-arm64-v8a', '18.8.0.1022711984-beta-arm64-v8a', '18.5.4.993608717-release-arm64-v8a']
 assert all(t['isExperimental'] for t in gboard_target['targets'])
 wongnai=next(p for p in patches if p['name']=='Disable Wongnai Google ads')
 assert wongnai['default'] is False, 'Untested Wongnai patch must remain opt-in'

@@ -18,27 +18,61 @@ private const val PREVIOUS = "18.5.4.993608717-release-arm64-v8a"
 
 private const val CURRENT = "18.6.7.1002251336-release-arm64-v8a"
 
-private class KeyboardBindings(val current: Boolean) {
-    val manager = if (current) "Lpks;" else "Lpqw;"
-    val resolver = if (current) "Lpkw;" else "Lpra;"
-    val support = if (current) "ar" else "aq"
-    val auto = if (current) "af" else "ae"
-    val oneHanded = if (current) "au" else "at"
-    val shortcut = if (current) "fY" else "fV"
-    val shortcutArg = if (current) "Loyq;" else "Lpev;"
-    val setter = if (current) "ah" else "ag"
-    val modeGetter = if (current) "H" else "G"
-    val contextGetter = if (current) "I" else "H"
-    val flagHolder = if (current) "Lpmi;" else "Lpsm;"
-    val flagType = if (current) "Lodi;" else "Lokc;"
-    val settings = if (current) "Lpmm;" else "Lpsq;"
-    val options = if (current) "Layl;" else "Layg;"
-    val eligibility = if (current) "Lpkk;->d(Landroid/content/Context;Lqpn;)Z"
-                      else "Lpqo;->d(Landroid/content/Context;Lqvt;)Z"
-    val actionType = if (current) "Lpuc;" else "Lqae;"
-    val listType = if (current) "Lwhe;" else "Lwns;"
-    val popupEntry = if (current) "Lpva;" else "Lqbc;"
-}
+private const val BETA = "18.8.0.1022711984-beta-arm64-v8a"
+
+private data class PopupBindings(
+    val actionType: String,
+    val listType: String,
+    val entry: String,
+    val exactLookup: String = "g",
+    val fallbackLookup: String = "h",
+    val actionsField: String = "h",
+    val typeField: String = "e",
+    val entriesField: String = "f",
+    val codeField: String = "c"
+)
+
+private data class KeyboardBindings(
+    val manager: String, val resolver: String,
+    val support: String, val auto: String, val oneHanded: String,
+    val shortcut: String, val shortcutArg: String, val setter: String,
+    val modeGetter: String, val contextGetter: String,
+    val flagHolder: String, val flagType: String, val settings: String,
+    val options: String, val eligibility: String,
+    val popup: PopupBindings,
+    val boundsField: String = "L", val optionsField: String = "y",
+    val sharedReturn: Boolean = true
+)
+
+private val bindings = mapOf(
+    CURRENT to KeyboardBindings(
+        manager = "Lpks;", resolver = "Lpkw;", support = "ar", auto = "af", oneHanded = "au",
+        shortcut = "fY", shortcutArg = "Loyq;", setter = "ah", modeGetter = "H", contextGetter = "I",
+        flagHolder = "Lpmi;", flagType = "Lodi;", settings = "Lpmm;", options = "Layl;",
+        eligibility = "Lpkk;->d(Landroid/content/Context;Lqpn;)Z",
+        popup = PopupBindings(actionType = "Lpuc;", listType = "Lwhe;", entry = "Lpva;")
+    ),
+    BETA to KeyboardBindings(
+        manager = "Lafri;", resolver = "Lafrp;", support = "aF", auto = "aq", oneHanded = "aI",
+        shortcut = "em", shortcutArg = "Laeuj;", setter = "aG", modeGetter = "ad", contextGetter = "t",
+        flagHolder = "Lafvg;", flagType = "Ladfh;", settings = "Lafvk;", options = "Lcka;",
+        eligibility = "Lafqt;->d(Landroid/content/Context;Lahws;)Z",
+        popup = PopupBindings(
+            actionType = "Lagkl;", listType = "Lauaz;", entry = "Lagmb;",
+            exactLookup = "a", fallbackLookup = "b", actionsField = "g",
+            typeField = "d", entriesField = "e", codeField = "d"
+        ),
+        boundsField = "K", optionsField = "w"
+    ),
+    PREVIOUS to KeyboardBindings(
+        manager = "Lpqw;", resolver = "Lpra;", support = "aq", auto = "ae", oneHanded = "at",
+        shortcut = "fV", shortcutArg = "Lpev;", setter = "ag", modeGetter = "G", contextGetter = "H",
+        flagHolder = "Lpsm;", flagType = "Lokc;", settings = "Lpsq;", options = "Layg;",
+        eligibility = "Lpqo;->d(Landroid/content/Context;Lqvt;)Z",
+        popup = PopupBindings(actionType = "Lqae;", listType = "Lwns;", entry = "Lqbc;"),
+        sharedReturn = false
+    )
+)
 
 /** Normal bytecode patch: shares Morphe's method model with other Gboard sources. */
 val disableGboardFloatingKeyboard = bytecodePatch(
@@ -55,12 +89,12 @@ val disableGboardFloatingKeyboard = bytecodePatch(
         name = "Gboard", packageName = PACKAGE, apkFileType = ApkFileType.APK,
         description = "Optional add-on for stock ARM64 Gboard. Can be selected with " +
             "the standard Gboard patches, including GboardWu package rename, in one run.",
-        targets = listOf(CURRENT, PREVIOUS).map { AppTarget(version = it, isExperimental = true, minSdk = 26) }
+        targets = bindings.keys.map { AppTarget(version = it, isExperimental = true, minSdk = 26) }
     ))
     execute {
         val version = packageMetadata.versionName
-        check(version in listOf(CURRENT, PREVIOUS)) { "Unsupported Gboard version: $version" }
-        val b = KeyboardBindings(version == CURRENT)
+        val b = bindings[version] ?: error("Unsupported Gboard version: $version")
+        val popup = b.popup
         val support = Fingerprint(definingClass = b.manager, name = b.support,
             parameters = emptyList(), returnType = "Z", isStatic = false).method
         val auto = Fingerprint(definingClass = b.manager, name = b.auto,
@@ -70,10 +104,10 @@ val disableGboardFloatingKeyboard = bytecodePatch(
         val shortcutState = Fingerprint(definingClass = b.manager, name = b.shortcut,
             parameters = listOf(b.shortcutArg, "Landroid/view/inputmethod/EditorInfo;"),
             returnType = "J", isStatic = false).method
-        val actionLookups = listOf("g" to 5, "h" to 6).map { (name, registers) ->
+        val actionLookups = listOf(popup.exactLookup to 5, popup.fallbackLookup to 6).map { (name, registers) ->
             val method = Fingerprint(
                 definingClass = "Lcom/google/android/libraries/inputmethod/metadata/SoftKeyDef;",
-                name = name, parameters = listOf(b.actionType),
+                name = name, parameters = listOf(popup.actionType),
                 returnType = "Lcom/google/android/libraries/inputmethod/metadata/ActionDef;",
                 isStatic = false
             ).method
@@ -88,15 +122,15 @@ val disableGboardFloatingKeyboard = bytecodePatch(
             method.instructions.mapNotNull { (it as? ReferenceInstruction)?.reference?.toString() }.toSet()
         actionLookups.forEach { (method, registers) ->
             check(method.implementation!!.registerCount == registers &&
-                setOf("Lcom/google/android/libraries/inputmethod/metadata/SoftKeyDef;->h:${b.listType}",
-                    "Lcom/google/android/libraries/inputmethod/metadata/ActionDef;->e:${b.actionType}",
+                setOf("Lcom/google/android/libraries/inputmethod/metadata/SoftKeyDef;->${popup.actionsField}:${popup.listType}",
+                    "Lcom/google/android/libraries/inputmethod/metadata/ActionDef;->${popup.typeField}:${popup.actionType}",
                     "Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;",
                     "Ljava/util/Iterator;->hasNext()Z",
                     "Ljava/util/Iterator;->next()Ljava/lang/Object;").all { it in references(method) }
             ) { "Unexpected Gboard ${method.name} action lookup" }
         }
         check(support.implementation!!.registerCount == 1 &&
-            "${b.manager}->L:Landroid/graphics/Rect;" in references(support)) {
+            "${b.manager}->${b.boundsField}:Landroid/graphics/Rect;" in references(support)) {
             "Unexpected Gboard floating capability method"
         }
         check(auto.implementation!!.registerCount == 4 &&
@@ -104,7 +138,7 @@ val disableGboardFloatingKeyboard = bytecodePatch(
             "Unexpected Gboard automatic floating method"
         }
         check(oneHanded.implementation!!.registerCount == 3 &&
-            setOf("${b.manager}->y:${b.options}", "${b.manager}->${b.contextGetter}()Landroid/content/Context;",
+            setOf("${b.manager}->${b.optionsField}:${b.options}", "${b.manager}->${b.contextGetter}()Landroid/content/Context;",
                 "${b.settings}->v(Landroid/content/Context;)Z",
                 b.eligibility).all { it in references(oneHanded) }) {
             "Unexpected Gboard one-handed eligibility method"
@@ -122,15 +156,15 @@ val disableGboardFloatingKeyboard = bytecodePatch(
             "${b.resolver}->a()I" in references(setter)) {
             "Unexpected Gboard mode setter register layout"
         }
-        check(classDefBy(b.popupEntry).fields.any { it.name == "c" && it.type == "I" } &&
-            classDefBy(b.actionType).staticFields.any { it.name == "b" && it.type == b.actionType } &&
+        check(classDefBy(popup.entry).fields.any { it.name == popup.codeField && it.type == "I" } &&
+            classDefBy(popup.actionType).staticFields.any { it.name == "b" && it.type == popup.actionType } &&
             classDefBy("Lcom/google/android/libraries/inputmethod/metadata/ActionDef;").fields.any {
-                it.name == "f" && it.type == b.listType
+                it.name == popup.entriesField && it.type == popup.listType
             }) { "Unexpected Gboard long-press action fields" }
         val resolverCode = resolver.instructions.toList()
         check(resolver.implementation!!.registerCount == 2 &&
             resolverCode.map { it.opcode } == listOf(Opcode.INVOKE_VIRTUAL, Opcode.MOVE_RESULT,
-                Opcode.IF_EQZ, Opcode.IGET, if (b.current) Opcode.GOTO else Opcode.RETURN, Opcode.IGET, Opcode.RETURN) &&
+                Opcode.IF_EQZ, Opcode.IGET, if (b.sharedReturn) Opcode.GOTO else Opcode.RETURN, Opcode.IGET, Opcode.RETURN) &&
             references(resolver) == setOf("${b.resolver}->d()Z", "${b.resolver}->f:I", "${b.resolver}->c:I") &&
             resolverCode.filter { it.opcode == Opcode.RETURN }.all {
                 (it as OneRegisterInstruction).registerA in 0..1
@@ -175,7 +209,7 @@ val disableGboardFloatingKeyboard = bytecodePatch(
         // menu item. Normal Enter and unrelated long-press actions stay intact.
         // v0/v1 can overwrite incoming parameters because we return immediately.
         shortcutState.addInstructions(0, "const-wide/16 v0, 0x0\nreturn-wide v0")
-        actionLookups.forEach { (method, _) -> suppressOneHandedPopup(method, b) }
+        actionLookups.forEach { (method, _) -> suppressOneHandedPopup(method, popup) }
     }
 }
 
@@ -183,7 +217,7 @@ val disableGboardFloatingKeyboard = bytecodePatch(
  * Returning null also disables scheduling through SoftKeyDef.l(). The fallback
  * lookup is filtered at its returns so it cannot fall back to a normal key tap.
  */
-private fun suppressOneHandedPopup(method: MutableMethod, b: KeyboardBindings) {
+private fun suppressOneHandedPopup(method: MutableMethod, popup: PopupBindings) {
     method.instructions.toList().indices.filter {
         method.instructions.elementAt(it).opcode == Opcode.RETURN_OBJECT
     }.asReversed().forEach { index ->
@@ -197,10 +231,10 @@ private fun suppressOneHandedPopup(method: MutableMethod, b: KeyboardBindings) {
         method.replaceInstruction(index, "nop")
         method.addInstructionsWithLabels(index + 1, """
             if-eqz v$result, :mlkem_return_action
-            iget-object v$entry, v$result, Lcom/google/android/libraries/inputmethod/metadata/ActionDef;->e:${b.actionType}
-            sget-object v$constant, ${b.actionType}->b:${b.actionType}
+            iget-object v$entry, v$result, Lcom/google/android/libraries/inputmethod/metadata/ActionDef;->${popup.typeField}:${popup.actionType}
+            sget-object v$constant, ${popup.actionType}->b:${popup.actionType}
             if-ne v$entry, v$constant, :mlkem_return_action
-            iget-object v$iterator, v$result, Lcom/google/android/libraries/inputmethod/metadata/ActionDef;->f:${b.listType}
+            iget-object v$iterator, v$result, Lcom/google/android/libraries/inputmethod/metadata/ActionDef;->${popup.entriesField}:${popup.listType}
             invoke-interface {v$iterator}, Ljava/lang/Iterable;->iterator()Ljava/util/Iterator;
             move-result-object v$iterator
             :mlkem_next_popup_entry
@@ -209,8 +243,8 @@ private fun suppressOneHandedPopup(method: MutableMethod, b: KeyboardBindings) {
             if-eqz v$entry, :mlkem_return_action
             invoke-interface {v$iterator}, Ljava/util/Iterator;->next()Ljava/lang/Object;
             move-result-object v$entry
-            check-cast v$entry, ${b.popupEntry}
-            iget v$entry, v$entry, ${b.popupEntry}->c:I
+            check-cast v$entry, ${popup.entry}
+            iget v$entry, v$entry, ${popup.entry}->${popup.codeField}:I
             const/16 v$constant, -0x2749
             if-ne v$entry, v$constant, :mlkem_next_popup_entry
             const/4 v$result, 0x0

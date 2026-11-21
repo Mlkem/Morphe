@@ -89,7 +89,7 @@ sorting existing apps, and restoring icons. See [Niagara details](docs/apps/niag
 | GPS Emulator | `com.rosteam.gpsemulator` 3.36 (336) | Fresh Pro patch; 1,000 favourites | Opt-in beta; phone testing pending |
 | TAGTHAi | `com.thaidigitalplatform.tagthai` 4.26.1 (text selection), 4.25.1 | Accessibility, screenshots, text panel | Known white-screen launch failure in dev.7 and dev.8; diagnosis pending |
 | Songsterr | `com.songsterr` 7.1.6 (2012282388) | Highest local premium tier; player/UI/ad gates | Opt-in; server features and phone runtime unverified |
-| Gboard | `com.google.android.inputmethod.latin` 18.6.7 or 18.5.4 arm64 | Optional floating and one-handed mode block alongside standard Gboard patches | Opt-in beta; phone testing pending |
+| Gboard | `com.google.android.inputmethod.latin` 18.6.7 stable, 18.8.0 beta or 18.5.4 arm64 | Optional floating and one-handed mode block alongside standard Gboard patches | Opt-in beta; phone testing pending |
 | Merge XAPK only | Universal | Merge-only 1.0.0 | Opt-in; uses Morphe's merge/sign flow |
 
 The Amazon Aeroplan patch, Music League Hermes patch, Walmart Remove Shop patch and universal merge utility
@@ -102,7 +102,7 @@ See [TAGTHAi setup and limits](docs/apps/tagthai.md). See
 validation](docs/apps/openwith.md). Walmart price history records prices you actually encounter;
 it does not provide past prices from a remote database. See [Walmart details](docs/apps/walmart-canada.md).
 
-For Gboard, select the **original stock Gboard 18.6.7 or 18.5.4 arm64 APK**, then add
+For Gboard, select the **original stock Gboard 18.6.7 stable, 18.8.0 beta or 18.5.4 arm64 APK**, then add
 **Disable Gboard floating and one-handed modes** alongside your usual patches in the same run.
 See [Gboard installation and compatibility](docs/apps/gboard.md).
 
