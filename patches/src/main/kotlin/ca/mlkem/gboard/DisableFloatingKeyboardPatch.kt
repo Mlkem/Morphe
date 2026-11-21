@@ -155,7 +155,7 @@ val disableGboardFloatingKeyboard = bytecodePatch(
                 val result = (resolverCode[index] as OneRegisterInstruction).registerA
                 val scratch = 1 - result
                 resolver.replaceInstruction(index, "nop")
-                resolver.addInstructions(index + 1, """
+                resolver.addInstructionsWithLabels(index + 1, """
                     const/4 v$scratch, 0x2
                     if-eq v$result, v$scratch, :mlkem_dock_result
                     const/4 v$scratch, 0x3
