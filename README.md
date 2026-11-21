@@ -131,7 +131,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.41](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.41)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;48 patches total
+> **[v1.0.0-dev.42](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.42)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;47 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -152,23 +152,6 @@ provide privacy.
 | [Remove LiteAPKS nag](#remove-liteapks-nag) | Legacy Zoom Earth 6.1 LiteAPKS/9MOD popup cleanup. Both original fingerprints must match; unverified on a phone. |  |
 | [Remove Zoom Earth LiteAPKs promotions](#remove-zoom-earth-liteapks-promotions) | Removes the two injected promotional startup calls from the supplied working LiteAPKs 6.3.3 APK. Preserves its restored startup methods and DEX layout. Use this APK as input; do not select the original-only startup patch. Phone retest required. |  |
 | [Remove Zoom Earth ads](#remove-zoom-earth-ads) | Stops the bundled banner controller from initializing or showing ads, and collapses the ad footer. Works independently of Pro. Phone testing pending. |  |
-
-</details>
-
-<details>
-<summary>📦 Morphe Manager&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
-<br>
-
-**Package name:** `app.morphe.manager`
-
-**🎯 Supported versions:**
-
-| 🧪&nbsp;2.6.0 | 🧪&nbsp;2.4.0-dev.1 | 🧪&nbsp;2.4.0-dev.2 | 🧪&nbsp;2.4.0-dev.3 | 🧪&nbsp;2.4.0-dev.4 |
-| :---: | :---: | :---: | :---: | :---: |
-
-| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
-|----------|----------------|-----------|
-| [APKMirror search for collection apps](#apkmirror-search-for-collection-apps) | Changes Morphe Manager's download links for this collection's supported apps. Walmart Canada 26.31, Anker eufy 6.1.20_31181/6.1.30_32823 and Gmail 2026.10.26.1012468012.Release open verified APKMirror APKM pages; other versions/apps, including Gboard and Songsterr, use a package-and-version Google search restricted to APKMirror, without nodpi. Niagara Launcher and Manager itself open their official GitHub releases. Apps outside the collection keep Manager's resolver. Does not download files automatically. |  |
 
 </details>
 

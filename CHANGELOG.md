@@ -1,3 +1,9 @@
+## [1.0.0-dev.42](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.41...v1.0.0-dev.42) (2026-11-21)
+
+### 🐛 Bug Fixes
+
+* remove the Morphe Manager search patch from the collection ([25fd0cc](https://github.com/Mlkem/Morphe/commit/25fd0ccb9fe0fb6a2dcc1ff3d4ac2626e23380c1))
+
 ## [1.0.0-dev.41](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.40...v1.0.0-dev.41) (2026-11-19)
 
 ### 🐛 Bug Fixes
