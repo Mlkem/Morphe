@@ -131,7 +131,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.45](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.45)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;47 patches total
+> **[v1.0.0-dev.46](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.46)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;47 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -394,8 +394,9 @@ provide privacy.
 
 **🎯 Supported versions:**
 
-| 🧪&nbsp;3.42.0 | 🧪&nbsp;3.44.0 | 🧪&nbsp;3.45.0 |
-| :---: | :---: | :---: |
+| 🧪&nbsp;3.46.0 | 🧪&nbsp;3.45.0 | 🧪&nbsp;3.44.0 | 🧪&nbsp;3.42.0 |
+| :---: | :---: | :---: | :---: |
+| Google Play release. Patching the original 3.46.0 XAPK and selecting CrossFit on a phone still need verification. |  |  |  |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
