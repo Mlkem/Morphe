@@ -70,7 +70,7 @@ public final class AeroplanBridge {
                     .setLongLabel("Aeroplan referral and settings")
                     .setIcon(Icon.createWithResource(activity, android.R.drawable.ic_menu_compass))
                     .setIntent(("ca.walmart.ecommerceapp".equals(activity.getPackageName())
-                            ? new Intent(activity, ReviewActivity.class)
+                            ? new Intent(activity, ReviewActivity.class).setAction(Intent.ACTION_VIEW)
                             : new Intent(activity, AeroplanActivity.class).setAction(AeroplanActivity.ACTION_SETTINGS)))
                     .build();
             for (ShortcutInfo existing : manager.getDynamicShortcuts()) {

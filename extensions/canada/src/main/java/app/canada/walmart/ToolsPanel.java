@@ -9,6 +9,9 @@ final class ToolsPanel {
   ToolUi.action(box,"Stock checker","See supplied quantities by fulfilment option",android.R.drawable.ic_menu_search,()->StockPanel.show(c));
   ToolUi.action(box,"Scan barcode","Open Walmart’s product scanner",android.R.drawable.ic_menu_camera,()->{scan(c);ToolUi.close(c);});
   ToolUi.action(box,"Price history",HistoryStore.keys(c).size()+" saved products · prices and trends",android.R.drawable.ic_menu_recent_history,()->HistoryTools.browse(c,false));
+  Intent aeroplan = new Intent(Intent.ACTION_VIEW).setClassName(c.getPackageName(), "ca.mlkem.amazon.ReviewActivity");
+  if (aeroplan.resolveActivity(c.getPackageManager()) != null)
+   ToolUi.action(box,"Aeroplan shopping","Review your referral, cart and recent orders",android.R.drawable.ic_menu_compass,()->c.startActivity(aeroplan));
   ToolUi.section(box,"More tools");
   ToolUi.action(box,"Shopping tools","Unit prices, basket calculator and checklist export",android.R.drawable.ic_menu_sort_by_size,()->shopping(c));
   ToolUi.action(box,"Settings","Ads, price recording and checklist preferences",android.R.drawable.ic_menu_preferences,()->controls(c));

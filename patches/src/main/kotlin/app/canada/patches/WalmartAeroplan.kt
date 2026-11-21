@@ -29,7 +29,7 @@ val walmartAeroplan = bytecodePatch(
             val ins = code[index]
             val ref = (ins as? ReferenceInstruction)?.reference as? MethodReference
             ins.opcode in setOf(Opcode.INVOKE_SUPER, Opcode.INVOKE_SUPER_RANGE) &&
-                ref?.definingClass == parent && ref.name == "onCreate" &&
+                ref != null && ref.definingClass == parent && ref.name == "onCreate" &&
                 ref.parameterTypes == listOf("Landroid/os/Bundle;") && ref.returnType == "V"
         }
         create.addInstruction(superCall + 1, "invoke-static/range {p0 .. p0}, $hook")
