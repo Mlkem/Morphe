@@ -1,6 +1,6 @@
 {
   "NOTE": "Do NOT manually edit this file. This file is automatically updated when semantic release (release.yml) runs. Manually editing this file can break your releases and break third party tools that use this file.",
-  "version": "1.0.0-dev.48",
+  "version": "1.0.0-dev.49",
   "patches": [
     {
       "name": "100 Zoom Earth favourites",
@@ -31,7 +31,7 @@
     },
     {
       "name": "Aeroplan shopping",
-      "description": "Reviews the official Amazon.ca referral, cart categories and local order references in a shopping window. The existing native Amazon referral and encrypted profile are also available.",
+      "description": "Reviews the official Amazon.ca referral, cart categories and local order references in a shopping window. Shows referral status in native Amazon and retains the encrypted profile.",
       "default": false,
       "category": null,
       "compatiblePackages": [
@@ -72,7 +72,7 @@
     },
     {
       "name": "Aeroplan shopping for Walmart Canada",
-      "description": "Start at the official Walmart.ca eStore offer, review cart items and retain order references on this device.",
+      "description": "Offer Aeroplan shopping when Walmart starts. Cart review is also available on demand in Patch Tools.",
       "default": false,
       "category": null,
       "compatiblePackages": [
