@@ -41,10 +41,15 @@ internal val canada = Compatibility(name="Walmart Canada", packageName="ca.walma
     apkFileType=ApkFileType.APKM, appIconColor=0x0071CE,
     targets=listOf(AppTarget(version="26.41.2", isExperimental=true), AppTarget(version="26.31", isExperimental=true)))
 
+internal val walmartReviewComponents = bytecodePatch {
+    dependsOn(ca.mlkem.amazon.aeroplanReviewManifest)
+    extendWith("extensions/amazon-aeroplan.mpe")
+}
+
 val patchTools = bytecodePatch(name="Patch Tools — Canada",
     description="Replace Sparky with a card-based tools menu: stock checker, barcode scanner, price history, shopping calculators, settings and backups. Includes Back navigation and dark-mode support.", default=true) {
     dependsOn(ca.mlkem.updates.startupUpdates)
-    compatibleWith(canada); dependsOn(walmartCompatibility)
+    compatibleWith(canada); dependsOn(walmartCompatibility, walmartReviewComponents)
     execute {
         // CH.b is SparkyBottomTabInfo (implements v51.c). Preserve the internal
         // navigation identity, but replace its user-facing label, icon and action.

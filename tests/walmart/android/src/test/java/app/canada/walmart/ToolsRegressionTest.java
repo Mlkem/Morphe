@@ -5,6 +5,23 @@ import android.app.*;import android.content.*;import android.view.*;import andro
 public class ToolsRegressionTest {
  Activity a;FrameLayout root;
  @Before public void setup(){a=Robolectric.buildActivity(Activity.class).setup().get();root=new FrameLayout(a);a.setContentView(root);HistoryStore.data(a).edit().clear().commit();HistoryStore.meta(a).edit().clear().commit();ToolSettings.prefs(a).edit().clear().commit();PatchStatus.installed.clear();RuntimeStats.clear();AdCleaner.candidates.clear();}
+ @Test public void missingAeroplanActivityHasNoMenuEntryOrInstalledLabel(){
+  PatchStatus.open(root);
+  assertNull(find("Aeroplan shopping"));
+  assertFalse(ToolsPanel.report(a).contains("Aeroplan shopping (Patch Tools)"));
+ }
+ @Test public void registeredAeroplanActivityOpensFromTools(){
+  ComponentName review=new ComponentName(a.getPackageName(),"ca.mlkem.amazon.ReviewActivity");
+  Shadows.shadowOf(a.getPackageManager()).addActivityIfNotPresent(review);
+  PatchStatus.open(root);
+  View label=find("Aeroplan shopping");
+  assertNotNull(label);
+  View row=label;
+  while(!row.isClickable()) row=(View)row.getParent();
+  assertTrue(row.performClick());
+  assertEquals(review,Shadows.shadowOf(a).getNextStartedActivity().getComponent());
+  assertTrue(ToolsPanel.report(a).contains("Aeroplan shopping (Patch Tools)"));
+ }
  void save(String k,String name,long cents){HistoryStore.record(a,k,name,"Store A","seller",cents);}
  View find(View v,String text){if(v instanceof TextView&&text.equals(((TextView)v).getText().toString()))return v;if(v instanceof ViewGroup)for(int i=0;i<((ViewGroup)v).getChildCount();i++){View found=find(((ViewGroup)v).getChildAt(i),text);if(found!=null)return found;}return null;}
  View find(String text){return find(ShadowAlertDialog.getLatestAlertDialog().getWindow().getDecorView(),text);}

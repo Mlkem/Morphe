@@ -4,19 +4,17 @@ import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.extensions.InstructionExtensions.addInstruction
 import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.patch.bytecodePatch
-import ca.mlkem.amazon.aeroplanReviewManifest
 import com.android.tools.smali.dexlib2.Opcode
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
 val walmartAeroplan = bytecodePatch(
     name = "Aeroplan shopping for Walmart Canada",
-    description = "Start at the official Walmart.ca eStore offer, review cart items and retain order references on this device.",
+    description = "Offer Aeroplan shopping when Walmart starts. Cart review is also available on demand in Patch Tools.",
     default = false
 ) {
     compatibleWith(canada)
-    dependsOn(walmartCompatibility, ca.mlkem.updates.startupUpdates, aeroplanReviewManifest)
-    extendWith("extensions/amazon-aeroplan.mpe")
+    dependsOn(walmartCompatibility, ca.mlkem.updates.startupUpdates, walmartReviewComponents)
     execute {
         val owner = "Lcom/walmart/glass/integration/root/RootActivity;"
         val create = Fingerprint(definingClass = owner, name = "onCreate",
