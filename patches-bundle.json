@@ -1,6 +1,6 @@
 {
   "created_at": "2026-11-21T22:25:46",
-  "description": "## [1.0.0-dev.48](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.47...v1.0.0-dev.48) (2026-11-21)\n\n### ✨ New Features\n\n* **Aeroplan:** add Walmart and Amazon product, cart and referral reviews ([95387d3](https://github.com/Mlkem/Morphe/commit/95387d3339582f0ab3609280a60956a6ea4a5c03))\n\n### 🐛 Bug Fixes\n\n* **Aeroplan:** validate the Walmart launch hook and reopen reviews from Patch Tools ([3cf5dd0](https://github.com/Mlkem/Morphe/commit/3cf5dd01e51d6255562c9fa844f0279753f923e6))",
+  "description": "## [1.0.0-dev.48](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.47...v1.0.0-dev.48) (2026-11-21)\n\n### ✨ New Features\n\n* **Amazon Shopping:** review the Aeroplan referral, product and cart eligibility, and locally saved order numbers ([95387d3](https://github.com/Mlkem/Morphe/commit/95387d3339582f0ab3609280a60956a6ea4a5c03))\n* **Walmart Canada:** add Aeroplan referral, product and cart eligibility reviews and locally saved order numbers ([95387d3](https://github.com/Mlkem/Morphe/commit/95387d3339582f0ab3609280a60956a6ea4a5c03))\n\n### 🐛 Bug Fixes\n\n* **Walmart Canada:** validate the Walmart launch hook and reopen reviews from Patch Tools ([3cf5dd0](https://github.com/Mlkem/Morphe/commit/3cf5dd01e51d6255562c9fa844f0279753f923e6))",
   "download_url": "https://github.com/Mlkem/Morphe/releases/download/v1.0.0-dev.48/patches-1.0.0-dev.48.mpp",
   "signature_download_url": "",
   "version": "1.0.0-dev.48"
