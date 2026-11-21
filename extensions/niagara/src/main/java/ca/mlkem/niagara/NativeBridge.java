@@ -122,7 +122,11 @@ public final class NativeBridge {
             put(row, "R22npmuNnAlm", "Auto folders");
             put(row, "DXrRefnGncAQzaLktSL", "Sort new apps into folders and hide their separate icons");
             put(row, "zb6WeGAkeFk01GxkRZTwjyHAD", proxy("b.fkQ3p3udaQCrDLpFpQUM2PoTI", (p, m, a) -> {
-                if (m.getName().equals("XsWJYGAdKRv0cKLyNiHqk")) { AutoFolders.showSettings(activity); return true; }
+                // The setting exposes a single two-argument click callback on both releases.
+                if (m.getDeclaringClass() != Object.class && m.getParameterTypes().length == 2 && m.getReturnType() == boolean.class) {
+                    AutoFolders.showSettings(activity);
+                    return true;
+                }
                 if (m.getName().equals("hashCode")) return System.identityHashCode(p);
                 if (m.getName().equals("equals")) return p == a[0];
                 return "AutoFolders settings";

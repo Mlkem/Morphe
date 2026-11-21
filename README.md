@@ -67,7 +67,7 @@ enables the shared local Pro flag used by fonts, wallpaper themes and other
 features. Online services retain their normal account authorization. Phone
 testing is pending. [Pro setup and limits](docs/apps/niagara-pro.md).
 
-The experimental **Automatic app folders** patch supports official Niagara **1.16.37**.
+The experimental **Automatic app folders** patch supports official Niagara **1.16.38 and 1.16.37**.
 New apps are placed in native category folders, then their standalone icons are hidden.
 Use **Niagara Settings → Productivity → Auto folders** for category switches,
 sorting existing apps, and restoring icons. See [Niagara details](docs/apps/niagara.md).
@@ -76,7 +76,7 @@ sorting existing apps, and restoring icons. See [Niagara details](docs/apps/niag
 
 | App / utility | Target | Included source | Status |
 | --- | --- | --- | --- |
-| Niagara Launcher | `bitpit.launcher` 1.16.37 (1643) | Independent local Pro and automatic-folder options | Opt-in experimental; [Pro](docs/apps/niagara-pro.md) / [folders](docs/apps/niagara.md) |
+| Niagara Launcher | `bitpit.launcher` 1.16.38, 1.16.37 | Automatic folders on both versions, local Pro on 1.16.37 | Opt-in experimental; [Pro](docs/apps/niagara-pro.md) / [folders](docs/apps/niagara.md) |
 | Amazon Shopping | `com.amazon.mShop.android.shopping` 32.20.0.100 (1243260206), 32.19.0.100 (1243250306) | Aeroplan settings and official eStore referral, then shopping in the Amazon app | Opt-in experimental; [setup and limits](docs/apps/amazon-aeroplan.md) |
 | Gmail | `com.google.android.gm` 2026.10.26.1012468012.Release | Account visibility setting; separate GmsCore copy | Experimental; [setup and limits](docs/apps/gmail.md) |
 | Anker eufy | `com.oceanwing.battery.cam` 6.1.20_31181 | Camera-focused tabs and native promotion cleanup | Experimental; [scope and phone checks](docs/apps/eufy.md) |

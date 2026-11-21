@@ -22,7 +22,7 @@ assert amazon['options'] == [], 'Aeroplan account values belong only in device s
 niagara=next(p for p in patches if p['name']=='Automatic app folders')
 assert not niagara['default']
 assert niagara['compatiblePackages'][0]['packageName']=='bitpit.launcher'
-assert [t['version'] for t in niagara['compatiblePackages'][0]['targets']]==['1.16.37']
+assert [t['version'] for t in niagara['compatiblePackages'][0]['targets']]==['1.16.38', '1.16.37']
 assert niagara['compatiblePackages'][0]['targets'][0]['isExperimental']
 niagara_pro=next(p for p in patches if p['name']=='Enable Niagara Pro')
 assert niagara_pro['default'] is False and niagara_pro['options']==[]

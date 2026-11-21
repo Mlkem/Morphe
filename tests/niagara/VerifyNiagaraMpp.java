@@ -70,15 +70,46 @@ public final class VerifyNiagaraMpp {
         if (i instanceof ReferenceInstruction) b.append(" ref=").append(((ReferenceInstruction)i).getReference());
         return b.toString();
     }
+    // The native database lambda uses a switch for both reads and writes. Verify
+    // the exact branch called by NativeBridge.persisted before accepting an APK.
+    private static boolean readsSavedFeed(Method query) {
+        Map<Integer, Instruction> code = new HashMap<>();
+        int address = 0;
+        for (Instruction i : instructions(query)) {
+            code.put(address, i);
+            address += i.getCodeUnits();
+        }
+        for (Map.Entry<Integer, Instruction> entry : code.entrySet()) {
+            if (entry.getValue().getOpcode() != Opcode.PACKED_SWITCH) continue;
+            int start = entry.getKey();
+            SwitchPayload cases = (SwitchPayload)code.get(start + ((OffsetInstruction)entry.getValue()).getCodeOffset());
+            for (SwitchElement item : cases.getSwitchElements()) {
+                if (item.getKey() != 6) continue;
+                Instruction first = code.get(start + item.getOffset());
+                if (!(first instanceof ReferenceInstruction ref) ||
+                    !(ref.getReference() instanceof com.android.tools.smali.dexlib2.iface.reference.StringReference str)) return false;
+                return str.getString().trim().replaceAll("\\s+", " ").equals("SELECT * FROM Feed WHERE id = (?) AND type = (?)");
+            }
+        }
+        return false;
+    }
     private static int verifyHooks(Map<String, Method> before, Map<String, Method> after, boolean auto, boolean pro) {
         int count = 0;
         int proOverrides = 0;
-        Set<String> expected = Set.of(
-            "Lb/uXEn98dBZyHFNcs4SNt;-><init>",
-            "Lb/uXEn98dBZyHFNcs4SNt;->QkO0iYBXnHfGs",
-            "Lb/uXEn98dBZyHFNcs4SNt;->i31xkztVRqgXM6VmkhJG3j1ad1OM",
-            "Lbitpit/launcher/ui/HomeActivity;->onResume",
-            "Lb/rkhpNkl4D1;->QkO0iYBXnHfGs");
+        boolean build38 = before.containsKey("Lb/P7sI5PMvmtbovH;->Idx11cNZ15(Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;)V");
+        String controller = build38 ? "Lb/P7sI5PMvmtbovH;" : "Lb/uXEn98dBZyHFNcs4SNt;";
+        String changed = build38 ? "Idx11cNZ15" : "QkO0iYBXnHfGs";
+        String feedChanged = build38 ? "dAqlsNOBOcwBdqab2iL3pe" : "i31xkztVRqgXM6VmkhJG3j1ad1OM";
+        String settings = build38 ? "Lb/Il9nLZSTco0tqHmWDubcE1UH7VJH;" : "Lb/rkhpNkl4D1;";
+        String readyField = build38 ? "VJE51uPIoecJiKg0wuKHpmyliYfu:Lb/Qqn68ODSFrckn;"
+                                    : "uP3MjWikAhbpaogvi8rIfV8OZg4pk:Lb/naks8ZxpaWirE;";
+        Set<String> expected = Set.of(controller+"-><init>", controller+"->"+changed, controller+"->"+feedChanged,
+            "Lbitpit/launcher/ui/HomeActivity;->onResume", settings+"->"+changed);
+        if (auto) {
+            String query = build38 ? "Lb/B9ZYK85o3JvPks7of8tnbXtcon3IV;" : "Lb/qBlsmBnzmgtZe0gU3u2b;";
+            check(before.values().stream().anyMatch(m -> m.getDefiningClass().equals(query) &&
+                m.getImplementation() != null && readsSavedFeed(m)), "Folder persistence check reads the saved feed");
+        }
         Set<String> found = new HashSet<>();
         check(after.keySet().containsAll(before.keySet()), "Original methods missing");
         for (Method old : before.values()) {
@@ -108,7 +139,7 @@ public final class VerifyNiagaraMpp {
                         if (ref.contains("->attach(")) {
                             Instruction previous = kept.get(kept.size()-1);
                             check(previous.getOpcode()==Opcode.IPUT_OBJECT && previous instanceof TwoRegisterInstruction &&
-                                ((ReferenceInstruction)previous).getReference().toString().equals("Lb/uXEn98dBZyHFNcs4SNt;->uP3MjWikAhbpaogvi8rIfV8OZg4pk:Lb/naks8ZxpaWirE;"),
+                                ((ReferenceInstruction)previous).getReference().toString().equals(controller+"->"+readyField),
                                 "Attach runs at the last initialization, before R8 reuses p0");
                             check(r.getStartRegister()==((TwoRegisterInstruction)previous).getRegisterB(), "Attach uses the live controller receiver");
                         } else check(r.getStartRegister()==(ref.contains("->settings(")?3:p0), "Correct hook argument");
@@ -125,6 +156,29 @@ public final class VerifyNiagaraMpp {
             check(added.startsWith(EXTENSION)||added.startsWith(UPDATES), "Unexpected class/stub packaged: "+added);
         String bridge="Lca/mlkem/niagara/NativeContinuation;-><init>(Lca/mlkem/niagara/NativeBridge$Done;)V";
         check(after.containsKey(bridge)==auto, "Auto-folder extension only included when selected");
+        if (auto && build38) {
+            String callback = "Mp48tfHH45TRNN7q3taBNtTIbX(Ljava/lang/Object;)Ljava/lang/Object;";
+            check(after.containsKey(EXTENSION+"NativeContinuation;->"+callback), "Host continuation override");
+            String read = "Lb/FdG6xMzPSaymcSpktNphRSSpiuQd;->jWvXewWdTvbuXsq9m9mUy(Lb/oF4VPGelezQL5RhSUQALi0;ZZLb/Gt2e7OqBn9CvfhW;)Ljava/lang/Object;";
+            String context = "Lb/T3aZigmfOFNniS;->tmvaFiZ3YIQF7MAEfYHiQR52ffC()Lb/IdZUlMXZV6Pp17XJ;";
+            check(before.containsKey(read) && before.containsKey(context), "Native database and coroutine contracts");
+            Set<String> extensionStrings = new HashSet<>();
+            for (Method m : after.values()) {
+                if (!m.getDefiningClass().startsWith(EXTENSION) || m.getImplementation() == null) continue;
+                for (Instruction i : instructions(m)) {
+                    if (i instanceof ReferenceInstruction ref && ref.getReference() instanceof com.android.tools.smali.dexlib2.iface.reference.StringReference str)
+                        extensionStrings.add(str.getString());
+                }
+            }
+            check(extensionStrings.contains("jWvXewWdTvbuXsq9m9mUy") && extensionStrings.contains("tmvaFiZ3YIQF7MAEfYHiQR52ffC"), "Injected folder bindings");
+            for (Instruction i : instructions(after.get(bridge))) {
+                if (!(i instanceof ReferenceInstruction ref)) continue;
+                String target = ref.getReference().toString();
+                if (target.startsWith("Lb/") && target.contains("->")) {
+                    check(before.containsKey(target), "Continuation invokes a missing native method: "+target);
+                }
+            }
+        }
         return count;
     }
     /** Execute the tiny constructor's boolean operations for all original input combinations. */

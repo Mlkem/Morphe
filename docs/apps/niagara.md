@@ -3,8 +3,8 @@
 For the separate **Enable Niagara Pro** option, see [local Pro features](niagara-pro.md).
 Both patches can be selected together; automatic folders also works on its own.
 
-Experimental Morphe patch for the **official Niagara Launcher 1.16.37 APK, build 1643**.
-Original APK: https://github.com/NiagaraLauncher/Niagara-Issues/releases/tag/v1.16.37
+Experimental Morphe patch for the **official Niagara Launcher 1.16.38 (1644) and 1.16.37 (1643) APKs**.
+[Download the official 1.16.38 APK](https://github.com/NiagaraLauncher/Niagara-Issues/releases/download/v1.16.38/Niagara_Launcher_v1.16.38-release.apk)
 SHA-256: `974d3e82aaa82bc4de4ef76834aade5e2888464929b6b208730a5d88bd6a4b76`.
 
 Select **Automatic app folders**, patch, and install with your existing Morphe signing key.
