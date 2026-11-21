@@ -120,7 +120,7 @@ Ad cleanup previously affected only the shopping-list deals banner. A separate *
 | Aisle-Sorted Checklist — Canada | On | Groups remaining checklist items using supplied aisle locations, sorted naturally (A2 before A10). Unknown locations last. Preserves item identity, quantity and checked state. |
 | Running List Total — Canada | On | Estimated subtotal, remaining and collected values for every loaded checklist item, including offscreen rows. Shows how many unpriced items were excluded. |
 | Quick Scanner — Canada | On | Adds a Scan barcode button to the checklist. Opens the existing Walmart scanner and its standard camera permission flow. |
-| Promotion Cleanup — Canada | On | Collapses the deals promotional banner in shopping lists. Product discounts, conditions, rewards and checkout remain available. This is scoped to that banner, not app-wide advertising. |
+| Promotion Cleanup — Canada | On | Collapses the shopping-list deals banner and taps the visible X on the optional “Your Data, Your Choice” sheet. You can still manage cookie preferences in Walmart. |
 | Sale-Ending Reminders — Canada | On | Makes supplied promotion-expiry text larger, bold and prominent on list cards. These are in-list reminders; there are no background alarms or invented expiry dates. |
 
 | Hide Ads and Sponsored Content — Canada | On | Collapses native ad containers and entire sponsored grid/list product cards; restores organic cards on recycling. Some slots can remain empty. |

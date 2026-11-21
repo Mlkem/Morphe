@@ -5,6 +5,17 @@ import android.app.*;import android.content.*;import android.view.*;import andro
 public class ToolsRegressionTest {
  Activity a;FrameLayout root;
  @Before public void setup(){a=Robolectric.buildActivity(Activity.class).setup().get();root=new FrameLayout(a);a.setContentView(root);HistoryStore.data(a).edit().clear().commit();HistoryStore.meta(a).edit().clear().commit();ToolSettings.prefs(a).edit().clear().commit();PatchStatus.installed.clear();RuntimeStats.clear();AdCleaner.candidates.clear();}
+ @Test public void optionalDataNoticeUsesItsVisibleEnabledCloseButtonOnly(){
+  Button close=new Button(a);root.addView(close);
+  int[] clicks={0};close.setOnClickListener(v->clicks[0]++);
+  ChecklistTools.dismissDataNotice(close);Shadows.shadowOf(Looper.getMainLooper()).idle();
+  assertEquals(1,clicks[0]);
+  ChecklistTools.dismissDataNotice(close);close.setVisibility(View.GONE);Shadows.shadowOf(Looper.getMainLooper()).idle();
+  close.setVisibility(View.VISIBLE);close.setEnabled(false);
+  ChecklistTools.dismissDataNotice(close);Shadows.shadowOf(Looper.getMainLooper()).idle();
+  assertEquals(1,clicks[0]);
+  assertEquals(Integer.valueOf(1),RuntimeStats.countSnapshot().get("Data notices dismissed"));
+ }
  @Test public void missingAeroplanActivityHasNoMenuEntryOrInstalledLabel(){
   PatchStatus.open(root);
   assertNull(find("Aeroplan shopping"));

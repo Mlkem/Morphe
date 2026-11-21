@@ -5,6 +5,7 @@ import app.morphe.patcher.extensions.InstructionExtensions.instructions
 import app.morphe.patcher.extensions.InstructionExtensions.removeInstructions
 import app.morphe.patcher.patch.*
 import com.android.tools.smali.dexlib2.Opcode
+import com.android.tools.smali.dexlib2.iface.instruction.FiveRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
@@ -290,12 +291,22 @@ val quickScanner = bytecodePatch(name="Quick Scanner — Canada",
     }
 }
 val promotionCleanup = bytecodePatch(name="Promotion Cleanup — Canada",
-    description="Collapse the shopping-list deals promotional banner. Product discounts, expiry conditions, rewards, totals and checkout are preserved. Not an app-wide ad blocker.", default=true) {
+    description="Collapse the shopping-list deals banner and dismiss Walmart’s optional data notice using its close button. Cookie preferences remain available.", default=true) {
     dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(canada); dependsOn(walmartCompatibility)
     execute {
         val report=canadaFingerprint(definingClass="Lcom/walmart/glass/integration/root/RootActivity;",name="onCreate",parameters=listOf("Landroid/os/Bundle;"),returnType="V").method
         report.addInstructions(0,"invoke-static {}, Lapp/canada/walmart/PatchStatus;->promo()V")
+        val intro = canadaFingerprint(definingClass="Lcom/walmart/glass/consentmanagement/view/ConsentIntroEnforcedFragment;",
+            name="onViewCreated", parameters=listOf("Landroid/view/View;","Landroid/os/Bundle;"), returnType="V").method
+        val close = intro.instructions.withIndex().single { (index, ins) ->
+            ins.opcode == Opcode.INVOKE_VIRTUAL && (ins as? ReferenceInstruction)?.reference.toString() ==
+                "Landroid/view/View;->setOnClickListener(Landroid/view/View\$OnClickListener;)V" &&
+                index > 0 && (intro.instructions[index - 1] as? ReferenceInstruction)?.reference.toString()
+                    .endsWith(":Lglass/platform/design/components/WcpSpotIcon;")
+        }
+        val button = (close.value as FiveRegisterInstruction).registerC
+        intro.addInstructions(close.index + 1, "invoke-static/range {v$button .. v$button}, $C->dismissDataNotice(Landroid/view/View;)V")
         // The active deals-list adapter binds its layout directly, without the custom-view setters.
         val bind=canadaFingerprint(definingClass="Lcom/walmart/glass/lists/view/lists/ListsDetailRecyclerView\$c;",name="p",
             parameters=listOf("Ljava/lang/Object;","I","Landroidx/recyclerview/widget/RecyclerView\$A;","Ljava/util/List;"),returnType="V").method

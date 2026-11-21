@@ -31,13 +31,17 @@ final class ReferralVisit {
     private boolean trustedPath(String url, String path) {
         return portal(url) && path.equals(Uri.parse(url).getEncodedPath());
     }
+    boolean offerPage(String url) {
+        return slug.equals("walmart") ? WalmartHandoff.portalRoute(url, false)
+            : trustedPath(url, "/en-CA/affiliate-details/" + slug);
+    }
     void observe(String url, long now) {
         if (!SessionRules.isHttps(url)) return;
-        if (trustedPath(url, "/en-CA/affiliate-details/" + slug)) {
+        if (offerPage(url)) {
             if (arrived == 0) sawOffer = true;
             return;
         }
-        if (arrived == 0 && sawOffer && trustedPath(url, redirect)) { sawRedirect = true; return; }
+        if (arrived == 0 && sawOffer && (slug.equals("walmart") ? WalmartHandoff.portalRoute(url, true) : trustedPath(url, redirect))) { sawRedirect = true; return; }
         if (!store(url)) {
             if (arrived != 0) interrupted = true;
             return;
@@ -61,6 +65,7 @@ final class ReferralVisit {
     String status(long now) {
         if (replaced) return "Referral changed · activate again";
         if (interrupted) return "Shopping session left the store · tracking unverified";
+        if (arrived == 0 && sawRedirect && slug.equals("walmart")) return "Aeroplan referral received · waiting for Walmart";
         if (arrived == 0) return "Waiting for the eStore referral";
         long min = Math.max(0, (now - arrived) / 60000L);
         String elapsed = min == 0 ? "just now" : min < 60 ? min + " min ago" : min / 60 + " h ago";

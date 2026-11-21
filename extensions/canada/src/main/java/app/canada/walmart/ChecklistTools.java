@@ -83,6 +83,12 @@ public final class ChecklistTools {
             text.setContentDescription((ListEnhancements.french(tile)?"Fin de promotion : ":"Promotion expiry: ")+text.getText());
         }catch(Exception e){android.util.Log.w("WalmartCanadaMorphe","Promotion expiry unavailable",e);}});
     }
+    public static void dismissDataNotice(View close) {
+        close.post(() -> {
+            if (close.isAttachedToWindow() && close.isShown() && close.isEnabled()
+                    && close.hasOnClickListeners() && close.performClick()) RuntimeStats.hit("Data notices dismissed");
+        });
+    }
     public static void hidePromotionBanner(final View banner) {
         RuntimeStats.hit("List promo banners hidden");banner.setVisibility(View.GONE);banner.setMinimumHeight(0);
         ViewGroup.LayoutParams lp=banner.getLayoutParams();if(lp!=null){lp.height=0;banner.setLayoutParams(lp);}

@@ -23,6 +23,8 @@ public final class ReviewActivity extends Activity {
     private ReferralVisit visit;
     private boolean walmart, resumed, inspecting;
     private TextView banner;
+    private Button activation;
+    private WalmartHandoff handoff;
     private FrameLayout frame;
     private final List<WebView> tabs = new ArrayList<>();
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -35,6 +37,11 @@ public final class ReviewActivity extends Activity {
     private int generation;
     private final Runnable tick = new Runnable() {
         public void run() {
+            WebView view = current();
+            if (pendingHandoff() && view != null && failedUrl == null) {
+                String next = handoff.autoContinue(view.getUrl(), SystemClock.elapsedRealtime());
+                if (next != null) { view.loadUrl(next); draw(); }
+            }
             inspect();
             if (resumed) handler.postDelayed(this, 2200);
         }
@@ -55,7 +62,15 @@ public final class ReviewActivity extends Activity {
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL); root.setFitsSystemWindows(true);
         LinearLayout bar = new LinearLayout(this); root.addView(bar);
-        action(bar, "Activate", v -> {
+        activation = action(bar, "Activate", v -> {
+            if (pendingHandoff()) {
+                String next = handoff.continueVisit();
+                if (next != null) { current().loadUrl(next); draw(); }
+                else new AlertDialog.Builder(this).setTitle("Open the eStore in your browser?")
+                    .setMessage("Start a new Walmart referral there and finish shopping in that browser.")
+                    .setNegativeButton("Stay here", null).setPositiveButton("Open eStore", (d,w) -> external(visit.offer)).show();
+                return;
+            }
             if (current() == null || visit.arrived == 0) startOffer();
             else new AlertDialog.Builder(this).setTitle("Start a new referral?")
                 .setMessage("Items already in your cart may need to be added again.")
@@ -67,14 +82,23 @@ public final class ReviewActivity extends Activity {
         frame = new FrameLayout(this); root.addView(frame,new LinearLayout.LayoutParams(-1,0,1)); setContentView(root);
         startOffer();
     }
-    private void action(LinearLayout bar, String name, View.OnClickListener click) {
+    private Button action(LinearLayout bar, String name, View.OnClickListener click) {
         Button b=new Button(this); b.setText(name); b.setAllCaps(false); b.setOnClickListener(click);
-        bar.addView(b,new LinearLayout.LayoutParams(0,-2,1));
+        bar.addView(b,new LinearLayout.LayoutParams(0,-2,1)); return b;
     }
     private int dp(int value) { return Math.round(getResources().getDisplayMetrics().density*value); }
     private void startOffer() {
-        destroyTabs(); visit = new ReferralVisit(walmart); liveRules=null; lastCart=null; rate="";
+        destroyTabs(); visit = new ReferralVisit(walmart); handoff = walmart ? new WalmartHandoff() : null; liveRules=null; lastCart=null; rate="";
         WebView view = newTab(); view.loadUrl(visit.offer); draw();
+    }
+    private boolean pendingHandoff() { return handoff != null && visit.sawRedirect && visit.arrived == 0; }
+    private void observe(String url) {
+        if (pendingHandoff() && visit.offerPage(url)) {
+            visit.sawRedirect = false;
+            handoff = new WalmartHandoff();
+        }
+        visit.observe(url,System.currentTimeMillis());
+        if (pendingHandoff()) handoff.observe(url, SystemClock.elapsedRealtime());
     }
     private WebView current() { return tabs.isEmpty() ? null : tabs.get(tabs.size()-1); }
     private void invalidatePage() { generation++; inspecting=false; summary=""; snapshot=null; }
@@ -89,19 +113,26 @@ public final class ReviewActivity extends Activity {
         view.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS);
         view.setWebViewClient(new WebViewClient() {
             @Override public boolean shouldOverrideUrlLoading(WebView v,WebResourceRequest r) {
-                return r.isForMainFrame() && !SessionRules.isHttps(r.getUrl().toString());
+                if (!r.isForMainFrame()) return false;
+                String url = r.getUrl().toString();
+                if (SessionRules.isHttps(url)) return false;
+                if (v == current() && pendingHandoff()) {
+                    String next = WalmartHandoff.browserDestination(url);
+                    if (next != null) v.loadUrl(next);
+                }
+                return true;
             }
             @Override public void onPageStarted(WebView v,String url,Bitmap icon) {
                 if (v!=current()) return;
                 invalidatePage(); committedView=null; failedUrl=null;
-                if (!visit.store(url)) visit.observe(url,System.currentTimeMillis());
+                if (!visit.store(url)) observe(url);
                 draw();
             }
             @Override public void doUpdateVisitedHistory(WebView v,String url,boolean reload) {
-                if (v==current()) { invalidatePage(); if (!visit.store(url) || committedView==v) visit.observe(url,System.currentTimeMillis()); draw(); }
+                if (v==current()) { invalidatePage(); if (!visit.store(url) || committedView==v) observe(url); draw(); }
             }
             @Override public void onPageFinished(WebView v,String url) {
-                if (v==current() && url.equals(v.getUrl()) && !url.equals(failedUrl)) { committedView=v; visit.observe(url,System.currentTimeMillis()); draw(); inspect(); }
+                if (v==current() && url.equals(v.getUrl()) && !url.equals(failedUrl)) { committedView=v; observe(url); draw(); inspect(); }
             }
             private void fail(WebView v,String url) {
                 if (v!=current()) return;
@@ -110,7 +141,14 @@ public final class ReviewActivity extends Activity {
                 summary="Page could not be verified"; draw();
             }
             @Override public void onReceivedError(WebView v,WebResourceRequest r,WebResourceError error) {
-                if (r.isForMainFrame()) fail(v,r.getUrl().toString());
+                if (!r.isForMainFrame() || v != current()) return;
+                String url = r.getUrl().toString();
+                fail(v,url);
+                int code = error.getErrorCode();
+                if (pendingHandoff() && (code == ERROR_HOST_LOOKUP || code == ERROR_CONNECT || code == ERROR_TIMEOUT)) {
+                    String next = handoff.relayFailed(url);
+                    if (next != null) { v.loadUrl(next); draw(); }
+                }
             }
             @Override public void onReceivedHttpError(WebView v,WebResourceRequest r,WebResourceResponse response) {
                 if (r.isForMainFrame()) fail(v,r.getUrl().toString());
@@ -130,16 +168,18 @@ public final class ReviewActivity extends Activity {
         tabs.add(view); frame.removeAllViews(); frame.addView(view); return view;
     }
     private void draw() {
+        activation.setText(pendingHandoff() ? (handoff.canContinue() ? "Continue" : "Browser") : "Activate");
         banner.setBackgroundColor(visit.replaced || visit.interrupted ? 0xff883b2b : visit.arrived>0 && visit.sawRedirect ? 0xff165544 : 0xff38475a);
         String host=current()==null ? "" : SessionRules.host(current().getUrl());
-        banner.setText(visit.status(System.currentTimeMillis()) + (rate.isEmpty()?"":" · "+rate) + (host.isEmpty()?"":"\n"+host) + (summary.isEmpty()?"":"\n"+summary));
+        String hint = pendingHandoff() ? (handoff.canContinue() ? "\nIf Walmart doesn’t open, tap Continue." :
+            "\nIf Walmart doesn’t open, tap Browser to restart at the eStore.") : "";
+        banner.setText(visit.status(System.currentTimeMillis()) + hint + (rate.isEmpty()?"":" · "+rate) + (host.isEmpty()?"":"\n"+host) + (summary.isEmpty()?"":"\n"+summary));
     }
     private void inspect() {
         WebView v=current();
         if (v==null || committedView!=v || !resumed) return;
         String url=v.getUrl();
-        boolean offer = visit.offer.equals(url) || (visit.portal(url) &&
-            ("/en-CA/affiliate-details/"+visit.slug).equals(Uri.parse(url).getEncodedPath()));
+        boolean offer = visit.offerPage(url);
         if (!visit.store(url) && !offer) return;
         visit.observe(url,System.currentTimeMillis());
         if (script==null) { summary="Cart review unavailable · check the official offer"; draw(); return; }
