@@ -131,7 +131,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.48](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.48)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;48 patches total
+> **[v1.0.0-dev.49](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.49)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;48 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -168,7 +168,7 @@ provide privacy.
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [Aeroplan shopping](#aeroplan-shopping) | Reviews the official Amazon.ca referral, cart categories and local order references in a shopping window. The existing native Amazon referral and encrypted profile are also available. |  |
+| [Aeroplan shopping](#aeroplan-shopping) | Reviews the official Amazon.ca referral, cart categories and local order references in a shopping window. Shows referral status in native Amazon and retains the encrypted profile. |  |
 
 </details>
 
@@ -185,7 +185,7 @@ provide privacy.
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [Aeroplan shopping for Walmart Canada](#aeroplan-shopping-for-walmart-canada) | Start at the official Walmart.ca eStore offer, review cart items and retain order references on this device. |  |
+| [Aeroplan shopping for Walmart Canada](#aeroplan-shopping-for-walmart-canada) | Offer Aeroplan shopping when Walmart starts. Cart review is also available on demand in Patch Tools. |  |
 | [Aisle-Sorted Checklist — Canada](#aisle-sorted-checklist-canada) | Group remaining checklist items by supplied aisle, in natural order (A2 before A10). Unknown locations last. No floor-plan routing. |  |
 | [Clearer Unit Prices — Canada](#clearer-unit-prices-canada) | Show Walmart's supplied price-per-unit in larger bold text on list items, including the shopping checklist. No guessed conversions. |  |
 | [Default Lists Tab — Canada](#default-lists-tab-canada) | Open Lists when entering My Items. Walmart Canada 26.31 and 26.41.2. |  |

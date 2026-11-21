@@ -1,3 +1,10 @@
+## [1.0.0-dev.49](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.48...v1.0.0-dev.49) (2026-11-21)
+
+### 🐛 Bug Fixes
+
+* **Amazon Shopping:** show Aeroplan referral status and review actions in native shopping ([130f114](https://github.com/Mlkem/Morphe/commit/130f114abc05763b5e08dba61778e1587bbebc35))
+* **Walmart Canada:** include the Aeroplan activity in Patch Tools and check its registration ([1c442bf](https://github.com/Mlkem/Morphe/commit/1c442bf78e9247fcc248af1675aaf61f6b39ac61))
+
 ## [1.0.0-dev.48](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.47...v1.0.0-dev.48) (2026-11-21)
 
 ### ✨ New Features
