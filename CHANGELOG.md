@@ -1,3 +1,9 @@
+## [1.0.0-dev.50](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.49...v1.0.0-dev.50) (2026-11-21)
+
+### 🐛 Bug Fixes
+
+* **Walmart Canada:** continue stalled Aeroplan visits and dismiss the data notice ([654513e](https://github.com/Mlkem/Morphe/commit/654513e20f9468036d0abe33c2b345f0ccbae5d9))
+
 ## [1.0.0-dev.49](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.48...v1.0.0-dev.49) (2026-11-21)
 
 ### 🐛 Bug Fixes

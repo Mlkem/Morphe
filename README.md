@@ -131,7 +131,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.49](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.49)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;48 patches total
+> **[v1.0.0-dev.50](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.50)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;48 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -193,7 +193,7 @@ provide privacy.
 | [Hide Ads and Sponsored Content — Canada](#hide-ads-and-sponsored-content-canada) | Collapse native ad containers and entire sponsored grid/list product cards, restoring organic cards when recycled. Includes display ads and sponsored carousels. Does not block network requests; some layouts may retain empty slots. |  |
 | [Patch Tools — Canada](#patch-tools-canada) | Replace Sparky with a card-based tools menu: stock checker, barcode scanner, price history, shopping calculators, settings and backups. Includes Back navigation and dark-mode support. |  |
 | [Personal Price History — Canada](#personal-price-history-canada) | Record exact prices from list cards and search/browse product tiles. Tap History on list cards, or Patch tools → Price history. Recording starts after installation. |  |
-| [Promotion Cleanup — Canada](#promotion-cleanup-canada) | Collapse the shopping-list deals promotional banner. Product discounts, expiry conditions, rewards, totals and checkout are preserved. Not an app-wide ad blocker. |  |
+| [Promotion Cleanup — Canada](#promotion-cleanup-canada) | Collapse the shopping-list deals banner and dismiss Walmart’s optional data notice using its close button. Cookie preferences remain available. |  |
 | [Quick Scanner — Canada](#quick-scanner-canada) | Add a Scan barcode shortcut to the shopping checklist, opening Walmart's native scanner and permission flow. |  |
 | [Remove Shop — Canada](#remove-shop-canada) | Hide Shop from bottom navigation and redirect the default Shop tab to My Items. Explicit other tabs are preserved. |  |
 | [Running List Total — Canada](#running-list-total-canada) | Checklist subtotal, remaining and collected amounts from all loaded items, including offscreen rows. Estimated CAD before tax/fees; missing prices are counted and excluded. |  |
