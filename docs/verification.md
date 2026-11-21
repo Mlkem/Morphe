@@ -26,7 +26,7 @@ CI additionally builds with the official Gradle plugin before publishing each be
 - Phone testing remains pending. The release workflow runs the official Gradle
   build and Android UI regressions before publishing the next beta.
 
-## APKMirror search integration
+## APKMirror search integration (removed in dev.42)
 
 - The full collection builds with **27 patches**, seven named apps and the
   universal merge utility. The Manager patch is opt-in and experimental.

@@ -24,7 +24,7 @@ An explicit `dev` source enables prerelease updates from the start. The default
 source may also mirror a published beta; it does not represent a phone-tested
 stable release. Enable **Pre-release patches** on
 **mlkemac patches itself**; Morphe Manager's own pre-release setting is separate. Enable
-**Experimental app versions** for Niagara Launcher, Amazon Shopping, Walmart Canada, Zoom Earth 6.3.3, PushPress, Open with, GPS Emulator, TAGTHAi, Songsterr, Gboard, Anker eufy, Gmail, and the Manager patch. Choose
+**Experimental app versions** for Niagara Launcher, Amazon Shopping, Walmart Canada, Zoom Earth 6.3.3, PushPress, Open with, GPS Emulator, TAGTHAi, Songsterr, Gboard, Anker eufy, and Gmail. Choose
 the original app APK/APKM/XAPK, select patches, then patch and install. Keep your existing Morphe
 APK signing key so future patched apps can update in place.
 
