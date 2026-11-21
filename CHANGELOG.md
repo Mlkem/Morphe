@@ -2,7 +2,7 @@
 
 ### 🐛 Bug Fixes
 
-* **niagara:** support automatic folders on 1.16.38 ([6ee9485](https://github.com/Mlkem/Morphe/commit/6ee94858bafea0ff6bb40e8064bb2c788b1cf023))
+* **Niagara Launcher:** support automatic folders on 1.16.38 ([6ee9485](https://github.com/Mlkem/Morphe/commit/6ee94858bafea0ff6bb40e8064bb2c788b1cf023))
 
 ## [1.0.0-dev.42](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.41...v1.0.0-dev.42) (2026-11-21)
 
@@ -14,25 +14,25 @@
 
 ### 🐛 Bug Fixes
 
-* **amazon:** return Aeroplan referral shopping to the native app ([345ae77](https://github.com/Mlkem/Morphe/commit/345ae77b7b6819143df9e0afcd09af4b47e23eff))
+* **Amazon Shopping:** return Aeroplan referral shopping to the native app ([345ae77](https://github.com/Mlkem/Morphe/commit/345ae77b7b6819143df9e0afcd09af4b47e23eff))
 
 ## [1.0.0-dev.40](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.39...v1.0.0-dev.40) (2026-11-19)
 
 ### ✨ New Features
 
-* **niagara:** add opt-in local Pro patch for 1.16.37 ([8d01271](https://github.com/Mlkem/Morphe/commit/8d012715df5876dfd489aee846ca980f50c2da45))
+* **Niagara Launcher:** add opt-in local Pro patch for 1.16.37 ([8d01271](https://github.com/Mlkem/Morphe/commit/8d012715df5876dfd489aee846ca980f50c2da45))
 
 ## [1.0.0-dev.39](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.38...v1.0.0-dev.39) (2026-11-19)
 
 ### 🐛 Bug Fixes
 
-* **amazon:** support Shopping 32.19.0.100 alongside 32.20 ([4cd45c5](https://github.com/Mlkem/Morphe/commit/4cd45c5d4cd1d3f97c578b3cea6be23eb9cc2bf9))
+* **Amazon Shopping:** support Shopping 32.19.0.100 alongside 32.20 ([4cd45c5](https://github.com/Mlkem/Morphe/commit/4cd45c5d4cd1d3f97c578b3cea6be23eb9cc2bf9))
 
 ## [1.0.0-dev.38](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.37...v1.0.0-dev.38) (2026-11-19)
 
 ### ✨ New Features
 
-* **amazon:** add Aeroplan eStore shopping helper ([f243deb](https://github.com/Mlkem/Morphe/commit/f243debe0e14a657729f3542b169f188bcd8ecd2))
+* **Amazon Shopping:** add Aeroplan eStore shopping helper ([f243deb](https://github.com/Mlkem/Morphe/commit/f243debe0e14a657729f3542b169f188bcd8ecd2))
 
 ## [1.0.0-dev.37](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.36...v1.0.0-dev.37) (2026-11-18)
 
@@ -44,7 +44,7 @@
 
 ### 🐛 Bug Fixes
 
-* **music-league:** limit ad-container removal to home AdsCard only ([3d622db](https://github.com/Mlkem/Morphe/commit/3d622dba416136a58c773726b40b7a2891cc0e51))
+* **Music League:** limit ad-container removal to home AdsCard only ([3d622db](https://github.com/Mlkem/Morphe/commit/3d622dba416136a58c773726b40b7a2891cc0e51))
 
 ## [1.0.0-dev.35](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.34...v1.0.0-dev.35) (2026-11-17)
 
@@ -52,15 +52,15 @@
 
 * **ci:** allow new patches and app targets without blocking beta releases ([56da66c](https://github.com/Mlkem/Morphe/commit/56da66cbeec369e5397928f4f61dbf97052e28da))
 * **ci:** recognize Music League native-library patch in bundle verification ([260ef1e](https://github.com/Mlkem/Morphe/commit/260ef1ec8042cdca5d598d1bc4e8c19378f0f893))
-* **music-league:** extract merged native libraries for 1.4.11 startup recovery ([48d77ad](https://github.com/Mlkem/Morphe/commit/48d77adb47e3eb5e68d3f749c1babcde330fa230))
-* **music-league:** flag 1.4.11 compatibility as experimental ([d5a106f](https://github.com/Mlkem/Morphe/commit/d5a106f0fdbf0b4ca7c5c486e562dec01a7035a4))
-* **music-league:** make DisableAdRemoteConfigPatch.kt opt-in for crash isolation ([a3c5b9e](https://github.com/Mlkem/Morphe/commit/a3c5b9e7e8f11634a887c17e3a8fdba51ab72e56))
-* **music-league:** make DisableAdSdkManifestPatch.kt opt-in for crash isolation ([085f03b](https://github.com/Mlkem/Morphe/commit/085f03bfdeb3cdd727b0790a3ec76ec197e2e3b4))
-* **music-league:** make DisableExpoUpdatesPatch.kt opt-in for crash isolation ([14390fc](https://github.com/Mlkem/Morphe/commit/14390fceec495cfda3e5a34d238532f79d118a59))
-* **music-league:** make NeutralizeAdUnitIdsPatch.kt opt-in for crash isolation ([83b5c6d](https://github.com/Mlkem/Morphe/commit/83b5c6d4b039f8711a0e8a15b9077c34f1f741da))
-* **music-league:** make NeutralizePremiumPromptsPatch.kt opt-in for crash isolation ([787b4c6](https://github.com/Mlkem/Morphe/commit/787b4c6d677176b9d3a93f7efc59d631f5eb3ad8))
-* **music-league:** make PinLocalExpoConfigPatch.kt opt-in for crash isolation ([8267fbf](https://github.com/Mlkem/Morphe/commit/8267fbf20e30d52f1ea000dc3c1723e066f847ff))
-* **music-league:** target split XAPK input instead of standalone APK ([32f518e](https://github.com/Mlkem/Morphe/commit/32f518edf113b02d94572051779f99ce58987f6d))
+* **Music League:** extract merged native libraries for 1.4.11 startup recovery ([48d77ad](https://github.com/Mlkem/Morphe/commit/48d77adb47e3eb5e68d3f749c1babcde330fa230))
+* **Music League:** flag 1.4.11 compatibility as experimental ([d5a106f](https://github.com/Mlkem/Morphe/commit/d5a106f0fdbf0b4ca7c5c486e562dec01a7035a4))
+* **Music League:** make DisableAdRemoteConfigPatch.kt opt-in for crash isolation ([a3c5b9e](https://github.com/Mlkem/Morphe/commit/a3c5b9e7e8f11634a887c17e3a8fdba51ab72e56))
+* **Music League:** make DisableAdSdkManifestPatch.kt opt-in for crash isolation ([085f03b](https://github.com/Mlkem/Morphe/commit/085f03bfdeb3cdd727b0790a3ec76ec197e2e3b4))
+* **Music League:** make DisableExpoUpdatesPatch.kt opt-in for crash isolation ([14390fc](https://github.com/Mlkem/Morphe/commit/14390fceec495cfda3e5a34d238532f79d118a59))
+* **Music League:** make NeutralizeAdUnitIdsPatch.kt opt-in for crash isolation ([83b5c6d](https://github.com/Mlkem/Morphe/commit/83b5c6d4b039f8711a0e8a15b9077c34f1f741da))
+* **Music League:** make NeutralizePremiumPromptsPatch.kt opt-in for crash isolation ([787b4c6](https://github.com/Mlkem/Morphe/commit/787b4c6d677176b9d3a93f7efc59d631f5eb3ad8))
+* **Music League:** make PinLocalExpoConfigPatch.kt opt-in for crash isolation ([8267fbf](https://github.com/Mlkem/Morphe/commit/8267fbf20e30d52f1ea000dc3c1723e066f847ff))
+* **Music League:** target split XAPK input instead of standalone APK ([32f518e](https://github.com/Mlkem/Morphe/commit/32f518edf113b02d94572051779f99ce58987f6d))
 * **release:** honor optional Morphe bundle signing configuration ([2a5b353](https://github.com/Mlkem/Morphe/commit/2a5b35305a3fa5aa4f3157201b712bba973392a5))
 * **release:** isolate publishing from app-specific regressions and report missing signing key ([67839c9](https://github.com/Mlkem/Morphe/commit/67839c91507b26e636936f075f96e9a178717441))
 * **release:** keep upstream APK network audits in CI, not beta publish gate ([19c0543](https://github.com/Mlkem/Morphe/commit/19c05438fdff3e6f6ffb0339a41025e274117e4e))
@@ -113,48 +113,48 @@
 
 ### 🐛 Bug Fixes
 
-* **pushpress:** find minified Flutter accessibility bridge by type and expose selector stage ([8b49aca](https://github.com/Mlkem/Morphe/commit/8b49aca9ca08362ed93f838ce26fa830c1e5f9f6))
+* **PushPress Members:** find minified Flutter accessibility bridge by type and expose selector stage ([8b49aca](https://github.com/Mlkem/Morphe/commit/8b49aca9ca08362ed93f838ce26fa830c1e5f9f6))
 
 ## [1.0.0-dev.30](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.29...v1.0.0-dev.30) (2026-11-12)
 
 ### 🐛 Bug Fixes
 
-* **pushpress:** describe visible workout category selector ([cddeeb3](https://github.com/Mlkem/Morphe/commit/cddeeb3299c86d0592c842837188101885041c56))
-* **pushpress:** publish startup-hook diagnostic to isolate inactive selector ([3e74bdf](https://github.com/Mlkem/Morphe/commit/3e74bdf8c35a0f5397bb8ef128772d3fc30d6e92))
-* **pushpress:** recognize actual Workouts class dropdown and verify CrossFit selection ([fdb089d](https://github.com/Mlkem/Morphe/commit/fdb089df855ebec7c36a9d35efd4a477f334d190))
+* **PushPress Members:** describe visible workout category selector ([cddeeb3](https://github.com/Mlkem/Morphe/commit/cddeeb3299c86d0592c842837188101885041c56))
+* **PushPress Members:** publish startup-hook diagnostic to isolate inactive selector ([3e74bdf](https://github.com/Mlkem/Morphe/commit/3e74bdf8c35a0f5397bb8ef128772d3fc30d6e92))
+* **PushPress Members:** recognize actual Workouts class dropdown and verify CrossFit selection ([fdb089d](https://github.com/Mlkem/Morphe/commit/fdb089df855ebec7c36a9d35efd4a477f334d190))
 
 ## [1.0.0-dev.29](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.28...v1.0.0-dev.29) (2026-11-12)
 
 ### ✨ New Features
 
-* **eufy:** auto-confirm recurring mobile-data streaming prompt ([d65ef36](https://github.com/Mlkem/Morphe/commit/d65ef3632c09312d75c54d03b2692beb2cd1681e))
+* **Anker eufy:** auto-confirm recurring mobile-data streaming prompt ([d65ef36](https://github.com/Mlkem/Morphe/commit/d65ef3632c09312d75c54d03b2692beb2cd1681e))
 
 ## [1.0.0-dev.28](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.27...v1.0.0-dev.28) (2026-11-12)
 
 ### 🐛 Bug Fixes
 
-* **pushpress:** access Flutter semantics when Android accessibility is disabled ([ea1e5eb](https://github.com/Mlkem/Morphe/commit/ea1e5eb9bd2d16c6342d717d2014e0487fd29957))
-* **pushpress:** add experimental 3.44 and 3.45 targets ([aa0e9ba](https://github.com/Mlkem/Morphe/commit/aa0e9ba262183f7dc51de79be2a65163bc30d6ae))
+* **PushPress Members:** access Flutter semantics when Android accessibility is disabled ([ea1e5eb](https://github.com/Mlkem/Morphe/commit/ea1e5eb9bd2d16c6342d717d2014e0487fd29957))
+* **PushPress Members:** add experimental 3.44 and 3.45 targets ([aa0e9ba](https://github.com/Mlkem/Morphe/commit/aa0e9ba262183f7dc51de79be2a65163bc30d6ae))
 
 ## [1.0.0-dev.27](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.26...v1.0.0-dev.27) (2026-11-12)
 
 ### 🐛 Bug Fixes
 
-* **pushpress:** default Class type to CrossFit on each Workouts visit ([143d7a7](https://github.com/Mlkem/Morphe/commit/143d7a71567a745ee2da094408295c2123855720))
+* **PushPress Members:** default Class type to CrossFit on each Workouts visit ([143d7a7](https://github.com/Mlkem/Morphe/commit/143d7a71567a745ee2da094408295c2123855720))
 
 ## [1.0.0-dev.26](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.25...v1.0.0-dev.26) (2026-11-12)
 
 ### 🐛 Bug Fixes
 
-* **walmart:** reject mismatched original build codes ([aaf4426](https://github.com/Mlkem/Morphe/commit/aaf44264ce6e0f2a463a3c58b6f843dd4573cdb5))
+* **Walmart Canada:** reject mismatched original build codes ([aaf4426](https://github.com/Mlkem/Morphe/commit/aaf44264ce6e0f2a463a3c58b6f843dd4573cdb5))
 * **wongnai:** keep untested ad patch experimental and opt-in ([99d31dc](https://github.com/Mlkem/Morphe/commit/99d31dc95131948430ec0d2d34f3b4552ae88c73))
-* **zoom-earth:** fail closed on legacy popup fingerprints ([972138c](https://github.com/Mlkem/Morphe/commit/972138ce13ac92799a76bda6aa5bfe55955687da))
+* **Zoom Earth:** fail closed on legacy popup fingerprints ([972138c](https://github.com/Mlkem/Morphe/commit/972138ce13ac92799a76bda6aa5bfe55955687da))
 
 ## [1.0.0-dev.25](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.24...v1.0.0-dev.25) (2026-11-11)
 
 ### ✨ New Features
 
-* **eufy:** validate 6.1.30 beta with build-specific UI mappings ([b753138](https://github.com/Mlkem/Morphe/commit/b75313864023dd188b79ad5ce1959149d4332ea9))
+* **Anker eufy:** validate 6.1.30 beta with build-specific UI mappings ([b753138](https://github.com/Mlkem/Morphe/commit/b75313864023dd188b79ad5ce1959149d4332ea9))
 
 ## [1.0.0-dev.24](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.23...v1.0.0-dev.24) (2026-11-05)
 
@@ -166,13 +166,13 @@
 
 ### ✨ New Features
 
-* **walmart:** show supplied stock quantities and simplify tools navigation ([b77194a](https://github.com/Mlkem/Morphe/commit/b77194aaaca8698789802804ce529e18fad93c22))
+* **Walmart Canada:** show supplied stock quantities and simplify tools navigation ([b77194a](https://github.com/Mlkem/Morphe/commit/b77194aaaca8698789802804ce529e18fad93c22))
 
 ## [1.0.0-dev.22](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.21...v1.0.0-dev.22) (2026-11-05)
 
 ### 🐛 Bug Fixes
 
-* **walmart:** support Canada 26.41.2 with safe binder hooks ([114640d](https://github.com/Mlkem/Morphe/commit/114640dfc2d1040a624b1fafe4b09264041ac050))
+* **Walmart Canada:** support Canada 26.41.2 with safe binder hooks ([114640d](https://github.com/Mlkem/Morphe/commit/114640dfc2d1040a624b1fafe4b09264041ac050))
 
 ## [1.0.0-dev.21](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.20...v1.0.0-dev.21) (2026-11-04)
 
@@ -190,17 +190,17 @@
 
 ### 🐛 Bug Fixes
 
-* **eufy:** initialize cleanup through the active component factory ([c23b3c5](https://github.com/Mlkem/Morphe/commit/c23b3c56d4ace38da3d4b73ba6141c34396b94f7))
+* **Anker eufy:** initialize cleanup through the active component factory ([c23b3c5](https://github.com/Mlkem/Morphe/commit/c23b3c56d4ace38da3d4b73ba6141c34396b94f7))
 
 ## [1.0.0-dev.18](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.17...v1.0.0-dev.18) (2026-11-03)
 
 ### ✨ New Features
 
-* **eufy:** add camera-focused navigation and promotion cleanup ([5b7c90f](https://github.com/Mlkem/Morphe/commit/5b7c90f4baab342110933aac7663824e9489bf9d))
+* **Anker eufy:** add camera-focused navigation and promotion cleanup ([5b7c90f](https://github.com/Mlkem/Morphe/commit/5b7c90f4baab342110933aac7663824e9489bf9d))
 
 ### 🐛 Bug Fixes
 
-* **eufy:** include extension manifest for Android release builds ([5fb9005](https://github.com/Mlkem/Morphe/commit/5fb900566d0c2bdee42e2e340bb3aeb6f9a8fd50))
+* **Anker eufy:** include extension manifest for Android release builds ([5fb9005](https://github.com/Mlkem/Morphe/commit/5fb900566d0c2bdee42e2e340bb3aeb6f9a8fd50))
 
 ## [1.0.0-dev.17](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.16...v1.0.0-dev.17) (2026-11-03)
 
@@ -242,19 +242,19 @@
 
 ### 🐛 Bug Fixes
 
-* **zoomearth:** support the working LiteAPKs 6.3.3 input ([a2367ab](https://github.com/Mlkem/Morphe/commit/a2367ab9a44062848cf00c243977f1ad9be96fc0))
+* **Zoom Earth:** support the working LiteAPKs 6.3.3 input ([a2367ab](https://github.com/Mlkem/Morphe/commit/a2367ab9a44062848cf00c243977f1ad9be96fc0))
 
 ## [1.0.0-dev.10](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.9...v1.0.0-dev.10) (2026-11-02)
 
 ### 🐛 Bug Fixes
 
-* **zoomearth:** address Play installer startup block in patched 6.3.3 ([46f65a4](https://github.com/Mlkem/Morphe/commit/46f65a414978af6dc0c7bf31ea2709ebb8ada1f1))
+* **Zoom Earth:** address Play installer startup block in patched 6.3.3 ([46f65a4](https://github.com/Mlkem/Morphe/commit/46f65a414978af6dc0c7bf31ea2709ebb8ada1f1))
 
 ## [1.0.0-dev.9](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.8...v1.0.0-dev.9) (2026-11-02)
 
 ### ✨ New Features
 
-* **zoomearth:** add local Pro, ad removal and usability patches for 6.3.3 ([5779a0f](https://github.com/Mlkem/Morphe/commit/5779a0ffde5dca2cf9f0a16542f4024395637b01))
+* **Zoom Earth:** add local Pro, ad removal and usability patches for 6.3.3 ([5779a0f](https://github.com/Mlkem/Morphe/commit/5779a0ffde5dca2cf9f0a16542f4024395637b01))
 
 ## [1.0.0-dev.8](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.7...v1.0.0-dev.8) (2026-11-02)
 
@@ -272,7 +272,7 @@
 
 ### ✨ New Features
 
-* **gps:** add fresh GPS Emulator 3.36 Pro patch ([9e2aefa](https://github.com/Mlkem/Morphe/commit/9e2aefaaad72126e43d3be096ef91016867de1a7))
+* **GPS Emulator:** add fresh GPS Emulator 3.36 Pro patch ([9e2aefa](https://github.com/Mlkem/Morphe/commit/9e2aefaaad72126e43d3be096ef91016867de1a7))
 
 ## [1.0.0-dev.5](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.4...v1.0.0-dev.5) (2026-11-02)
 

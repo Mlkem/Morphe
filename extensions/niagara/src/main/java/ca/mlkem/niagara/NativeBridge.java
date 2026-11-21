@@ -119,6 +119,9 @@ public final class NativeBridge {
     public static void settings(Activity activity, Object builder) {
         try {
             Object row = type("b.SVteKkH3agn3HfStY").getConstructor(String.class).newInstance("mlkem_auto_folders");
+            // Use Niagara's own Folders drawable in the native preference icon slot.
+            int folderIcon = activity.getResources().getIdentifier("ic_ip_act_folder", "drawable", activity.getPackageName());
+            if (folderIcon != 0) put(row, "CGIzpDMt4IosrEXJSXs", folderIcon);
             put(row, "R22npmuNnAlm", "Auto folders");
             put(row, "DXrRefnGncAQzaLktSL", "Sort new apps into folders and hide their separate icons");
             put(row, "zb6WeGAkeFk01GxkRZTwjyHAD", proxy("b.fkQ3p3udaQCrDLpFpQUM2PoTI", (p, m, a) -> {

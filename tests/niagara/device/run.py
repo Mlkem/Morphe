@@ -27,6 +27,22 @@ def tap_node(n):
     adb('shell','input','tap',(x1+x2)//2,(y1+y2)//2)
 def find(root,text):
     return next((n for n in root.iter('node') if n.get('text','').casefold()==text.casefold() or n.get('content-desc','').casefold()==text.casefold()),None)
+def check_folder_icon(root):
+    parents = {child: parent for parent in root.iter() for child in parent}
+    title = find(root, 'Auto folders')
+    assert title is not None, 'Auto folders entry missing'
+    row = title
+    while row.get('clickable') != 'true' and row in parents:
+        row = parents[row]
+    icons = [node for node in root.iter('node') if node.get('resource-id') == 'android:id/icon']
+    folder_icon = next((node for node in row.iter('node') if node in icons), None)
+    assert folder_icon is not None, 'Auto folders has no visible native icon'
+    def layout(node):
+        left, top, right, bottom = map(int, re.findall(r'-?\d+', node.get('bounds', '')))
+        return left, right - left, bottom - top
+    assert any(layout(folder_icon) == layout(other) for other in icons if other is not folder_icon), 'Icon size or alignment differs from neighboring settings'
+    return title
+
 def onboard():
     favorite_selected=False
     goal_selected=False
@@ -140,7 +156,7 @@ def main():
     # Live per-category toggle in the actual injected settings dialog.
     home();adb('shell','am','start','-n','bitpit.launcher/.settings.SettingsActivity');time.sleep(2)
     root=snapshot('settings');n=find(root,'Productivity');assert n is not None,'Productivity settings unavailable';tap_node(n);time.sleep(2)
-    root=snapshot('productivity');n=find(root,'Auto folders');assert n is not None,'Auto folders entry missing';tap_node(n);time.sleep(2)
+    root=snapshot('productivity');tap_node(check_folder_icon(root));time.sleep(2)
     root=snapshot('auto-folders');n=find(root,'Games');assert n is not None,'Games switch missing';tap_node(n);time.sleep(4)
     stop();check_sorted(games,'Games',False);check_sorted(social,'Social',True)
     (OUT/'result.json').write_text(json.dumps({'native_install_sort_hide':True,'truckful_fallback':True,'second_category':True,'update_no_duplicate_folder':True,'live_category_toggle_restores':True,'phone_tested':False,'emulator_api':35},indent=2)+'\n')
