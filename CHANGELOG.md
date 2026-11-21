@@ -1,3 +1,9 @@
+## [1.0.0-dev.44](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.43...v1.0.0-dev.44) (2026-11-21)
+
+### 🐛 Bug Fixes
+
+* **Niagara Launcher:** show the native folder icon in Productivity settings ([2e076b7](https://github.com/Mlkem/Morphe/commit/2e076b7ef1999c937b0f40b47e51850ba7a5ab11))
+
 ## [1.0.0-dev.43](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.42...v1.0.0-dev.43) (2026-11-21)
 
 ### 🐛 Bug Fixes
