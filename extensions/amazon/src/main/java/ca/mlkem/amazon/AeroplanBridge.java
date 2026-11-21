@@ -31,15 +31,27 @@ public final class AeroplanBridge {
                 }
                 new AlertDialog.Builder(activity)
                         .setTitle("Shop with Aeroplan")
-                        .setMessage("Start through the eStore before adding items to your cart. "
-                                + "After Shop & earn, shopping opens in the Amazon app. Points credit is not verified.")
-                        .setPositiveButton("Start referral", (dialog, which) -> open(activity, true))
-                        .setNeutralButton("Settings", (dialog, which) -> open(activity, false))
+                        .setMessage("Review your cart and referral in one shopping window, or use the existing Amazon app referral.")
+                        .setPositiveButton("Review and shop", (dialog, which) -> ReviewActivity.open(activity))
+                        .setNeutralButton("Native referral", (dialog, which) -> open(activity, true))
                         .setNegativeButton("Continue in Amazon", null)
                         .show();
             } catch (RuntimeException ignored) {
                 // An unavailable shortcut or window must never break Amazon's launch.
             }
+        });
+    }
+
+    public static void onWalmartStart(Activity activity) {
+        if (offered || activity == null || activity.isFinishing()) return;
+        offered = true;
+        activity.getWindow().getDecorView().post(() -> {
+            if (activity.isFinishing() || activity.isDestroyed()) return;
+            publishShortcut(activity);
+            new AlertDialog.Builder(activity).setTitle("Shop with Aeroplan")
+                    .setMessage("Open the Walmart.ca eStore offer before adding items to your shopping cart.")
+                    .setPositiveButton("Review and shop", (d, w) -> ReviewActivity.open(activity))
+                    .setNegativeButton("Continue in Walmart", null).show();
         });
     }
 
@@ -57,7 +69,9 @@ public final class AeroplanBridge {
                     .setShortLabel("Aeroplan")
                     .setLongLabel("Aeroplan referral and settings")
                     .setIcon(Icon.createWithResource(activity, android.R.drawable.ic_menu_compass))
-                    .setIntent(new Intent(activity, AeroplanActivity.class).setAction(AeroplanActivity.ACTION_SETTINGS))
+                    .setIntent(("ca.walmart.ecommerceapp".equals(activity.getPackageName())
+                            ? new Intent(activity, ReviewActivity.class)
+                            : new Intent(activity, AeroplanActivity.class).setAction(AeroplanActivity.ACTION_SETTINGS)))
                     .build();
             for (ShortcutInfo existing : manager.getDynamicShortcuts()) {
                 if (existing.getId().equals(shortcut.getId())) {

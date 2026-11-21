@@ -62,8 +62,8 @@ private val aeroplanManifest = resourcePatch {
 @Suppress("unused")
 val aeroplanShoppingPatch = bytecodePatch(
     name = "Aeroplan shopping",
-    description = "Keeps Aeroplan details encrypted on this device, opens the official eStore referral, then returns shopping and checkout to the Amazon app. " +
-        "Passes the complete Amazon.ca destination link to the native app. Points credit after handoff is not verified.",
+    description = "Reviews the official Amazon.ca referral, cart categories and local order references in a shopping window. " +
+        "The existing native Amazon referral and encrypted profile are also available.",
     default = false,
 ) {
     compatibleWith(Compatibility(
@@ -73,7 +73,7 @@ val aeroplanShoppingPatch = bytecodePatch(
         appIconColor = 0xFF9900,
         targets = reviewedVersions.keys.map { AppTarget(version = it, minSdk = 31, isExperimental = true) },
     ))
-    dependsOn(ca.mlkem.updates.startupUpdates, aeroplanManifest)
+    dependsOn(ca.mlkem.updates.startupUpdates, aeroplanManifest, aeroplanReviewManifest)
     extendWith("extensions/amazon-aeroplan.mpe")
 
     execute {

@@ -37,7 +37,7 @@ private const val TILE = "Lcom/walmart/glass/lists/view/lists/ListDetailTileView
 private const val L = "Lapp/canada/walmart/ListEnhancements;"
 private const val S = "Lapp/canada/walmart/ShoppingMode;"
 private const val C = "Lapp/canada/walmart/ChecklistTools;"
-private val canada = Compatibility(name="Walmart Canada", packageName="ca.walmart.ecommerceapp",
+internal val canada = Compatibility(name="Walmart Canada", packageName="ca.walmart.ecommerceapp",
     apkFileType=ApkFileType.APKM, appIconColor=0x0071CE,
     targets=listOf(AppTarget(version="26.41.2", isExperimental=true), AppTarget(version="26.31", isExperimental=true)))
 

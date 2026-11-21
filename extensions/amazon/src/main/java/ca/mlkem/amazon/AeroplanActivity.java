@@ -109,6 +109,7 @@ public final class AeroplanActivity extends Activity {
         root.addView(fillButton, new LinearLayout.LayoutParams(-1, dp(44)));
         content = new FrameLayout(this);
         root.addView(content, new LinearLayout.LayoutParams(-1, 0, 1));
+        root.addView(button("Aeroplan cart and orders", v -> ReviewActivity.open(this)));
         root.addView(button("Return to Amazon app", v -> leave()), new LinearLayout.LayoutParams(-1, dp(48)));
         setContentView(root);
     }

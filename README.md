@@ -77,11 +77,11 @@ sorting existing apps, and restoring icons. See [Niagara details](docs/apps/niag
 | App / utility | Target | Included source | Status |
 | --- | --- | --- | --- |
 | Niagara Launcher | `bitpit.launcher` 1.16.38, 1.16.37 | Automatic folders on both versions, local Pro on 1.16.37 | Opt-in experimental; [Pro](docs/apps/niagara-pro.md) / [folders](docs/apps/niagara.md) |
-| Amazon Shopping | `com.amazon.mShop.android.shopping` 32.20.2.100 (1243262206), 32.20.0.100 (1243260206), 32.19.0.100 (1243250306) | Aeroplan settings and official eStore referral, then shopping in the Amazon app | Opt-in experimental; [setup and limits](docs/apps/amazon-aeroplan.md) |
+| Amazon Shopping | `com.amazon.mShop.android.shopping` 32.20.2.100 (1243262206), 32.20.0.100 (1243260206), 32.19.0.100 (1243250306) | Aeroplan cart review, local order history and optional native referral | Opt-in experimental; [setup and limits](docs/apps/amazon-aeroplan.md) |
 | Gmail | `com.google.android.gm` 2026.10.26.1012468012.Release | Account visibility setting; separate GmsCore copy | Experimental; [setup and limits](docs/apps/gmail.md) |
 | Anker eufy | `com.oceanwing.battery.cam` 6.1.40 (32-bit), 6.1.32 (ARM64), 6.1.30, 6.1.20 | Camera-focused tabs and native promotion cleanup | Experimental; [scope and phone checks](docs/apps/eufy.md) |
 | Music League | `com.musicleague.app` 1.4.11, 1.4.9 | Recovered patch sources | Combined bundle awaits phone testing |
-| Walmart Canada | `ca.walmart.ecommerceapp` 26.41.2 (26410201), 26.31 | 14 patches; stock quantities by fulfilment, easier tools menu | Beta; exact-count response and phone testing pending |
+| Walmart Canada | `ca.walmart.ecommerceapp` 26.41.2 (26410201), 26.31 | 15 patches, including Aeroplan cart review and order history | Beta; exact-count response and phone testing pending |
 | Wongnai | `com.wongnai.android` 12.11.1, 12.11.0 | Ad fix 1.0.0 | Phone testing pending |
 | Zoom Earth | `com.neave.zoomearth` 6.3.3 (52); legacy 6.1 | Local Pro, no ads, 100 favourites, quiet prompts; cleanup for the supplied working LiteAPKs APK | Attached failing dev.11 APK uses the original Play input; LiteAPKs-based phone retest still pending |
 | PushPress Members | `com.pushpress.memberportal` 3.46.0, 3.45.0, 3.44.0, 3.42.0 | CrossFit-only selector | Experimental; phone testing pending |

@@ -15,3 +15,4 @@ subprocess.run([javac, '--release', '8', '-encoding', 'UTF-8', '-d', str(out),
                 str(root / 'tests/amazon/RulesTest.java')], check=True)
 subprocess.run([java, '-cp', str(out), 'ca.mlkem.amazon.RulesTest', str(out)], check=True)
 subprocess.run(['node', str(root / 'tests/amazon/autofill.test.cjs'), str(out)], check=True)
+subprocess.run(['node', str(root / 'tests/amazon/cart-review.test.cjs')], cwd=root, check=True)

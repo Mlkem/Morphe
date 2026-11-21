@@ -3,9 +3,9 @@ from pathlib import Path
 import hashlib,json,sys,time
 ROOT=Path(__file__).resolve().parents[2]
 PATHS={
- 'com.amazon.mShop.android.shopping':['patches/src/main/kotlin/ca/mlkem/amazon','extensions/amazon'],
+ 'com.amazon.mShop.android.shopping':['patches/src/main/kotlin/ca/mlkem/amazon','extensions/amazon','patches/src/main/resources/aeroplan'],
  'bitpit.launcher':['patches/src/main/kotlin/ca/mlkem/niagara','extensions/niagara'],
- 'ca.walmart.ecommerceapp':['patches/src/main/kotlin/app/canada','extensions/canada'],
+ 'ca.walmart.ecommerceapp':['patches/src/main/kotlin/app/canada','extensions/canada','extensions/amazon','patches/src/main/kotlin/ca/mlkem/amazon/ReviewManifest.kt','patches/src/main/resources/aeroplan'],
  'com.google.android.gm':['patches/src/main/kotlin/ca/mlkem/gmail','extensions/gmail'],
  'com.google.android.inputmethod.latin':['patches/src/main/kotlin/ca/mlkem/gboard'],
  'com.musicleague.app':['patches/src/main/kotlin/me/mikem/musicleague'],

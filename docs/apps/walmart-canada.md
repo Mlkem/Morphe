@@ -1,5 +1,7 @@
 # Walmart Canada patches
 
+[Use Aeroplan cart review and local order history](aeroplan-review.md).
+
 Supports **26.41.2 (26410201)** and **26.31 (26310017)**, package `ca.walmart.ecommerceapp`. The shared compatibility gate now requires both the exact version name and the inspected version code for each build; a different APK build with a reused version name is rejected before any feature patch runs. Both remain experimental. Enable **Experimental app versions** in Morphe, update the **mlkemac patches** beta source, select the original app bundle, and choose the desired patches. Retain the existing Morphe APK signing key for an in-place update that keeps local price history.
 
 ## Stock checker and menu update

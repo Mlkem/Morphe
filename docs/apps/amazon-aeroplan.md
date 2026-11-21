@@ -1,5 +1,7 @@
 # Amazon Shopping: Aeroplan eStore
 
+[Use Aeroplan cart review and local order history](aeroplan-review.md).
+
 **Aeroplan shopping** is opt-in and experimental. It targets the original
 `com.amazon.mShop.android.shopping` on Android 12 or newer:
 

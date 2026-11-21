@@ -19,6 +19,10 @@ assert amazon_target['apkFileType'] == 'APKM'
 assert [t['version'] for t in amazon_target['targets']] == ['32.20.2.100', '32.20.0.100', '32.19.0.100']
 assert all(t['isExperimental'] and t['minSdk'] == 31 for t in amazon_target['targets'])
 assert amazon['options'] == [], 'Aeroplan account values belong only in device settings'
+walmart_aeroplan=next(p for p in patches if p['name']=='Aeroplan shopping for Walmart Canada')
+assert not walmart_aeroplan['default'] and len(walmart_aeroplan['compatiblePackages']) == 1
+wa=walmart_aeroplan['compatiblePackages'][0]
+assert wa['packageName']=='ca.walmart.ecommerceapp' and [t['version'] for t in wa['targets']]==['26.41.2','26.31']
 niagara=next(p for p in patches if p['name']=='Automatic app folders')
 assert not niagara['default']
 assert niagara['compatiblePackages'][0]['packageName']=='bitpit.launcher'
@@ -139,8 +143,9 @@ for p in bundles:
         assert b'Lca/mlkem/amazon/AeroplanPatchKt;' in z.read('classes.dex')
         amazon_extension=z.read('extensions/amazon-aeroplan.mpe')
         assert amazon_extension.startswith(b'dex\n')
-        for name in ['AeroplanBridge','AeroplanActivity','ProfileStore','SessionRules','AutofillScript','NativeAmazon']:
+        for name in ['AeroplanBridge','AeroplanActivity','ProfileStore','SessionRules','AutofillScript','NativeAmazon','ReviewActivity','ReferralVisit','OrderLog']:
             assert ('Lca/mlkem/amazon/'+name+';').encode() in amazon_extension
+        assert 'aeroplan/mlkem_aeroplan_review.js' in files
         assert b'Lkotlin/' not in amazon_extension
         assert 'ca/mlkem/niagara/AutoFoldersPatchKt.class' in files
         assert 'ca/mlkem/niagara/ProPatchKt.class' in files
