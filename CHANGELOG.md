@@ -1,3 +1,13 @@
+## [1.0.0-dev.48](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.47...v1.0.0-dev.48) (2026-11-21)
+
+### ✨ New Features
+
+* **Aeroplan:** add Walmart and Amazon product, cart and referral reviews ([95387d3](https://github.com/Mlkem/Morphe/commit/95387d3339582f0ab3609280a60956a6ea4a5c03))
+
+### 🐛 Bug Fixes
+
+* **Aeroplan:** validate the Walmart launch hook and reopen reviews from Patch Tools ([3cf5dd0](https://github.com/Mlkem/Morphe/commit/3cf5dd01e51d6255562c9fa844f0279753f923e6))
+
 ## [1.0.0-dev.47](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.46...v1.0.0-dev.47) (2026-11-21)
 
 ### 🐛 Bug Fixes
