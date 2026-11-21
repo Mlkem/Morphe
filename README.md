@@ -131,7 +131,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.42](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.42)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;47 patches total
+> **[v1.0.0-dev.43](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.43)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;47 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -248,12 +248,12 @@ provide privacy.
 
 **🎯 Supported versions:**
 
-| 🧪&nbsp;1.16.37 |
-| :---: |
+| 🧪&nbsp;1.16.38 | 🧪&nbsp;1.16.37 |
+| :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [Automatic app folders](#automatic-app-folders) | Automatically sorts newly installed apps into native Niagara folders in Favorites, then hides their separate app-list icons after saving. Ten local categories with live switches in Settings > Productivity > Auto folders. Includes sort-existing and restore controls. Unknown apps go to Other Apps. Preserves pinned favorites, manually hidden apps and other profiles. Niagara 1.16.37 only; phone testing pending. |  |
+| [Automatic app folders](#automatic-app-folders) | Automatically sorts newly installed apps into native Niagara folders in Favorites, then hides their separate app-list icons after saving. Ten local categories with live switches in Settings > Productivity > Auto folders. Includes sort-existing and restore controls. Unknown apps go to Other Apps. Preserves pinned favorites, manually hidden apps and other profiles. Niagara 1.16.37 and 1.16.38; phone testing pending. |  |
 | [Enable Niagara Pro](#enable-niagara-pro) | Enables local Pro features in Niagara Launcher 1.16.37. Works independently of Automatic app folders. Online services still require their normal account authorization. Phone testing pending. |  |
 
 </details>

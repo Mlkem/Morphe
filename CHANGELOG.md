@@ -1,3 +1,9 @@
+## [1.0.0-dev.43](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.42...v1.0.0-dev.43) (2026-11-21)
+
+### 🐛 Bug Fixes
+
+* **niagara:** support automatic folders on 1.16.38 ([6ee9485](https://github.com/Mlkem/Morphe/commit/6ee94858bafea0ff6bb40e8064bb2c788b1cf023))
+
 ## [1.0.0-dev.42](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.41...v1.0.0-dev.42) (2026-11-21)
 
 ### 🐛 Bug Fixes
