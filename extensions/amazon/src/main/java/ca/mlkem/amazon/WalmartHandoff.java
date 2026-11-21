@@ -11,6 +11,9 @@ final class WalmartHandoff {
     private String relay, partner;
     private boolean leftNotice, usedPartner, captured;
     private long received;
+    private String clickUrl, clickError;
+    private boolean onTrustedRoute, atClick;
+    private long clickStarted;
 
     static boolean portalRoute(String url, boolean notice) {
         if (!SessionRules.isHttps(url) || !"aeroplan.rewardops.com".equalsIgnoreCase(SessionRules.host(url))) return false;
@@ -36,12 +39,31 @@ final class WalmartHandoff {
         return store(url) || (SessionRules.isHttps(url) && ("click.linksynergy.com".equalsIgnoreCase(SessionRules.host(url))
                 || "goto.walmart.ca".equalsIgnoreCase(SessionRules.host(url))));
     }
+    static boolean rakuten(String url) {
+        return SessionRules.isHttps(url) && "click.linksynergy.com".equalsIgnoreCase(SessionRules.host(url));
+    }
     void observe(String url, long now) {
         if (!portalRoute(url, true)) {
-            if (captured && SessionRules.isHttps(url)) leftNotice = true;
+            if (!captured || !SessionRules.isHttps(url)) return;
+            leftNotice = true;
+            boolean known = url.equals(partner) || url.equals(relay);
+            if (rakuten(url) && (onTrustedRoute || known)) {
+                if (!atClick || !url.equals(clickUrl)) {
+                    clickUrl = url;
+                    clickStarted = now;
+                    clickError = null;
+                }
+                atClick = true;
+                usedPartner = true;
+                onTrustedRoute = true;
+            } else {
+                atClick = false;
+                onTrustedRoute = known;
+            }
             return;
         }
         if (captured) return;
+        onTrustedRoute = true;
         captured = true;
         received = now;
         String supplied = parameter(Uri.parse(url), "redirectUrl");
@@ -55,6 +77,21 @@ final class WalmartHandoff {
             String target = parameter(wrapper, "q");
             if (portalRoute(parameter(wrapper, "p"), false) && partnerLink(target)) partner = target;
         }
+    }
+    String currentClick() { return atClick ? clickUrl : null; }
+    String retryClick(long now) {
+        if (!atClick) return null;
+        clickStarted = now;
+        clickError = null;
+        return clickUrl;
+    }
+    void recordClickError(String url, String reason) {
+        if (atClick && clickUrl.equals(url)) clickError = reason;
+    }
+    String clickProblem(long now) {
+        if (!atClick) return null;
+        if (clickError != null) return clickError;
+        return now - clickStarted >= GRACE_MS ? "Rakuten hasn’t opened Walmart yet." : null;
     }
     String autoContinue(String current, long now) {
         if (!captured || leftNotice || now - received < GRACE_MS || !portalRoute(current, true)) return null;
@@ -77,7 +114,12 @@ final class WalmartHandoff {
         return partner;
     }
     static String browserDestination(String url) {
-        if (url == null || !url.startsWith("intent://")) return null;
+        if (url == null) return null;
+        if (url.regionMatches(true, 0, "http://", 0, 7)) {
+            String https = "https" + url.substring(4);
+            return store(https) ? https : null;
+        }
+        if (!url.startsWith("intent://")) return null;
         try {
             Intent intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
             String fallback = intent.getStringExtra("browser_fallback_url");
