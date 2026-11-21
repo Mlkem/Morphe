@@ -7,11 +7,11 @@
         "1.16.37"
       ],
       "upstream": {
-        "checkedAt": "2026-11-21T07:24:56.221960+00:00",
-        "source": "Google Play",
+        "checkedAt": "2026-11-21T10:35:20.424400+00:00",
+        "source": "GitHub",
         "status": "ok",
-        "url": "https://play.google.com/store/apps/details?id=bitpit.launcher&hl=en&gl=CA",
-        "version": "1.16.37"
+        "url": "https://github.com/NiagaraLauncher/Niagara-Issues/releases/latest",
+        "version": "1.16.38"
       }
     },
     "ca.walmart.ecommerceapp": {
@@ -22,7 +22,7 @@
         "26.31"
       ],
       "upstream": {
-        "checkedAt": "2026-11-21T07:24:57.060840+00:00",
+        "checkedAt": "2026-11-21T10:35:21.401567+00:00",
         "source": "Google Play",
         "status": "ok",
         "url": "https://play.google.com/store/apps/details?id=ca.walmart.ecommerceapp&hl=en&gl=CA",
@@ -37,7 +37,7 @@
         "32.19.0.100"
       ],
       "upstream": {
-        "checkedAt": "2026-11-21T07:24:57.904241+00:00",
+        "checkedAt": "2026-11-21T10:35:22.246688+00:00",
         "source": "Google Play",
         "status": "ok",
         "url": "https://play.google.com/store/apps/details?id=com.amazon.mShop.android.shopping&hl=en&gl=CA",
@@ -51,7 +51,7 @@
         "2026.10.26.1012468012.Release"
       ],
       "upstream": {
-        "checkedAt": "2026-11-21T07:24:58.746671+00:00",
+        "checkedAt": "2026-11-21T10:35:23.111411+00:00",
         "source": "Google Play",
         "status": "version_unavailable",
         "url": "https://play.google.com/store/apps/details?id=com.google.android.gm&hl=en&gl=CA"
@@ -64,7 +64,7 @@
         "18.5.4.993608717-release-arm64-v8a"
       ],
       "upstream": {
-        "checkedAt": "2026-11-21T07:24:59.580234+00:00",
+        "checkedAt": "2026-11-21T10:35:23.946921+00:00",
         "source": "Google Play",
         "status": "version_unavailable",
         "url": "https://play.google.com/store/apps/details?id=com.google.android.inputmethod.latin&hl=en&gl=CA"
@@ -78,7 +78,7 @@
         "1.4.11"
       ],
       "upstream": {
-        "checkedAt": "2026-11-21T07:25:00.411170+00:00",
+        "checkedAt": "2026-11-21T10:35:24.776779+00:00",
         "source": "Google Play",
         "status": "ok",
         "url": "https://play.google.com/store/apps/details?id=com.musicleague.app&hl=en&gl=CA",
@@ -93,7 +93,7 @@
         "6.1"
       ],
       "upstream": {
-        "checkedAt": "2026-11-21T07:25:01.382797+00:00",
+        "checkedAt": "2026-11-21T10:35:25.765079+00:00",
         "source": "Google Play",
         "status": "ok",
         "url": "https://play.google.com/store/apps/details?id=com.neave.zoomearth&hl=en&gl=CA",
@@ -108,7 +108,7 @@
         "6.1.30_32823"
       ],
       "upstream": {
-        "checkedAt": "2026-11-21T07:25:02.236889+00:00",
+        "checkedAt": "2026-11-21T10:35:26.615376+00:00",
         "source": "Google Play",
         "status": "ok",
         "url": "https://play.google.com/store/apps/details?id=com.oceanwing.battery.cam&hl=en&gl=CA",
@@ -123,7 +123,7 @@
         "1.4"
       ],
       "upstream": {
-        "checkedAt": "2026-11-21T07:25:03.074863+00:00",
+        "checkedAt": "2026-11-21T10:35:27.463925+00:00",
         "source": "Google Play",
         "status": "version_unavailable",
         "url": "https://play.google.com/store/apps/details?id=com.openwith.app&hl=en&gl=CA"
@@ -138,11 +138,11 @@
         "3.45.0"
       ],
       "upstream": {
-        "checkedAt": "2026-11-21T07:25:03.929469+00:00",
+        "checkedAt": "2026-11-21T10:35:28.375487+00:00",
         "source": "Google Play",
         "status": "ok",
         "url": "https://play.google.com/store/apps/details?id=com.pushpress.memberportal&hl=en&gl=CA",
-        "version": "3.45.0"
+        "version": "3.46.0"
       }
     },
     "com.rosteam.gpsemulator": {
@@ -152,7 +152,7 @@
         "3.36"
       ],
       "upstream": {
-        "checkedAt": "2026-11-21T07:25:04.764700+00:00",
+        "checkedAt": "2026-11-21T10:35:29.239500+00:00",
         "source": "Google Play",
         "status": "ok",
         "url": "https://play.google.com/store/apps/details?id=com.rosteam.gpsemulator&hl=en&gl=CA",
@@ -166,7 +166,7 @@
         "7.1.6"
       ],
       "upstream": {
-        "checkedAt": "2026-11-21T07:25:05.682843+00:00",
+        "checkedAt": "2026-11-21T10:35:30.099101+00:00",
         "source": "Google Play",
         "status": "ok",
         "url": "https://play.google.com/store/apps/details?id=com.songsterr&hl=en&gl=CA",
@@ -180,7 +180,7 @@
         "4.25.1"
       ],
       "upstream": {
-        "checkedAt": "2026-11-21T07:25:06.598500+00:00",
+        "checkedAt": "2026-11-21T10:35:30.944899+00:00",
         "source": "Google Play",
         "status": "ok",
         "url": "https://play.google.com/store/apps/details?id=com.thaidigitalplatform.tagthai&hl=en&gl=CA",
@@ -194,7 +194,7 @@
         "12.11.0"
       ],
       "upstream": {
-        "checkedAt": "2026-11-21T07:25:07.518529+00:00",
+        "checkedAt": "2026-11-21T10:35:31.884341+00:00",
         "source": "Google Play",
         "status": "ok",
         "url": "https://play.google.com/store/apps/details?id=com.wongnai.android&hl=en&gl=CA",
@@ -205,5 +205,6 @@
   "generatedAt": "2026-11-21T10:34:46.043317+00:00",
   "releaseUrl": "https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.42",
   "releaseVersion": "1.0.0-dev.42",
-  "schema": 1
+  "schema": 1,
+  "upstreamCheckedAt": "2026-11-21T10:35:32.755318+00:00"
 }
