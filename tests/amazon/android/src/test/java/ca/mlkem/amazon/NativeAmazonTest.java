@@ -205,6 +205,7 @@ public class NativeAmazonTest {
         android.app.AlertDialog dialog = org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
         assertTrue(shadowOf(dialog).getMessage().toString().contains("has not confirmed"));
         dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
+        shadowOf(android.os.Looper.getMainLooper()).idle();
         assertEquals(ReviewActivity.class.getName(), activity.launched.getComponent().getClassName());
     }
 
