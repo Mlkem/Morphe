@@ -131,7 +131,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.44](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.44)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;47 patches total
+> **[v1.0.0-dev.45](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.45)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;47 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -163,8 +163,8 @@ provide privacy.
 
 **🎯 Supported versions:**
 
-| 🧪&nbsp;32.20.0.100 | 🧪&nbsp;32.19.0.100 |
-| :---: | :---: |
+| 🧪&nbsp;32.20.2.100 | 🧪&nbsp;32.20.0.100 | 🧪&nbsp;32.19.0.100 |
+| :---: | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
@@ -229,8 +229,8 @@ provide privacy.
 
 **🎯 Supported versions:**
 
-| 🧪&nbsp;6.1.20_31181 | 🧪&nbsp;6.1.30_32823 |
-| :---: | :---: |
+| 🧪&nbsp;6.1.40_33274 | 🧪&nbsp;6.1.32_32827 | 🧪&nbsp;6.1.30_32823 | 🧪&nbsp;6.1.20_31181 |
+| :---: | :---: | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
@@ -290,8 +290,8 @@ provide privacy.
 
 **🎯 Supported versions:**
 
-| 🧪&nbsp;18.5.4.993608717-release-arm64-v8a |
-| :---: |
+| 🧪&nbsp;18.6.7.1002251336-release-arm64-v8a | 🧪&nbsp;18.5.4.993608717-release-arm64-v8a |
+| :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
@@ -307,12 +307,12 @@ provide privacy.
 
 **🎯 Supported versions:**
 
-| 🧪&nbsp;12.11.0 |
-| :---: |
+| 🧪&nbsp;12.11.1 | 🧪&nbsp;12.11.0 |
+| :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [Disable Wongnai Google ads](#disable-wongnai-google-ads) | Stops the identified Google banner, native and interstitial ad loaders in Wongnai 12.11.0, and uses its existing photo-ad fallback. Phone testing pending. |  |
+| [Disable Wongnai Google ads](#disable-wongnai-google-ads) | Stops the identified Google banner, native and interstitial ad loaders in Wongnai, and uses its existing photo-ad fallback. Phone testing pending. |  |
 
 </details>
 

@@ -1,3 +1,10 @@
+## [1.0.0-dev.45](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.44...v1.0.0-dev.45) (2026-11-21)
+
+### 🐛 Bug Fixes
+
+* **apps:** update Eufy, Amazon Shopping, Gboard, Wongnai and TAGTHAi text selection ([b145e57](https://github.com/Mlkem/Morphe/commit/b145e5792dfddf25ee80ceb11a363abecb7bdb17))
+* **Gboard:** preserve branch labels when restoring keyboard modes ([bd24581](https://github.com/Mlkem/Morphe/commit/bd2458129d136feea97cd4b6c1903e04fe28978c))
+
 ## [1.0.0-dev.44](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.43...v1.0.0-dev.44) (2026-11-21)
 
 ### 🐛 Bug Fixes
