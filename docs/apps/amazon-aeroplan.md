@@ -1,5 +1,8 @@
 # Amazon Shopping: Aeroplan eStore
 
+The native Amazon screen has a tappable **Aeroplan** badge. It shows whether this Amazon session has seen a referral and when a link was successfully handed to the native app. You can start a referral or open **Review and shop** from the badge. Aeroplan confirms order credit in its own history.
+
+
 [Use Aeroplan cart review and local order history](aeroplan-review.md).
 
 **Aeroplan shopping** is opt-in and experimental. It targets the original

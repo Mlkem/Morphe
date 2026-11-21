@@ -180,6 +180,36 @@ public class NativeAmazonTest {
         assertFalse(activity.isFinishing());
     }
 
+    @Test public void nativeShoppingShowsStatusEvenWhenStartupPromptWasDismissed() {
+        AeroplanBridge.suppressStartupOffer();
+        AeroplanBridge.onResume(activity);
+        android.view.View decor = activity.getWindow().getDecorView();
+        android.widget.TextView chip = decor.findViewWithTag("ca.mlkem.amazon.native_referral_status");
+        assertNotNull(chip);
+        assertTrue(chip.getText().toString().contains("No referral seen"));
+
+        NativeReferralStatus.beginVisit();
+        AeroplanBridge.onResume(activity);
+        assertSame(chip, decor.findViewWithTag("ca.mlkem.amazon.native_referral_status"));
+        assertTrue(chip.getText().toString().contains("Waiting for link"));
+        assertTrue(NativeAmazon.open(activity, DESTINATION));
+        AeroplanBridge.onResume(activity);
+        assertTrue(chip.getText().toString().contains("Link sent"));
+        chip.performClick();
+        android.app.AlertDialog dialog = org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
+        assertTrue(shadowOf(dialog).getMessage().toString().contains("has not confirmed"));
+        dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
+        assertEquals(ReviewActivity.class.getName(), activity.launched.getComponent().getClassName());
+    }
+
+    @Test public void failedHandoffDoesNotDisplayLinkSent() {
+        activity.launchFailure = new ActivityNotFoundException();
+        assertFalse(NativeAmazon.open(activity, DESTINATION));
+        AeroplanBridge.onResume(activity);
+        android.widget.TextView chip = activity.getWindow().getDecorView().findViewWithTag("ca.mlkem.amazon.native_referral_status");
+        assertTrue(chip.getText().toString().contains("Link failed"));
+    }
+
     private ComponentName registerHome() {
         ComponentName component = new ComponentName(activity.getPackageName(), "com.amazon.mShop.home.HomeActivity");
         ResolveInfo resolved = new ResolveInfo();

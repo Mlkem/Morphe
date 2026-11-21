@@ -16,11 +16,14 @@ public final class AeroplanBridge {
     static void suppressStartupOffer() { offered = true; }
 
     public static void onResume(Activity activity) {
-        if (offered || activity == null || activity.isFinishing() || activity.isDestroyed()) return;
-        offered = true;
+        if (activity == null || activity.isFinishing() || activity.isDestroyed()) return;
         activity.runOnUiThread(() -> {
             if (activity.isFinishing() || activity.isDestroyed()) return;
             try {
+                NativeReferralStatus.register(activity);
+                NativeReferralStatus.attach(activity);
+                if (offered) return;
+                offered = true;
                 publishShortcut(activity);
                 ProfileStore.Profile profile;
                 try { profile = ProfileStore.load(activity); }
@@ -55,7 +58,7 @@ public final class AeroplanBridge {
         });
     }
 
-    private static void open(Activity activity, boolean start) {
+    static void open(Activity activity, boolean start) {
         Intent intent = new Intent(activity, AeroplanActivity.class);
         intent.setAction(start ? AeroplanActivity.ACTION_START : AeroplanActivity.ACTION_SETTINGS);
         activity.startActivity(intent);

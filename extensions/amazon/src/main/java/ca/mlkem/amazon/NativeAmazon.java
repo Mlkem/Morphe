@@ -40,9 +40,12 @@ final class NativeAmazon {
         if (intent == null) return false;
         AeroplanBridge.suppressStartupOffer();
         try {
+            NativeReferralStatus.register(activity);
             activity.startActivity(intent);
+            NativeReferralStatus.linkSent();
             return true;
         } catch (ActivityNotFoundException | SecurityException unavailable) {
+            NativeReferralStatus.launchFailed();
             return false;
         }
     }

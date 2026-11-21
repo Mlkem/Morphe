@@ -230,6 +230,7 @@ public final class AeroplanActivity extends Activity {
     }
 
     private void startSession() {
+        NativeReferralStatus.beginVisit();
         if (!profile.configured()) { showSettings(); return; }
         destroyWindows();
         handoffAttempted = false;

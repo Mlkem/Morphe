@@ -63,7 +63,7 @@ private val aeroplanManifest = resourcePatch {
 val aeroplanShoppingPatch = bytecodePatch(
     name = "Aeroplan shopping",
     description = "Reviews the official Amazon.ca referral, cart categories and local order references in a shopping window. " +
-        "The existing native Amazon referral and encrypted profile are also available.",
+        "Shows referral status in native Amazon and retains the encrypted profile.",
     default = false,
 ) {
     compatibleWith(Compatibility(
