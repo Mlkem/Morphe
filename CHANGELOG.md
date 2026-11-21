@@ -1,3 +1,9 @@
+## [1.0.0-dev.51](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.50...v1.0.0-dev.51) (2026-11-21)
+
+### 🐛 Bug Fixes
+
+* **Walmart Canada:** keep the Rakuten referral when Walmart fails to open ([922fc23](https://github.com/Mlkem/Morphe/commit/922fc23e9b5f7f34bae056a7587e1a620281805c))
+
 ## [1.0.0-dev.50](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.49...v1.0.0-dev.50) (2026-11-21)
 
 ### 🐛 Bug Fixes
