@@ -61,9 +61,10 @@
     },
     "com.google.android.inputmethod.latin": {
       "name": "Gboard",
-      "revision": "76e88414f33e031f7c1e638d3a6b98f07c82c31ba209b3b18aaf9c396617fedc",
+      "revision": "7f83d5a5326f091b24f07dacdaeb86515580b9b54b4ef2ad7da73fac4d479fd6",
       "supportedVersions": [
         "18.6.7.1002251336-release-arm64-v8a",
+        "18.8.0.1022711984-beta-arm64-v8a",
         "18.5.4.993608717-release-arm64-v8a"
       ],
       "upstream": {
@@ -210,9 +211,8 @@
       }
     }
   },
-  "generatedAt": "2026-11-21T21:50:16.023591+00:00",
-  "releaseUrl": "https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.46",
-  "releaseVersion": "1.0.0-dev.46",
-  "schema": 1,
-  "upstreamCheckedAt": "2026-11-21T21:51:08.183562+00:00"
+  "generatedAt": "2026-11-21T22:01:12.253631+00:00",
+  "releaseUrl": "https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.47",
+  "releaseVersion": "1.0.0-dev.47",
+  "schema": 1
 }

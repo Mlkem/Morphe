@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-11-21T21:50:01",
-  "description": "## [1.0.0-dev.46](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.45...v1.0.0-dev.46) (2026-11-21)\n\n### 🐛 Bug Fixes\n\n* **PushPress Members:** list 3.46.0 for the CrossFit class patch ([1a78580](https://github.com/Mlkem/Morphe/commit/1a7858039a4d7f03738ef80ea13a3a21e31ab503))",
-  "download_url": "https://github.com/Mlkem/Morphe/releases/download/v1.0.0-dev.46/patches-1.0.0-dev.46.mpp",
+  "created_at": "2026-11-21T22:00:58",
+  "description": "## [1.0.0-dev.47](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.46...v1.0.0-dev.47) (2026-11-21)\n\n### 🐛 Bug Fixes\n\n* **Gboard:** support the 18.8.0 ARM64 beta keyboard modes and menus ([921dfb2](https://github.com/Mlkem/Morphe/commit/921dfb2eec4cd3fa23bb43e31c5d44abf08369af))",
+  "download_url": "https://github.com/Mlkem/Morphe/releases/download/v1.0.0-dev.47/patches-1.0.0-dev.47.mpp",
   "signature_download_url": "",
-  "version": "1.0.0-dev.46"
+  "version": "1.0.0-dev.47"
 }

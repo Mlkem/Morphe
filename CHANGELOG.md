@@ -1,3 +1,9 @@
+## [1.0.0-dev.47](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.46...v1.0.0-dev.47) (2026-11-21)
+
+### 🐛 Bug Fixes
+
+* **Gboard:** support the 18.8.0 ARM64 beta keyboard modes and menus ([921dfb2](https://github.com/Mlkem/Morphe/commit/921dfb2eec4cd3fa23bb43e31c5d44abf08369af))
+
 ## [1.0.0-dev.46](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.45...v1.0.0-dev.46) (2026-11-21)
 
 ### 🐛 Bug Fixes

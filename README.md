@@ -131,7 +131,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.46](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.46)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;47 patches total
+> **[v1.0.0-dev.47](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.47)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;47 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -290,8 +290,8 @@ provide privacy.
 
 **🎯 Supported versions:**
 
-| 🧪&nbsp;18.6.7.1002251336-release-arm64-v8a | 🧪&nbsp;18.5.4.993608717-release-arm64-v8a |
-| :---: | :---: |
+| 🧪&nbsp;18.6.7.1002251336-release-arm64-v8a | 🧪&nbsp;18.8.0.1022711984-beta-arm64-v8a | 🧪&nbsp;18.5.4.993608717-release-arm64-v8a |
+| :---: | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
