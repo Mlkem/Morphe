@@ -1,3 +1,9 @@
+## [1.0.0-dev.46](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.45...v1.0.0-dev.46) (2026-11-21)
+
+### 🐛 Bug Fixes
+
+* **PushPress Members:** list 3.46.0 for the CrossFit class patch ([1a78580](https://github.com/Mlkem/Morphe/commit/1a7858039a4d7f03738ef80ea13a3a21e31ab503))
+
 ## [1.0.0-dev.45](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.44...v1.0.0-dev.45) (2026-11-21)
 
 ### 🐛 Bug Fixes
