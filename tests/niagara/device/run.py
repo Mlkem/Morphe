@@ -1,6 +1,6 @@
 """Disposable emulator acceptance test. Uses synthetic apps and a fresh launcher."""
 from pathlib import Path
-import os, re, sqlite3, subprocess, time, xml.etree.ElementTree as ET, zipfile, json, tempfile
+import os, re, sqlite3, subprocess, sys, time, xml.etree.ElementTree as ET, zipfile, json, tempfile
 from contextlib import closing
 ROOT=Path(__file__).resolve().parents[3]
 OUT=ROOT/'build/niagara-device';OUT.mkdir(parents=True,exist_ok=True)
@@ -125,7 +125,7 @@ def home():
     assert adb('shell','pidof','bitpit.launcher',check=False), 'Niagara failed to stay running; see logcat.txt'
 def main():
     run('keytool','-genkeypair','-keystore',OUT/'test.jks','-storepass','android','-keypass','android','-alias','test','-dname','CN=Disposable Niagara Test','-keyalg','RSA','-validity','2')
-    sign(ROOT/'build/niagara-apk-validation/niagara-patched-unsigned.apk',OUT/'launcher.apk')
+    sign(Path(sys.argv[1]),OUT/'launcher.apk')
     adb('root');adb('wait-for-device')
     adb('shell','settings','put','secure','immersive_mode_confirmations','confirmed')
     adb('install',OUT/'launcher.apk')

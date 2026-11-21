@@ -1,4 +1,5 @@
 """Apply the actual MPP to the pinned official APK and inspect every DEX method."""
+import argparse
 from pathlib import Path
 import hashlib, json, os, subprocess, urllib.request
 root=Path(__file__).resolve().parents[1]
@@ -13,7 +14,12 @@ releases = {
     '1.16.37': ('974d3e82aaa82bc4de4ef76834aade5e2888464929b6b208730a5d88bd6a4b76', ('auto', 'pro', 'both')),
     '1.16.38': ('5418283952b13848eb1891b0f01e3acba98e29d017b933b2e034c99a5df5f0df', ('auto',)),
 }
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--version', choices=releases)
+selected = parser.parse_args().version
 for release, (expected, modes) in releases.items():
+    if selected and selected != release:
+        continue
     apk = out / f'Niagara_Launcher_v{release}-release.apk'
     if not apk.exists() or hashlib.sha256(apk.read_bytes()).hexdigest() != expected:
         url = f'https://github.com/NiagaraLauncher/Niagara-Issues/releases/download/v{release}/{apk.name}'
