@@ -47,6 +47,12 @@ public class NativeAmazonTest {
         Field offered = AeroplanBridge.class.getDeclaredField("offered");
         offered.setAccessible(true);
         offered.setBoolean(null, false);
+        // Robolectric reuses the class loader across tests. Begin each case as a fresh process.
+        Field status = NativeReferralStatus.class.getDeclaredField("status");
+        status.setAccessible(true);
+        Field unseen = status.getType().getDeclaredField("UNSEEN");
+        unseen.setAccessible(true);
+        status.set(null, unseen.get(null));
         controller = Robolectric.buildActivity(CaptureActivity.class).setup();
         activity = controller.get();
     }
