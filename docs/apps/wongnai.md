@@ -1,9 +1,8 @@
-Wongnai ad fix v1.0.0
+# Wongnai ad cleanup
 
-Target: com.wongnai.android 12.11.0 only.
-Morphe patch: Disable Wongnai Google ads. **Experimental and opt-in** because no on-device test has been completed. Google Play now lists 12.11.1; this is **not** a verified compatible input. Enable experimental app versions, and do not force the patch onto 12.11.1.
+The opt-in **Disable Wongnai Google ads** patch supports `com.wongnai.android` 12.11.1 (487) and 12.11.0 (485). Both original bundles passed desktop patching. The new version moves one ad loader into a different class. Device testing remains pending. [APK source](https://apkpure.net/wongnai-restaurants-reviews/com.wongnai.android)
 
-Import this MPP as a local patch bundle, select the original Wongnai 12.11.0
+Import this MPP as a local patch bundle, select the original Wongnai
 XAPK and enable this patch. It can be used by itself; it already includes the
 identified banner, native and interstitial request loaders. The existing
 Adobo hosts patch is not required for these six code changes.

@@ -10,23 +10,18 @@ import com.android.tools.smali.dexlib2.iface.instruction.ReferenceInstruction
 import com.android.tools.smali.dexlib2.iface.instruction.OneRegisterInstruction
 
 private const val PACKAGE = "com.oceanwing.battery.cam"
-private const val LEGACY_VERSION = "6.1.20_31181"
-private const val CANDIDATE_VERSION = "6.1.30_32823"
-private val expectedVersionCodes = mapOf(
-    LEGACY_VERSION to "31181",
-    CANDIDATE_VERSION to "32823"
+// The first two 328xx builds share the same 12 resource IDs.
+private val hookSuffixes = mapOf(
+    "6.1.40_33274" to "33274",
+    "6.1.32_32827" to "32823",
+    "6.1.30_32823" to "32823",
+    "6.1.20_31181" to "",
 )
 private const val HOOK = "Lca/mlkem/eufy/CameraOnly;"
 private val eufy = Compatibility(
     name = "Anker eufy", packageName = PACKAGE, apkFileType = ApkFileType.APKM,
-    description = "Original APKMirror APKM including the required asset-pack split. " +
-        "6.1.20_31181: statically verified, phone testing pending. " +
-        "6.1.30_32823: CANDIDATE ONLY; input DEX, UI IDs and native startup are not yet verified. " +
-        "Fail closed if the protected Activity factory shape changes.",
-    targets = listOf(
-        AppTarget(version = LEGACY_VERSION, isExperimental = true, minSdk = 29),
-        AppTarget(version = CANDIDATE_VERSION, isExperimental = true, minSdk = 29)
-    )
+    description = "Use the original bundle including its asset pack and the native splits for your device. ARM64 verified on 6.1.32; 6.1.40 verified on armeabi-v7a. Phone testing pending.",
+    targets = hookSuffixes.keys.map { AppTarget(version = it, isExperimental = true, minSdk = 29) }
 )
 
 // Android 10+ calls A.instantiateClassLoader, which selects EufyApplication
@@ -47,10 +42,10 @@ private val legacyStartup = Fingerprint(
 private val eufyExtension = bytecodePatch {
     extendWith("extensions/eufy-camera-only.mpe")
     execute {
-        val expectedCode = expectedVersionCodes[packageMetadata.versionName]
-        check(packageMetadata.packageName == PACKAGE && expectedCode != null &&
-            packageMetadata.versionCode == expectedCode) {
-            "Requires an unmodified Anker eufy version in $expectedVersionCodes."
+        val version = packageMetadata.versionName
+        check(packageMetadata.packageName == PACKAGE && version in hookSuffixes &&
+            packageMetadata.versionCode == version?.substringAfterLast('_')) {
+            "Requires an original Anker eufy bundle from ${hookSuffixes.keys}."
         }
         val method = activityFactory.method
         val instructions = method.instructions.toList()
@@ -77,9 +72,7 @@ private val eufyExtension = bytecodePatch {
 
 context(context: BytecodePatchContext)
 private fun install(entry: String) {
-    // The resource table changed in 32823. Encode the reviewed version-specific
-    // extension method into both injection paths, rather than guessing at runtime.
-    val selectedEntry = if (context.packageMetadata.versionName == CANDIDATE_VERSION) "${entry}32823" else entry
+    val selectedEntry = entry + hookSuffixes.getValue(checkNotNull(context.packageMetadata.versionName))
     val method = activityFactory.method
     val calls = method.instructions.withIndex().filter {
         (it.value as? ReferenceInstruction)?.reference.toString() == FACTORY_CALL

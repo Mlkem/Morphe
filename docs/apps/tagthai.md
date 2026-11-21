@@ -1,4 +1,8 @@
-# TAGTHAi 4.25.1
+# TAGTHAi
+
+**4.26.1 (4261001)** supports **Select TAGTHAi text**. The original ARM64 split bundle passed desktop patching with the updated Flutter accessibility channel binding. The other two patches target 4.25.1. [APK source](https://apkpure.net/tagthai/com.thaidigitalplatform.tagthai)
+
+## 4.25.1
 
 Package **`com.thaidigitalplatform.tagthai`**, version **4.25.1 (4251001)**,
 minimum Android 9 / API 28. These three patches are independent, opt-in, and

@@ -9,11 +9,12 @@ from loguru import logger
 logger.remove()
 from androguard.core.dex import DEX
 
-assert len(sys.argv) == 4 and sys.argv[3] in ('31181', '32823'), 'Usage: verify_apk.py original.apkm patched.apk 31181|32823'
-expected_hooks = ({'enableNavigation', 'enablePromotions', 'enableMobileStreaming'} if sys.argv[3] == '31181'
-                  else {'enableNavigation32823', 'enablePromotions32823', 'enableMobileStreaming32823'})
+suffixes = {'31181': '', '32823': '32823', '32827': '32823', '33274': '33274'}
+assert len(sys.argv) == 4 and sys.argv[3] in suffixes, 'Usage: verify_apk.py original_bundle patched.apk version_code'
+expected_hooks = {name + suffixes[sys.argv[3]] for name in ('enableNavigation', 'enablePromotions', 'enableMobileStreaming')}
 bundle = zipfile.ZipFile(sys.argv[1])
-base = zipfile.ZipFile(io.BytesIO(bundle.read('base.apk')))
+base_name = 'base.apk' if 'base.apk' in bundle.namelist() else 'com.oceanwing.battery.cam.apk'
+base = zipfile.ZipFile(io.BytesIO(bundle.read(base_name)))
 out = zipfile.ZipFile(sys.argv[2])
 assert len(out.namelist()) == len(set(out.namelist())), 'duplicate ZIP entries'
 
@@ -23,6 +24,9 @@ for name in ('assets/ijiami.dat', 'assets/IJMDal.Data', 'classes2.dex', 'classes
 
 # Verify every original asset and every retained native library, across splits.
 # The test command keeps arm64-v8a; other architectures may be stripped by Morphe.
+abis = {name.split('/')[1] for name in out.namelist() if name.startswith('lib/') and name.endswith('.so')}
+assert abis, 'No native libraries in patched output'
+lib_prefixes = tuple('lib/' + abi + '/' for abi in abis)
 assets = set()
 unmatched = []
 output_names = set(out.namelist())
@@ -31,7 +35,7 @@ for split in bundle.namelist():
     with zipfile.ZipFile(io.BytesIO(bundle.read(split))) as apk:
         for name in apk.namelist():
             if name.endswith('/'): continue
-            if name.startswith('assets/') or name.startswith('lib/arm64-v8a/'):
+            if name.startswith('assets/') or name.startswith(lib_prefixes):
                 content = apk.read(name)
                 if name in output_names:
                     assert content == out.read(name), f'changed asset or arm64 library: {name}'
@@ -45,7 +49,7 @@ for split in bundle.namelist():
 if unmatched:
     output_digests = {}
     for name in out.namelist():
-        if not (name.startswith('assets/') or name.startswith('lib/arm64-v8a/')):
+        if not (name.startswith('assets/') or name.startswith(lib_prefixes)):
             continue
         digest = hashlib.sha256(out.read(name)).digest()
         output_digests.setdefault(digest, []).append(name)
@@ -119,6 +123,6 @@ for cls in original.get_classes():
 
 assert 'Lca/mlkem/eufy/CameraOnly;' in classes
 print(f'PASS: Eufy {sys.argv[3]} uses {sorted(expected_hooks)}; both Activity factory paths hooked with all three options; original branch targets preserved; other loader methods unchanged; '
-      f'{len(assets)} assets/arm64 libraries preserved; no duplicate classes; '
+      f'{len(assets)} assets/libraries preserved for {sorted(abis)}; no duplicate classes; '
       'encrypted payload and secondary DEX files byte-identical.')
 print('APK SHA-256:', hashlib.file_digest(Path(sys.argv[2]).open('rb'), 'sha256').hexdigest())

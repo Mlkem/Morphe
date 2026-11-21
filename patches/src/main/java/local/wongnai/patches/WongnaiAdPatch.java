@@ -14,7 +14,7 @@ import com.android.tools.smali.dexlib2.iface.ClassDef;
 import com.android.tools.smali.dexlib2.iface.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.stream.Collectors;
 import java.util.List;
 import java.util.logging.Logger;
 import kotlin.Unit;
@@ -23,30 +23,33 @@ import kotlin.jvm.functions.Function1;
 /** Version-specific ad request blocking for the user's Wongnai APK. */
 public final class WongnaiAdPatch {
     private static final String PACKAGE = "com.wongnai.android";
-    private static final String VERSION = "12.11.0";
+    private static final List<String> VERSIONS = Arrays.asList("12.11.1", "12.11.0");
     private static final String PHOTO_MODEL = "Lcom/wongnai/android/legacy/photo2/model/UiPhotoAds;";
     // Owner, method, static/instance, then the exact parameter types.
-    private static final String[][] LOADERS = {
-        {"Ld4/d;", "a", "instance", "Ld4/e;"},
-        {"Ld4/i;", "b", "instance", "Ld4/e;"},
-        {"Le4/b;", "e", "instance", "Le4/a;"},
-        {"Lk4/H0;", "b", "instance", "Lk4/F0;"},
-        {"Ln4/a;", "b", "static", "Landroid/content/Context;", "Ljava/lang/String;", "Ld4/e;", "Ln4/b;"}
-    };
+    private static String[][] loaders(String version) {
+        String client = version.equals("12.11.1") ? "Lk4/I0;" : "Lk4/H0;";
+        return new String[][] {
+            {"Ld4/d;", "a", "instance", "Ld4/e;"},
+            {"Ld4/i;", "b", "instance", "Ld4/e;"},
+            {"Le4/b;", "e", "instance", "Le4/a;"},
+            {client, "b", "instance", "Lk4/F0;"},
+            {"Ln4/a;", "b", "static", "Landroid/content/Context;", "Ljava/lang/String;", "Ld4/e;", "Ln4/b;"}
+        };
+    }
     private static final String[] PHOTO_ENTRY = {"Lpf/e;", "k", "instance", PHOTO_MODEL};
     private static final String[] PHOTO_FALLBACK = {"Lpf/e;", "l", "instance", PHOTO_MODEL, "Z"};
     private static final Logger LOG = Logger.getLogger(WongnaiAdPatch.class.getName());
     private static final BytecodePatch PATCH = PatchKt.bytecodePatch(
         "Disable Wongnai Google ads",
-        "Stops the identified Google banner, native and interstitial ad loaders in Wongnai 12.11.0, and uses its existing photo-ad fallback. Phone testing pending.",
+        "Stops the identified Google banner, native and interstitial ad loaders in Wongnai, and uses its existing photo-ad fallback. Phone testing pending.",
         false,
         new Function1<BytecodePatchBuilder, Unit>() {
             @Override public Unit invoke(BytecodePatchBuilder builder) {
                 builder.dependsOn(ca.mlkem.updates.StartupUpdatesKt.getStartupUpdates());
-            builder.compatibleWith(new Compatibility(
+                builder.compatibleWith(new Compatibility(
                     PACKAGE, "Wongnai", null, ApkFileType.XAPK, (Integer) null,
                     null,
-                    Collections.singletonList(new AppTarget(VERSION, null, true, null, null)),
+                    VERSIONS.stream().map(v -> new AppTarget(v, null, true, null, null)).collect(Collectors.toList()),
                     FormFactor.MOBILE
                 ));
                 builder.execute(new Function1<BytecodePatchContext, Unit>() {
@@ -67,13 +70,14 @@ public final class WongnaiAdPatch {
 
     private static void patch(BytecodePatchContext context) {
         if (!PACKAGE.equals(context.getPackageMetadata().getPackageName()) ||
-            !VERSION.equals(context.getPackageMetadata().getVersionName())) {
-            throw new IllegalStateException("Requires Wongnai " + VERSION + " (" + PACKAGE + ").");
+            !VERSIONS.contains(context.getPackageMetadata().getVersionName())) {
+            throw new IllegalStateException("Requires Wongnai " + VERSIONS + " (" + PACKAGE + ").");
         }
 
         // Resolve every required method before making any edits; fail closed.
+        String[][] loaders = loaders(context.getPackageMetadata().getVersionName());
         List<Method> methods = new ArrayList<Method>();
-        for (String[] target : LOADERS) methods.add(requireMethod(context, target));
+        for (String[] target : loaders) methods.add(requireMethod(context, target));
         Method photoEntry = requireMethod(context, PHOTO_ENTRY);
         requireMethod(context, PHOTO_FALLBACK);
         int registers = photoEntry.getImplementation().getRegisterCount();
@@ -83,7 +87,7 @@ public final class WongnaiAdPatch {
 
         for (int i = 0; i < methods.size(); i++) {
             BytecodeUtilsKt.returnEarly(BytecodeUtilsKt.getMutableMethod(context, methods.get(i)));
-            LOG.info("[Wongnai] Disabled " + descriptor(LOADERS[i]));
+            LOG.info("[Wongnai] Disabled " + descriptor(loaders[i]));
         }
         InstructionExtensions.INSTANCE.addInstructions(
             BytecodeUtilsKt.getMutableMethod(context, photoEntry), 0,

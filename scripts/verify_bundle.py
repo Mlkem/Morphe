@@ -16,7 +16,7 @@ assert len(amazon['compatiblePackages']) == 1
 amazon_target=amazon['compatiblePackages'][0]
 assert amazon_target['packageName'] == 'com.amazon.mShop.android.shopping'
 assert amazon_target['apkFileType'] == 'APKM'
-assert [t['version'] for t in amazon_target['targets']] == ['32.20.0.100', '32.19.0.100']
+assert [t['version'] for t in amazon_target['targets']] == ['32.20.2.100', '32.20.0.100', '32.19.0.100']
 assert all(t['isExperimental'] and t['minSdk'] == 31 for t in amazon_target['targets'])
 assert amazon['options'] == [], 'Aeroplan account values belong only in device settings'
 niagara=next(p for p in patches if p['name']=='Automatic app folders')
@@ -52,7 +52,7 @@ assert {p['name'] for p in eufy} == {'Hide Eufy Discover, Smart and Shop', 'Hide
 for p in eufy:
     assert not p['default']
     assert p['compatiblePackages'][0]['apkFileType']=='APKM'
-    assert [t['version'] for t in p['compatiblePackages'][0]['targets']]==['6.1.20_31181', '6.1.30_32823']
+    assert [t['version'] for t in p['compatiblePackages'][0]['targets']]==['6.1.40_33274', '6.1.32_32827', '6.1.30_32823', '6.1.20_31181']
     assert all(t['isExperimental'] and t['minSdk']==29 for t in p['compatiblePackages'][0]['targets'])
 gmail=next(p for p in patches if p['name']=='Gmail account visibility')
 assert not gmail['default'] and len(gmail['compatiblePackages']) == 1
@@ -65,14 +65,14 @@ assert not gboard['default'] and len(gboard['compatiblePackages'])==1
 assert gboard['description'].find('original Gboard APK') >= 0
 gboard_target=gboard['compatiblePackages'][0]
 assert gboard_target['packageName']=='com.google.android.inputmethod.latin'
-assert [t['version'] for t in gboard_target['targets']]==['18.5.4.993608717-release-arm64-v8a']
+assert [t['version'] for t in gboard_target['targets']]==['18.6.7.1002251336-release-arm64-v8a', '18.5.4.993608717-release-arm64-v8a']
 assert all(t['isExperimental'] for t in gboard_target['targets'])
 wongnai=next(p for p in patches if p['name']=='Disable Wongnai Google ads')
 assert wongnai['default'] is False, 'Untested Wongnai patch must remain opt-in'
 assert len(wongnai['compatiblePackages']) == 1
 wongnai_target=wongnai['compatiblePackages'][0]
 assert wongnai_target['packageName'] == 'com.wongnai.android'
-assert [t['version'] for t in wongnai_target['targets']] == ['12.11.0']
+assert [t['version'] for t in wongnai_target['targets']] == ['12.11.1', '12.11.0']
 assert all(t['isExperimental'] for t in wongnai_target['targets'])
 pushpress=next(p for p in patches if p['name']=='Workouts: force CrossFit class')
 assert pushpress['default'] is True
@@ -92,7 +92,7 @@ tagthai=[p for p in patches if any(c['packageName']=='com.thaidigitalplatform.ta
 assert len(tagthai)==3
 for p in tagthai:
     assert not p['default']
-    assert [t['version'] for t in p['compatiblePackages'][0]['targets']]==['4.25.1']
+    assert [t['version'] for t in p['compatiblePackages'][0]['targets']]==(['4.26.1', '4.25.1'] if p['name'] == 'Select TAGTHAi text' else ['4.25.1'])
     assert all(t['minSdk']==28 and t['isExperimental'] for t in p['compatiblePackages'][0]['targets'])
 gps=next(p for p in patches if p['name']=='Enable GPS Emulator Pro')
 assert gps['default'] is False, 'GPS Emulator must remain opt-in'

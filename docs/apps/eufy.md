@@ -4,6 +4,15 @@
 and binary-checked 6.1.30_32823 (32823) APKMirror bundles use the same package,
 `com.oceanwing.battery.cam`, on Android 10 or newer.
 
+## November 21 inputs
+
+| Input | Desktop patch result | Device architecture |
+| --- | --- | --- |
+| [6.1.32_32827 complete APKM](https://www.apkmirror.com/apk/anker/anker-eufy/anker-eufy-6-1-32_32827-release/anker-eufy-6-1-32_32827-android-apk-download/) | All three options patched together. The 12 UI resource IDs match build 32823. | ARM64 output verified. Use this input for Galaxy S26 Ultra. |
+| [6.1.40_33274 XAPK](https://apkpure.net/eufy-security/com.oceanwing.battery.cam/download/6.1.40_33274) | All three options patched together. The patch uses a new table for the 12 UI resource IDs. | The available archive and the verified output contain only armeabi-v7a. |
+
+The original bases have the Anker signing certificate listed below. The asset pack, native libraries and both hook paths were checked after patching. Camera login, streaming and notifications still need a device test.
+
 ## 6.1.30_32823 (32823) — binary-verified candidate, phone test pending
 
 The original **6.1.30_32823 (32823)** APKMirror APKM was retrieved and verified

@@ -5,6 +5,7 @@
 
 | Version | Version code |
 | --- | --- |
+| [32.20.2.100](https://www.apkmirror.com/apk/amazon-mobile-llc/amazon-shopping/amazon-shopping-32-20-2-100-release/amazon-shopping-32-20-2-100-android-apk-download/) | 1243262206 |
 | 32.20.0.100 | 1243260206 |
 | 32.19.0.100 | 1243250306 |
 

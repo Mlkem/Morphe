@@ -115,6 +115,13 @@ val allowScreenshots = bytecodePatch(
     }
 }
 
+private val textChannelTypes = mapOf("4.26.1" to "Lu4/j;", "4.25.1" to "LB3/k;")
+private val textVersions = Compatibility(
+    packageName = "com.thaidigitalplatform.tagthai", name = "TAGTHAi",
+    apkFileType = ApkFileType.APKM,
+    targets = textChannelTypes.keys.map { AppTarget(version = it, isExperimental = true, minSdk = 28) }
+)
+
 val selectText = bytecodePatch(
     name = "Select TAGTHAi text",
     description = "Adds a movable Select text button and a native copy/select panel for visible " +
@@ -123,12 +130,17 @@ val selectText = bytecodePatch(
     default = false
 ) {
     dependsOn(ca.mlkem.updates.startupUpdates)
-    compatibleWith(target)
+    compatibleWith(textVersions)
     extendWith("extensions/tagthai-text.mpe")
     execute {
-        requireOriginalVersion()
+        val version = packageMetadata.versionName
+        val expectedCode = if (version == "4.26.1") "4261001" else "4251001"
+        check(packageMetadata.packageName == textVersions.packageName && version in textChannelTypes &&
+            packageMetadata.versionCode == expectedCode) { "Unsupported TAGTHAi text selection input." }
+        if (version == "4.25.1") requireOriginalVersion()
+        val channelType = textChannelTypes.getValue(checkNotNull(version))
         val constructor = Fingerprint(definingClass = BRIDGE, name = "<init>", returnType = "V",
-            parameters = listOf("Landroid/view/View;", "LB3/k;",
+            parameters = listOf("Landroid/view/View;", channelType,
                 "Landroid/view/accessibility/AccessibilityManager;", "Landroid/content/ContentResolver;",
                 "Lio/flutter/plugin/platform/o;")).method
         val update = Fingerprint(definingClass = "Lio/flutter/view/a;", name = "a", returnType = "V",

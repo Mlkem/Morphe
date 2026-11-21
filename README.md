@@ -77,19 +77,19 @@ sorting existing apps, and restoring icons. See [Niagara details](docs/apps/niag
 | App / utility | Target | Included source | Status |
 | --- | --- | --- | --- |
 | Niagara Launcher | `bitpit.launcher` 1.16.38, 1.16.37 | Automatic folders on both versions, local Pro on 1.16.37 | Opt-in experimental; [Pro](docs/apps/niagara-pro.md) / [folders](docs/apps/niagara.md) |
-| Amazon Shopping | `com.amazon.mShop.android.shopping` 32.20.0.100 (1243260206), 32.19.0.100 (1243250306) | Aeroplan settings and official eStore referral, then shopping in the Amazon app | Opt-in experimental; [setup and limits](docs/apps/amazon-aeroplan.md) |
+| Amazon Shopping | `com.amazon.mShop.android.shopping` 32.20.2.100 (1243262206), 32.20.0.100 (1243260206), 32.19.0.100 (1243250306) | Aeroplan settings and official eStore referral, then shopping in the Amazon app | Opt-in experimental; [setup and limits](docs/apps/amazon-aeroplan.md) |
 | Gmail | `com.google.android.gm` 2026.10.26.1012468012.Release | Account visibility setting; separate GmsCore copy | Experimental; [setup and limits](docs/apps/gmail.md) |
-| Anker eufy | `com.oceanwing.battery.cam` 6.1.20_31181 | Camera-focused tabs and native promotion cleanup | Experimental; [scope and phone checks](docs/apps/eufy.md) |
-| Music League | `com.musicleague.app` 1.4.9 | Recovered patch sources | Combined bundle awaits phone testing |
+| Anker eufy | `com.oceanwing.battery.cam` 6.1.40 (32-bit), 6.1.32 (ARM64), 6.1.30, 6.1.20 | Camera-focused tabs and native promotion cleanup | Experimental; [scope and phone checks](docs/apps/eufy.md) |
+| Music League | `com.musicleague.app` 1.4.11, 1.4.9 | Recovered patch sources | Combined bundle awaits phone testing |
 | Walmart Canada | `ca.walmart.ecommerceapp` 26.41.2 (26410201), 26.31 | 14 patches; stock quantities by fulfilment, easier tools menu | Beta; exact-count response and phone testing pending |
-| Wongnai | `com.wongnai.android` 12.11.0 | Ad fix 1.0.0 | Phone testing pending |
+| Wongnai | `com.wongnai.android` 12.11.1, 12.11.0 | Ad fix 1.0.0 | Phone testing pending |
 | Zoom Earth | `com.neave.zoomearth` 6.3.3 (52); legacy 6.1 | Local Pro, no ads, 100 favourites, quiet prompts; cleanup for the supplied working LiteAPKs APK | Attached failing dev.11 APK uses the original Play input; LiteAPKs-based phone retest still pending |
-| PushPress Members | `com.pushpress.memberportal` 3.42.0 | CrossFit-only selector | Experimental; phone testing pending |
+| PushPress Members | `com.pushpress.memberportal` 3.45.0, 3.44.0, 3.42.0 | CrossFit-only selector | Experimental; phone testing pending |
 | Open with | `com.openwith.app` 1.2.1 (11), 1.4 (20) | Pro file-type handling | Opt-in beta; phone testing pending |
 | GPS Emulator | `com.rosteam.gpsemulator` 3.36 (336) | Fresh Pro patch; 1,000 favourites | Opt-in beta; phone testing pending |
-| TAGTHAi | `com.thaidigitalplatform.tagthai` 4.25.1 (4251001) | Accessibility, screenshots, text panel | Known white-screen launch failure in dev.7 and dev.8; diagnosis pending |
+| TAGTHAi | `com.thaidigitalplatform.tagthai` 4.26.1 (text selection), 4.25.1 | Accessibility, screenshots, text panel | Known white-screen launch failure in dev.7 and dev.8; diagnosis pending |
 | Songsterr | `com.songsterr` 7.1.6 (2012282388) | Highest local premium tier; player/UI/ad gates | Opt-in; server features and phone runtime unverified |
-| Gboard | `com.google.android.inputmethod.latin` 18.5.4 arm64 | Optional floating and one-handed mode block alongside standard Gboard patches | Opt-in beta; phone testing pending |
+| Gboard | `com.google.android.inputmethod.latin` 18.6.7 or 18.5.4 arm64 | Optional floating and one-handed mode block alongside standard Gboard patches | Opt-in beta; phone testing pending |
 | Merge XAPK only | Universal | Merge-only 1.0.0 | Opt-in; uses Morphe's merge/sign flow |
 
 The Amazon Aeroplan patch, Music League Hermes patch, Walmart Remove Shop patch and universal merge utility
@@ -102,7 +102,7 @@ See [TAGTHAi setup and limits](docs/apps/tagthai.md). See
 validation](docs/apps/openwith.md). Walmart price history records prices you actually encounter;
 it does not provide past prices from a remote database. See [Walmart details](docs/apps/walmart-canada.md).
 
-For Gboard, select the **original stock Gboard 18.5.4 arm64 APK**, then add
+For Gboard, select the **original stock Gboard 18.6.7 or 18.5.4 arm64 APK**, then add
 **Disable Gboard floating and one-handed modes** alongside your usual patches in the same run.
 See [Gboard installation and compatibility](docs/apps/gboard.md).
 

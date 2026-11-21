@@ -20,7 +20,7 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-/** Version-specific UI IDs confirmed against original 6.1.20 and 6.1.30 APKMs. No network/camera API calls. */
+/** Version-specific UI IDs verified by resource name in the original bundles. No network/camera API calls. */
 public final class CameraOnly implements Application.ActivityLifecycleCallbacks {
     static final int NAV = 1, PROMOTIONS = 2, MOBILE_STREAMING = 4;
     static final int MAIN_TABS = 0x7f0a1719;
@@ -36,7 +36,19 @@ public final class CameraOnly implements Application.ActivityLifecycleCallbacks 
     static final int SHOP_IMAGE_32823 = 0x7f0a1a22, SHOP_CLOSE_32823 = 0x7f0a1a20;
     static final int SOLAR_IMAGE_32823 = 0x7f0a1298, SOLAR_CLOSE_32823 = 0x7f0a1299, SOLAR_MORE_32823 = 0x7f0a1e56;
     static final int DISCOVER_32823 = 0x7f140858, SMART_32823 = 0x7f143a42, SHOP_32823 = 0x7f143825, HOME_32823 = 0x7f143a41;
-    private static final int BUILD_31181 = 31181, BUILD_32823 = 32823;
+    private static final int MAIN_TABS_33274 = 0x7f0a173e;
+    private static final int HOME_BANNER_33274 = 0x7f0a0c0c;
+    private static final int AI_BANNER_33274 = 0x7f0a0c0b;
+    private static final int SHOP_IMAGE_33274 = 0x7f0a1a27;
+    private static final int SHOP_CLOSE_33274 = 0x7f0a1a25;
+    private static final int SOLAR_IMAGE_33274 = 0x7f0a129b;
+    private static final int SOLAR_CLOSE_33274 = 0x7f0a129c;
+    private static final int SOLAR_MORE_33274 = 0x7f0a1e5b;
+    private static final int DISCOVER_33274 = 0x7f14086b;
+    private static final int SMART_33274 = 0x7f143a64;
+    private static final int SHOP_33274 = 0x7f143839;
+    private static final int HOME_33274 = 0x7f143a63;
+    private static final int BUILD_31181 = 31181, BUILD_32823 = 32823, BUILD_33274 = 33274;
     private static final String PACKAGE = "com.oceanwing.battery.cam";
     private static final String BUSINESS_CARD = "com.oceanwing.battery.cam.account.ui.ItemBusinessBannerView";
     private static CameraOnly instance;
@@ -56,6 +68,19 @@ public final class CameraOnly implements Application.ActivityLifecycleCallbacks 
     public static void enablePromotions32823(Activity activity) { enable(activity, PROMOTIONS, BUILD_32823); }
     public static void enableMobileStreaming(Activity activity) { enable(activity, MOBILE_STREAMING, BUILD_31181); }
     public static void enableMobileStreaming32823(Activity activity) { enable(activity, MOBILE_STREAMING, BUILD_32823); }
+
+    public static void enableNavigation33274(Activity activity) { enable(activity, NAV, BUILD_33274); }
+    public static void enablePromotions33274(Activity activity) { enable(activity, PROMOTIONS, BUILD_33274); }
+    public static void enableMobileStreaming33274(Activity activity) { enable(activity, MOBILE_STREAMING, BUILD_33274); }
+
+    private int resourceId(int legacy, int build32823, int build33274) {
+        switch (targetBuild) {
+            case BUILD_31181: return legacy;
+            case BUILD_32823: return build32823;
+            case BUILD_33274: return build33274;
+            default: throw new IllegalStateException("Unknown Eufy resource table");
+        }
+    }
 
     private static void enable(Activity activity, int flag, int versionCode) {
         if (activity == null) return;
@@ -101,17 +126,16 @@ public final class CameraOnly implements Application.ActivityLifecycleCallbacks 
         if ((flags & MOBILE_STREAMING) != 0) autoConfirmMobileData(root);
         // A new build reuses the old IDs for unrelated views. Never search the
         // old IDs when running 32823, even if the correct targets are absent.
-        boolean modern = targetBuild == BUILD_32823;
         if ((flags & NAV) != 0) {
-            View bar = root.findViewById(modern ? MAIN_TABS_32823 : MAIN_TABS);
+            View bar = root.findViewById(resourceId(MAIN_TABS, MAIN_TABS_32823, MAIN_TABS_33274));
             if (bar instanceof ViewGroup) {
                 Resources res = root.getResources();
                 hideTabs((ViewGroup) bar,
                     new String[]{
-                        text(res, modern ? DISCOVER_32823 : DISCOVER, "Discover"),
-                        text(res, modern ? SMART_32823 : SMART, "Smart"),
-                        text(res, modern ? SHOP_32823 : SHOP, "Shop")
-                    }, text(res, modern ? HOME_32823 : HOME, "Home"));
+                        text(res, resourceId(DISCOVER, DISCOVER_32823, DISCOVER_33274), "Discover"),
+                        text(res, resourceId(SMART, SMART_32823, SMART_33274), "Smart"),
+                        text(res, resourceId(SHOP, SHOP_32823, SHOP_33274), "Shop")
+                    }, text(res, resourceId(HOME, HOME_32823, HOME_33274), "Home"));
             }
         }
         if ((flags & PROMOTIONS) == 0) return;
@@ -121,8 +145,8 @@ public final class CameraOnly implements Application.ActivityLifecycleCallbacks 
         while (!queue.isEmpty() && visited++ < 4096) {
             View view = queue.removeFirst();
             int id = view.getId();
-            if (id == (modern ? HOME_BANNER_32823 : HOME_BANNER) ||
-                id == (modern ? AI_BANNER_32823 : AI_BANNER) ||
+            if (id == resourceId(HOME_BANNER, HOME_BANNER_32823, HOME_BANNER_33274) ||
+                id == resourceId(AI_BANNER, AI_BANNER_32823, AI_BANNER_33274) ||
                 BUSINESS_CARD.equals(view.getClass().getName())) {
                 collapse(view);
                 continue;
@@ -134,10 +158,10 @@ public final class CameraOnly implements Application.ActivityLifecycleCallbacks 
         }
         // Exact multi-view signatures. Only the native close control is invoked;
         // no generic dialog dismissal, Back action or purchase button is used.
-        closeOffer(root, modern ? SHOP_IMAGE_32823 : SHOP_IMAGE,
-            modern ? SHOP_CLOSE_32823 : SHOP_CLOSE, 0);
-        closeOffer(root, modern ? SOLAR_IMAGE_32823 : SOLAR_IMAGE,
-            modern ? SOLAR_CLOSE_32823 : SOLAR_CLOSE, modern ? SOLAR_MORE_32823 : SOLAR_MORE);
+        closeOffer(root, resourceId(SHOP_IMAGE, SHOP_IMAGE_32823, SHOP_IMAGE_33274),
+            resourceId(SHOP_CLOSE, SHOP_CLOSE_32823, SHOP_CLOSE_33274), 0);
+        closeOffer(root, resourceId(SOLAR_IMAGE, SOLAR_IMAGE_32823, SOLAR_IMAGE_33274),
+            resourceId(SOLAR_CLOSE, SOLAR_CLOSE_32823, SOLAR_CLOSE_33274), resourceId(SOLAR_MORE, SOLAR_MORE_32823, SOLAR_MORE_33274));
     }
 
 

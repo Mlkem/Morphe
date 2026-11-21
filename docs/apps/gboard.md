@@ -11,7 +11,8 @@ The separate accessory panel and Floating Web Search feature are outside its sco
 ## Input and installation
 
 - Package: `com.google.android.inputmethod.latin`
-- Version: `18.5.4.993608717-release-arm64-v8a` (176049702), full APK.
+- ARM64 full APKs: `18.6.7.1002251336-release-arm64-v8a` (176071990) and `18.5.4.993608717-release-arm64-v8a` (176049702). [18.6.7 download](https://www.apkmirror.com/apk/google-inc/gboard/gboard-the-google-keyboard-18-6-7-1002251336-release/)
+- The floating/one-handed patch was applied to both originals. Testing with third-party GboardWu patches and testing the new build on a phone remain pending.
 - Use the original Google-signed Gboard APK, before applying other patches.
 
 1. Update **mlkemac patches** to dev.17 or later; enable **Experimental app

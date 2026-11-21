@@ -15,6 +15,7 @@ private const val SHOPPING_ACTIVITY = "ca.mlkem.amazon.AeroplanActivity"
 private const val AMAZON_LINK_ACTIVITY = "com.amazon.mShop.httpUrlDeepLink.DeepLinkingActivity"
 private const val ANDROID = "http://schemas.android.com/apk/res/android"
 private val reviewedVersions = mapOf(
+    "32.20.2.100" to "1243262206",
     "32.20.0.100" to "1243260206",
     "32.19.0.100" to "1243250306",
 )

@@ -65,8 +65,8 @@ public class VerifyGboard {
                     r[two.getRegisterA()]=fields.get(key);
                 }
                 case INVOKE_VIRTUAL -> {
-                    check(((ReferenceInstruction)i).getReference().toString().equals("Lpra;->d()Z"),"Only temporary-mode query");
-                    result=fields.get("Lpra;->f:I")!=0?1:0;
+                    check(((ReferenceInstruction)i).getReference().toString().equals(m.getDefiningClass()+"->d()Z"),"Only temporary-mode query");
+                    result=fields.get(m.getDefiningClass()+"->f:I")!=0?1:0;
                 }
                 case MOVE_RESULT -> r[((OneRegisterInstruction)i).getRegisterA()]=result;
                 case IF_EQZ -> { if ((Integer)r[((OneRegisterInstruction)i).getRegisterA()]==0) next=pc+((OffsetInstruction)i).getCodeOffset(); }
@@ -79,6 +79,7 @@ public class VerifyGboard {
                     var two=(TwoRegisterInstruction)i;
                     if (!Objects.equals(r[two.getRegisterA()],r[two.getRegisterB()])) next=pc+((OffsetInstruction)i).getCodeOffset();
                 }
+                case GOTO -> next=pc+((OffsetInstruction)i).getCodeOffset();
                 case RETURN -> { return (Integer)r[((OneRegisterInstruction)i).getRegisterA()]; }
                 case RETURN_WIDE -> {
                     long value=(Long)r[((OneRegisterInstruction)i).getRegisterA()];
@@ -183,7 +184,25 @@ public class VerifyGboard {
         }
         throw new AssertionError("Popup lookup did not terminate");
     }
+    private static void checkSavedModes(Method resolve) {
+        String owner = resolve.getDefiningClass();
+        for(int stored=0;stored<=6;stored++)for(int temporary=0;temporary<=6;temporary++) {
+            Object[] r={null,"this"};
+            int effective=temporary!=0?temporary:stored;
+            int value=execute(resolve,r,Map.of(owner+"->c:I",stored,owner+"->f:I",temporary),0,-1);
+            check(value==((effective==2 || effective==3)?1:effective),"Saved/temporary modes "+stored+"/"+temporary);
+            check(value!=2 && value!=3,"One-handed and floating never resolve");
+        }
+    }
+
     public static void main(String[] args) throws Exception {
+        if (args.length == 3 && args[0].equals("--saved-modes")) {
+            Method resolve = methods(Path.of(args[1])).get(args[2] + "->a()I");
+            check(resolve != null, "Expected reviewed mode resolver");
+            checkSavedModes(resolve);
+            System.out.println("PASS: all 49 saved and temporary keyboard mode combinations");
+            return;
+        }
         Path input=Path.of(args[0]), output=Path.of(args[1]);
         var before=hashes(input);var after=hashes(output);
         before.keySet().removeIf(n->n.matches("classes[0-9]*\\.dex"));
@@ -203,13 +222,7 @@ public class VerifyGboard {
         Method setter=patched.get("Lpqw;->ag(IZZ)Z");
         Method oneHanded=patched.get("Lpqw;->at(Z)Z");
         Method shortcutState=patched.get("Lpqw;->fV(Lpev;Landroid/view/inputmethod/EditorInfo;)J");
-        for(int stored=0;stored<=6;stored++)for(int temporary=0;temporary<=6;temporary++) {
-            Object[] r={null,"this"};
-            int effective=temporary!=0?temporary:stored;
-            int value=execute(resolve,r,Map.of("Lpra;->c:I",stored,"Lpra;->f:I",temporary),0,-1);
-            check(value==((effective==2 || effective==3)?1:effective),"Saved/temporary modes "+stored+"/"+temporary);
-            check(value!=2 && value!=3,"One-handed and floating never resolve");
-        }
+        checkSavedModes(resolve);
         for(int requested:new int[]{Integer.MIN_VALUE,-1,0,1,2,3,4,5,6,255,Integer.MAX_VALUE}) {
             Object[] r=new Object[15];Arrays.fill(r,"untouched");r[12]=requested;
             int value=execute(setter,r,Map.of(),0,7);
