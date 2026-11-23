@@ -1,3 +1,9 @@
+## [1.0.0-dev.53](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.52...v1.0.0-dev.53) (2026-11-23)
+
+### 🐛 Bug Fixes
+
+* **Walmart Canada:** open native shopping after Aeroplan activation ([375af6b](https://github.com/Mlkem/Morphe/commit/375af6b4434c56dca21da1f095d079f1026c8c67))
+
 ## [1.0.0-dev.52](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.51...v1.0.0-dev.52) (2026-11-23)
 
 ### 🐛 Bug Fixes
