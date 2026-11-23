@@ -14,6 +14,15 @@ internal val aeroplanReviewManifest = resourcePatch {
         }
         document("AndroidManifest.xml").use { manifest ->
             val app = manifest.getElementsByTagName("application").item(0) as Element
+            if (manifest.documentElement.getAttribute("package") == "ca.walmart.ecommerceapp") {
+                val namespace = "http://schemas.android.com/apk/res/android"
+                val activities = app.getElementsByTagName("activity")
+                check((0 until activities.length).any { index ->
+                    val candidate = activities.item(index) as Element
+                    candidate.getAttributeNS(namespace, "name") == "com.walmart.glass.integration.splash.SplashActivity" &&
+                        candidate.getAttributeNS(namespace, "enabled") != "false"
+                }) { "The Walmart shopping link handler is unavailable in this build." }
+            }
             val activity = manifest.createElement("activity")
             mapOf(
                 "name" to "ca.mlkem.amazon.ReviewActivity",

@@ -52,8 +52,8 @@ public final class AeroplanBridge {
             if (activity.isFinishing() || activity.isDestroyed()) return;
             publishShortcut(activity);
             new AlertDialog.Builder(activity).setTitle("Shop with Aeroplan")
-                    .setMessage("Open the Walmart.ca eStore offer before adding items to your shopping cart.")
-                    .setPositiveButton("Review and shop", (d, w) -> ReviewActivity.open(activity))
+                    .setMessage("Activate the eStore offer, then shop in the Walmart app.")
+                    .setPositiveButton("Activate for Walmart", (d, w) -> ReviewActivity.open(activity))
                     .setNegativeButton("Continue in Walmart", null).show();
         });
     }

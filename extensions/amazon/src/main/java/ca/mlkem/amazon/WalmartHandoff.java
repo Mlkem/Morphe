@@ -46,7 +46,7 @@ final class WalmartHandoff {
         List<String> values = uri.getQueryParameters(name);
         return values.size() == 1 ? values.get(0) : null;
     }
-    private static boolean store(String url) {
+    static boolean store(String url) {
         String host = SessionRules.host(url);
         return SessionRules.isHttps(url) && ("www.walmart.ca".equalsIgnoreCase(host) || "walmart.ca".equalsIgnoreCase(host));
     }
@@ -74,7 +74,7 @@ final class WalmartHandoff {
                 onTrustedRoute = true;
             } else {
                 atClick = false;
-                onTrustedRoute = known;
+                onTrustedRoute = known || (onTrustedRoute && "goto.walmart.ca".equalsIgnoreCase(SessionRules.host(url)));
                 if (store(url)) enter(Stage.STORE, now);
                 else if (known) enter(Stage.RELAY, now);
                 else enter(Stage.OTHER, now);
@@ -100,6 +100,9 @@ final class WalmartHandoff {
             String target = parameter(wrapper, "q");
             if (portalRoute(parameter(wrapper, "p"), false) && partnerLink(target)) partner = target;
         }
+    }
+    boolean expectsDestination(String url) {
+        return captured && url != null && (onTrustedRoute || url.equals(relay) || url.equals(partner));
     }
     String currentClick() { return atClick ? clickUrl : null; }
     String publisher() {

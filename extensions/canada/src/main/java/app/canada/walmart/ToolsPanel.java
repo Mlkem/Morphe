@@ -15,7 +15,7 @@ final class ToolsPanel {
   ToolUi.action(box,"Price history",HistoryStore.keys(c).size()+" saved products · prices and trends",android.R.drawable.ic_menu_recent_history,()->HistoryTools.browse(c,false));
   Intent aeroplan = aeroplanIntent(c);
   if (aeroplan != null)
-   ToolUi.action(box,"Aeroplan shopping","Review your referral, cart and recent orders",android.R.drawable.ic_menu_compass,()->c.startActivity(aeroplan));
+   ToolUi.action(box,"Aeroplan shopping","Activate Aeroplan and shop in the Walmart app",android.R.drawable.ic_menu_compass,()->c.startActivity(aeroplan));
   ToolUi.section(box,"More tools");
   ToolUi.action(box,"Shopping tools","Unit prices, basket calculator and checklist export",android.R.drawable.ic_menu_sort_by_size,()->shopping(c));
   ToolUi.action(box,"Settings","Ads, price recording and checklist preferences",android.R.drawable.ic_menu_preferences,()->controls(c));
