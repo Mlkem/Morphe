@@ -2,6 +2,7 @@ package ca.mlkem.niagara.restore;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.os.Looper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -23,7 +24,9 @@ public class RestoreMembershipTest {
         RestoreMembershipActivity activity = Robolectric.buildActivity(RestoreMembershipActivity.class, share).setup().get();
         assertNull(shadowOf(activity).getNextStartedActivity());
         ShadowAlertDialog.getLatestAlertDialog().getButton(AlertDialog.BUTTON_POSITIVE).performClick();
+        shadowOf(Looper.getMainLooper()).idle();
         Intent result = shadowOf(activity).getNextStartedActivity();
+        assertNotNull(result);
         assertEquals(Intent.ACTION_VIEW,result.getAction());
         assertEquals(LINK,result.getDataString());
         assertEquals(activity.getPackageName(),result.getComponent().getPackageName());
