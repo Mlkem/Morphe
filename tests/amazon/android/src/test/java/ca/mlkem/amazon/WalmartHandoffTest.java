@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Map;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,12 +46,77 @@ public class WalmartHandoffTest {
             public Map<String,String> getRequestHeaders() { return Collections.emptyMap(); }
         };
     }
+    @Test public void nativeIsDefaultAndDeliversTheCompleteLinkOnceAfterActivation() {
+        ActivityController<ReviewActivity> controller = Robolectric.buildActivity(ReviewActivity.class).setup();
+        try {
+            ReviewActivity a = controller.get();
+            ReflectionHelpers.setField(a, "walmart", true);
+            ReflectionHelpers.callInstanceMethod(a, "startOffer");
+            shadowOf(RuntimeEnvironment.getApplication()).checkActivities(false);
+            WebView v = ReflectionHelpers.callInstanceMethod(a, "current");
+            WebViewClient c = v.getWebViewClient();
+            c.onPageStarted(v, OFFER, null);
+            assertFalse(c.shouldOverrideUrlLoading(v, request(STORE, true)));
+            assertFalse(c.shouldOverrideUrlLoading(v, request(notice(CLICK), true)));
+            c.onPageStarted(v, CLICK, null);
+            assertFalse(c.shouldOverrideUrlLoading(v, request(STORE, false)));
+            assertNull(shadowOf(a).getNextStartedActivity());
+            assertTrue(c.shouldOverrideUrlLoading(v, request(STORE, true)));
+            c.onPageStarted(v, STORE, null);
+            Intent actual = shadowOf(a).getNextStartedActivity();
+            assertEquals(NativeWalmart.PACKAGE, actual.getComponent().getPackageName());
+            assertEquals(NativeWalmart.ACTIVITY, actual.getComponent().getClassName());
+            assertEquals(Intent.ACTION_VIEW, actual.getAction());
+            assertTrue(actual.hasCategory(Intent.CATEGORY_BROWSABLE));
+            assertEquals(STORE, actual.getDataString());
+            assertNull(actual.getExtras());
+            assertNull(shadowOf(a).getNextStartedActivity());
+            assertTrue(a.isFinishing());
+        } finally { controller.pause().stop().destroy(); }
+    }
+
+    @Test public void nativeLaunchFailureAllowsExplicitRetryOfTheSameLink() {
+        ActivityController<ReviewActivity> controller = Robolectric.buildActivity(ReviewActivity.class).setup();
+        try {
+            ReviewActivity a = controller.get();
+            ReflectionHelpers.setField(a, "walmart", true);
+            ReflectionHelpers.callInstanceMethod(a, "startOffer");
+            WebView v = ReflectionHelpers.callInstanceMethod(a, "current");
+            WebViewClient c = v.getWebViewClient();
+            c.onPageStarted(v, OFFER, null);
+            c.onPageStarted(v, notice(CLICK), null);
+            shadowOf(RuntimeEnvironment.getApplication()).checkActivities(true);
+            c.onPageStarted(v, STORE, null);
+            assertFalse(a.isFinishing());
+            Button retry = ReflectionHelpers.getField(a, "retry");
+            assertEquals("Retry in Walmart app", retry.getText());
+            assertEquals(View.VISIBLE, retry.getVisibility());
+            shadowOf(RuntimeEnvironment.getApplication()).checkActivities(false);
+            retry.performClick();
+            assertEquals(STORE, shadowOf(a).getNextStartedActivity().getDataString());
+            assertTrue(a.isFinishing());
+        } finally { controller.pause().stop().destroy(); }
+    }
+
+    @Test public void nativeDestinationsUseVerifiedShoppingSchemesOrWalmartWebFallback() {
+        String app = "walmartca://home?sourceid=a%2Fb";
+        assertEquals(app, NativeWalmart.destination(app));
+        assertEquals("walmartapp://home", NativeWalmart.destination("walmartapp://home"));
+        assertEquals(app, NativeWalmart.destination("intent://home?sourceid=a%2Fb#Intent;scheme=walmartca;package=other;end"));
+        assertEquals(STORE, NativeWalmart.destination("intent://outside/#Intent;scheme=unrelated;S.browser_fallback_url=" + Uri.encode(STORE) + ";end"));
+        assertNull(NativeWalmart.destination("https://walmart.ca.example/"));
+        assertNull(NativeWalmart.destination("https://example@www.walmart.ca/"));
+        assertNull(NativeWalmart.destination("walmartrewardsca://payment"));
+        assertNull(NativeWalmart.destination("intent://outside/#Intent;scheme=unrelated;end"));
+    }
+
     @Test public void stalledRakutenStageKeepsExactLinkForRetryAndExternalBrowser() {
         ActivityController<ReviewActivity> controller = Robolectric.buildActivity(ReviewActivity.class).setup();
         try {
             ReviewActivity activity = controller.get();
             shadowOf(RuntimeEnvironment.getApplication()).checkActivities(false);
             ReflectionHelpers.setField(activity, "walmart", true);
+            ((CheckBox) ReflectionHelpers.getField(activity, "nativeShopping")).setChecked(false);
             ReflectionHelpers.callInstanceMethod(activity, "startOffer");
             WebView web = ReflectionHelpers.callInstanceMethod(activity, "current");
             WebViewClient client = web.getWebViewClient();
@@ -125,6 +191,7 @@ public class WalmartHandoffTest {
         try {
             ReviewActivity a = controller.get();
             ReflectionHelpers.setField(a, "walmart", true);
+            ((CheckBox) ReflectionHelpers.getField(a, "nativeShopping")).setChecked(false);
             ReflectionHelpers.callInstanceMethod(a, "startOffer");
             WebView web = ReflectionHelpers.callInstanceMethod(a, "current");
             WebViewClient client = web.getWebViewClient();
@@ -172,6 +239,7 @@ public class WalmartHandoffTest {
         try {
             ReviewActivity activity = controller.get();
             ReflectionHelpers.setField(activity, "walmart", true);
+            ((CheckBox) ReflectionHelpers.getField(activity, "nativeShopping")).setChecked(false);
             ReflectionHelpers.callInstanceMethod(activity, "startOffer");
             WebView view = ReflectionHelpers.callInstanceMethod(activity, "current");
             Button action = ReflectionHelpers.getField(activity, "activation");

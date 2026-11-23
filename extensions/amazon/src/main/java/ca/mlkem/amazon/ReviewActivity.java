@@ -24,6 +24,9 @@ public final class ReviewActivity extends Activity {
     private boolean walmart, resumed, inspecting;
     private TextView banner;
     private Button activation, retry, browser;
+    private CheckBox nativeShopping;
+    // The exact retailer destination stays in memory for an explicit retry.
+    private String nativeTarget, webFallback;
     private boolean loadingWalmartOffer;
     private long offerStarted;
     private String offerError;
@@ -91,11 +94,25 @@ public final class ReviewActivity extends Activity {
                 .setNegativeButton("Keep shopping",null).setPositiveButton("Activate", (d,w)->startOffer()).show();
         });
         action(bar,"Review",v -> review()); action(bar,"Orders",v -> orders());
+        nativeShopping = new CheckBox(this);
+        nativeShopping.setText("Shop in the Walmart app after activation");
+        nativeShopping.setChecked(true);
+        nativeShopping.setSaveEnabled(false);
+        nativeShopping.setOnCheckedChangeListener((button, checked) -> {
+            if (!checked && nativeTarget != null) {
+                String url = webFallback;
+                nativeTarget = webFallback = null;
+                if (url != null) current().loadUrl(url);
+                draw();
+            }
+        });
+        root.addView(nativeShopping);
         banner = new TextView(this); banner.setTextSize(14); banner.setTextColor(Color.WHITE);
         banner.setPadding(dp(12),dp(8),dp(12),dp(8)); banner.setOnClickListener(v -> review()); root.addView(banner);
         retry = new Button(this);
         retry.setAllCaps(false); retry.setText("Retry referral in Walmart");
         retry.setOnClickListener(v -> {
+            if (nativeTarget != null) { openNativeTarget(); return; }
             if (offerStalled(SystemClock.elapsedRealtime())) { startOffer(); return; }
             if (!pendingHandoff() || current() == null) return;
             String target = handoff.retry(SystemClock.elapsedRealtime());
@@ -117,6 +134,8 @@ public final class ReviewActivity extends Activity {
     private int dp(int value) { return Math.round(getResources().getDisplayMetrics().density*value); }
     private void startOffer() {
         destroyTabs(); visit = new ReferralVisit(walmart); handoff = walmart ? new WalmartHandoff() : null; liveRules=null; lastCart=null; rate="";
+        nativeTarget = webFallback = null;
+        nativeShopping.setVisibility(walmart ? View.VISIBLE : View.GONE);
         failedUrl = null; committedView = null;
         loadingWalmartOffer = walmart; offerStarted = SystemClock.elapsedRealtime(); offerError = null;
         WebView view = newTab(); view.loadUrl(visit.offer); draw();
@@ -136,6 +155,27 @@ public final class ReviewActivity extends Activity {
         if (pendingHandoff()) handoff.observe(url, SystemClock.elapsedRealtime());
         if (visit.arrived != 0) handoff = null;
     }
+    private boolean routeToWalmart(String url) {
+        if (!walmart || !nativeShopping.isChecked()) return false;
+        if (isFinishing()) return true;
+        if (!pendingHandoff() || !handoff.expectsDestination(url)) return false;
+        String target = NativeWalmart.destination(url);
+        if (target == null) return false;
+        // Redirects can appear in multiple WebView callbacks. Launch once.
+        if (nativeTarget != null) return true;
+        nativeTarget = target;
+        webFallback = WalmartHandoff.store(target) ? target : WalmartHandoff.browserDestination(url);
+        if (webFallback == null) webFallback = handoff.recoveryLink();
+        openNativeTarget();
+        return true;
+    }
+    private void openNativeTarget() {
+        if (isFinishing() || nativeTarget == null) return;
+        if (NativeWalmart.open(this, nativeTarget)) {
+            Toast.makeText(this, "Aeroplan referral sent to the Walmart app", Toast.LENGTH_SHORT).show();
+            finish();
+        } else draw();
+    }
     private WebView current() { return tabs.isEmpty() ? null : tabs.get(tabs.size()-1); }
     private void invalidatePage() { generation++; inspecting=false; summary=""; snapshot=null; }
     private WebView newTab() {
@@ -151,6 +191,7 @@ public final class ReviewActivity extends Activity {
             @Override public boolean shouldOverrideUrlLoading(WebView v,WebResourceRequest r) {
                 if (!r.isForMainFrame()) return false;
                 String url = r.getUrl().toString();
+                if (v == current() && routeToWalmart(url)) return true;
                 if (SessionRules.isHttps(url)) {
                     if (v == current() && walmart && visit.sawOffer && visit.arrived == 0 && WalmartHandoff.portalRoute(url, true)) {
                         observe(url);
@@ -173,16 +214,18 @@ public final class ReviewActivity extends Activity {
             }
             @Override public void onPageStarted(WebView v,String url,Bitmap icon) {
                 if (v!=current()) return;
+                if (routeToWalmart(url)) { v.stopLoading(); return; }
                 invalidatePage(); committedView=null; failedUrl=null;
                 if (!visit.store(url)) observe(url);
                 else if (pendingHandoff()) handoff.observe(url, SystemClock.elapsedRealtime());
                 draw();
             }
             @Override public void doUpdateVisitedHistory(WebView v,String url,boolean reload) {
-                if (v==current()) { invalidatePage(); if (!visit.store(url) || committedView==v) observe(url); draw(); }
+                if (v==current() && !routeToWalmart(url)) { invalidatePage(); if (!visit.store(url) || committedView==v) observe(url); draw(); }
             }
             @Override public void onPageFinished(WebView v,String url) {
                 if (v==current() && url.equals(v.getUrl()) && !url.equals(failedUrl)) {
+                    if (routeToWalmart(url)) return;
                     if (visit.offerPage(url)) loadingWalmartOffer = false;
                     committedView=v; observe(url); draw(); inspect();
                 }
@@ -269,11 +312,15 @@ public final class ReviewActivity extends Activity {
             else if (recovery != null) hint += " Browser continues the same referral outside this window.";
             else hint += " Restart in browser starts a fresh eStore visit.";
         }
+        if (nativeTarget != null) {
+            retry.setText("Retry in Walmart app"); retry.setVisibility(View.VISIBLE);
+            hint = "\nWalmart couldn’t open the shopping link. Retry, or turn off native shopping to use the web review.";
+        }
         banner.setText(visit.status(System.currentTimeMillis()) + hint + (rate.isEmpty()?"":" · "+rate) + (host.isEmpty()?"":"\n"+host) + (summary.isEmpty()?"":"\n"+summary));
     }
     private void inspect() {
         WebView v=current();
-        if (v==null || committedView!=v || !resumed) return;
+        if (v==null || committedView!=v || !resumed || isFinishing() || nativeTarget!=null) return;
         String url=v.getUrl();
         boolean offer = visit.offerPage(url);
         if (!visit.store(url) && !offer) return;
