@@ -131,7 +131,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.54](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.54)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;48 patches total
+> **[v1.0.0-dev.55](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.55)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;49 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -242,7 +242,7 @@ provide privacy.
 </details>
 
 <details>
-<summary>📦 Niagara Launcher&nbsp;&nbsp;•&nbsp;&nbsp;2 patches</summary>
+<summary>📦 Niagara Launcher&nbsp;&nbsp;•&nbsp;&nbsp;3 patches</summary>
 <br>
 
 **Package name:** `bitpit.launcher`
@@ -256,6 +256,7 @@ provide privacy.
 |----------|----------------|-----------|
 | [Automatic app folders](#automatic-app-folders) | Automatically sorts newly installed apps into native Niagara folders in Favorites, then hides their separate app-list icons after saving. Ten local categories with live switches in Settings > Productivity > Auto folders. Includes sort-existing and restore controls. Unknown apps go to Other Apps. Preserves pinned favorites, manually hidden apps and other profiles. Niagara 1.16.37 and 1.16.38; phone testing pending. |  |
 | [Enable Niagara Pro](#enable-niagara-pro) | Enables local Pro features in Niagara Launcher 1.16.37. Works independently of Automatic app folders. Online services still require their normal account authorization. Phone testing pending. |  |
+| [Restore Niagara Pro membership](#restore-niagara-pro-membership) | Adds Restore Niagara Pro to Android’s Share menu for membership email links. Niagara verifies the original purchase. Supports Niagara 1.16.38 (1644). |  |
 
 </details>
 

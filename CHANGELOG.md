@@ -1,3 +1,9 @@
+## [1.0.0-dev.55](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.54...v1.0.0-dev.55) (2026-11-23)
+
+### ✨ New Features
+
+* **Niagara Launcher:** restore owned Pro memberships on 1.16.38 ([19b79f4](https://github.com/Mlkem/Morphe/commit/19b79f489002eecdd0b8c4ec46f1a7888fdbcf50))
+
 ## [1.0.0-dev.54](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.53...v1.0.0-dev.54) (2026-11-23)
 
 ### ✨ New Features
