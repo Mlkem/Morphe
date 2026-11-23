@@ -35,6 +35,25 @@ public class ReferralVisitTest {
         assertTrue(v.interrupted);
         assertFalse(v.store("https://walmart.ca.evil.example/"));
     }
+    @Test public void walmartChecksThePublisherAndIgnoresRotatingClickIdentifiers() {
+        ReferralVisit v = new ReferralVisit(true);
+        v.observe(v.offer, 1);
+        v.observe(ReferralVisit.PORTAL + v.redirect, 2);
+        v.expectWalmartPublisher("pub");
+        String store = "https://www.walmart.ca/en?";
+        v.observe(store + "siteID=pub-first&sourceid=one", 3);
+        v.observe(store + "wmlspartner=pub&siteID=pub-second&sourceid=two&irclickid=new", 4);
+        assertTrue(v.status(4).contains("publisher matches"));
+        v.observe(store + "siteID=other-click", 5);
+        assertTrue(v.replaced);
+        ReferralVisit conflict = new ReferralVisit(true);
+        conflict.observe(conflict.offer, 1);
+        conflict.observe(ReferralVisit.PORTAL + conflict.redirect, 2);
+        conflict.expectWalmartPublisher("pub");
+        conflict.observe(store + "wmlspartner=pub&siteID=other-click", 3);
+        assertTrue(conflict.publisherUnclear());
+        assertFalse(conflict.status(3).contains("matches"));
+    }
     @Test public void recordedOrderRequiresManualMatchAndSurvivesReopen() throws Exception {
         Context ctx=RuntimeEnvironment.getApplication();
         OrderLog log=new OrderLog(ctx,true);

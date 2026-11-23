@@ -11,9 +11,24 @@ final class WalmartHandoff {
     private String relay, partner;
     private boolean leftNotice, usedPartner, captured;
     private long received;
-    private String clickUrl, clickError;
+    private String clickUrl, failure;
+    private enum Stage {
+        NOTICE("Aeroplan confirmation"), RELAY("Aeroplan redirect service"), RAKUTEN("Rakuten"),
+        STORE("Walmart.ca"), OTHER("Retailer redirect");
+        final String label;
+        Stage(String label) { this.label = label; }
+    }
+    private Stage stage;
+    private long stageStarted;
+    private String action = "Following referral";
     private boolean onTrustedRoute, atClick;
-    private long clickStarted;
+    private void enter(Stage next, long now) {
+        if (stage != next) {
+            stage = next;
+            stageStarted = now;
+            failure = null;
+        }
+    }
 
     static boolean portalRoute(String url, boolean notice) {
         if (!SessionRules.isHttps(url) || !"aeroplan.rewardops.com".equalsIgnoreCase(SessionRules.host(url))) return false;
@@ -50,22 +65,30 @@ final class WalmartHandoff {
             if (rakuten(url) && (onTrustedRoute || known)) {
                 if (!atClick || !url.equals(clickUrl)) {
                     clickUrl = url;
-                    clickStarted = now;
-                    clickError = null;
+                    stageStarted = now;
+                    failure = null;
                 }
+                enter(Stage.RAKUTEN, now);
                 atClick = true;
                 usedPartner = true;
                 onTrustedRoute = true;
             } else {
                 atClick = false;
                 onTrustedRoute = known;
+                if (store(url)) enter(Stage.STORE, now);
+                else if (known) enter(Stage.RELAY, now);
+                else enter(Stage.OTHER, now);
             }
             return;
         }
-        if (captured) return;
-        onTrustedRoute = true;
-        captured = true;
-        received = now;
+        if (!captured) {
+            captured = true;
+            onTrustedRoute = true;
+            received = now;
+            enter(Stage.NOTICE, now);
+        }
+        // A same-document update can add the destination after the first notice callback.
+        if (relay != null || leftNotice) return;
         String supplied = parameter(Uri.parse(url), "redirectUrl");
         if (partnerLink(supplied)) {
             relay = supplied;
@@ -79,22 +102,37 @@ final class WalmartHandoff {
         }
     }
     String currentClick() { return atClick ? clickUrl : null; }
-    String retryClick(long now) {
-        if (!atClick) return null;
-        clickStarted = now;
-        clickError = null;
-        return clickUrl;
+    String publisher() {
+        String link = recoveryLink();
+        return rakuten(link) ? parameter(Uri.parse(link), "id") : null;
     }
-    void recordClickError(String url, String reason) {
-        if (atClick && clickUrl.equals(url)) clickError = reason;
+    String recoveryLink() {
+        // Keep the last official click even when the final Walmart document fails to load.
+        return clickUrl != null ? clickUrl : relay;
     }
-    String clickProblem(long now) {
-        if (!atClick) return null;
-        if (clickError != null) return clickError;
-        return now - clickStarted >= GRACE_MS ? "Rakuten hasn’t opened Walmart yet." : null;
+    String retry(long now) {
+        String link = recoveryLink();
+        if (link == null) return null;
+        stageStarted = now;
+        failure = null;
+        action = "Retried in Walmart";
+        return link;
+    }
+    void recordFailure(String reason) { failure = reason; }
+    String problem(long now) {
+        if (failure != null) return failure;
+        if (stage == null || now - stageStarted < GRACE_MS) return null;
+        return stage.label + " hasn’t finished opening Walmart.";
+    }
+    String progress(long now) {
+        if (stage == null) return "";
+        long seconds = Math.max(0L, now - stageStarted) / 1000L;
+        return stage.label + " · " + seconds + " s · " + action;
     }
     String autoContinue(String current, long now) {
         if (!captured || leftNotice || now - received < GRACE_MS || !portalRoute(current, true)) return null;
+        if (relay == null) return null;
+        action = "Continued automatically";
         return takeRelay();
     }
     private String takeRelay() {
@@ -104,10 +142,14 @@ final class WalmartHandoff {
     String relayFailed(String url) {
         if (relay == null || !relay.equals(url) || partner == null) return null;
         leftNotice = true;
-        return continueVisit();
+        String next = continueVisit();
+        if (next != null) action = "Tried the supplied partner link";
+        return next;
     }
     boolean canContinue() { return (!leftNotice && relay != null) || (!usedPartner && partner != null); }
     String continueVisit() {
+        if (!canContinue()) return null;
+        action = "Continued in Walmart";
         if (!leftNotice && relay != null) return takeRelay();
         if (usedPartner) return null;
         usedPartner = true;

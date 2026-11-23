@@ -4,6 +4,7 @@ import android.net.Uri;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.List;
 
 /** A local observation of one web visit. No tracking parameters are sent or written to disk. */
 final class ReferralVisit {
@@ -11,6 +12,8 @@ final class ReferralVisit {
     static final String PORTAL = "https://aeroplan.rewardops.com";
     boolean sawOffer, sawRedirect, replaced, interrupted;
     long arrived;
+    private String walmartPublisher;
+    private boolean publisherFromClick, publisherMatched, ambiguousPublisher;
     private final Map<String,String> signals = new LinkedHashMap<>();
 
     ReferralVisit(boolean walmart) {
@@ -35,6 +38,34 @@ final class ReferralVisit {
         return slug.equals("walmart") ? WalmartHandoff.portalRoute(url, false)
             : trustedPath(url, "/en-CA/affiliate-details/" + slug);
     }
+    void expectWalmartPublisher(String publisher) {
+        if (arrived == 0 && publisher != null && !publisher.isEmpty() && publisher.length() <= 512) {
+            walmartPublisher = publisher;
+            publisherFromClick = true;
+        }
+    }
+    boolean publisherUnclear() { return ambiguousPublisher; }
+    private void observeWalmartPublisher(Uri uri) {
+        String publisher = null;
+        for (String key : uri.getQueryParameterNames()) {
+            boolean siteId = "siteID".equalsIgnoreCase(key);
+            if (!siteId && !"wmlspartner".equalsIgnoreCase(key)) continue;
+            List<String> values = uri.getQueryParameters(key);
+            if (values.size() != 1) { ambiguousPublisher = true; return; }
+            String value = values.get(0);
+            if (siteId && value.contains("-")) value = value.substring(0, value.indexOf('-'));
+            if (value.isEmpty() || value.length() > 512 || (publisher != null && !publisher.equals(value))) {
+                ambiguousPublisher = true;
+                return;
+            }
+            publisher = value;
+        }
+        if (publisher == null) return;
+        if (walmartPublisher == null && arrived == 0 && sawOffer && sawRedirect) walmartPublisher = publisher;
+        if (walmartPublisher == null) return;
+        if (!walmartPublisher.equals(publisher)) replaced = true;
+        else if (publisherFromClick) publisherMatched = true;
+    }
     void observe(String url, long now) {
         if (!SessionRules.isHttps(url)) return;
         if (offerPage(url)) {
@@ -47,10 +78,15 @@ final class ReferralVisit {
             return;
         }
         Uri uri = Uri.parse(url);
+        if (slug.equals("walmart")) {
+            if (sawOffer) observeWalmartPublisher(uri);
+            if (arrived == 0 && sawOffer) arrived = now;
+            return;
+        }
         Map<String,String> incoming = new LinkedHashMap<>();
         for (String key : uri.getQueryParameterNames()) {
             String lower = key.toLowerCase(Locale.ROOT);
-            if (!(slug.equals("amazon") ? lower.equals("tag") : lower.equals("wmlspartner") || lower.equals("sourceid") || lower.equals("irclickid"))) continue;
+            if (!lower.equals("tag")) continue;
             String value = uri.getQueryParameter(key);
             if (value != null && !value.isEmpty() && value.length() <= 512) incoming.put(lower,value);
         }
@@ -64,11 +100,13 @@ final class ReferralVisit {
     }
     String status(long now) {
         if (replaced) return "Referral changed · activate again";
+        if (ambiguousPublisher) return "Conflicting Walmart publisher details · tracking unverified";
         if (interrupted) return "Shopping session left the store · tracking unverified";
         if (arrived == 0 && sawRedirect && slug.equals("walmart")) return "Aeroplan referral received · waiting for Walmart";
         if (arrived == 0) return "Waiting for the eStore referral";
         long min = Math.max(0, (now - arrived) / 60000L);
         String elapsed = min == 0 ? "just now" : min < 60 ? min + " min ago" : min / 60 + " h ago";
+        if (publisherMatched) return "Walmart publisher matches the eStore click · " + elapsed;
         return (sawRedirect ? "Official referral observed" : "Store reached · tracking unverified") + " · " + elapsed;
     }
 }

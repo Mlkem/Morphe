@@ -72,22 +72,26 @@ public class WalmartHandoffTest {
             assertEquals(View.VISIBLE, retry.getVisibility());
             assertTrue(status.getText().toString().contains("couldn’t resolve"));
             assertFalse(status.getText().toString().contains("sample"));
+            retry.performClick();
+            assertEquals(CLICK, shadowOf(web).getLastLoadedUrl());
+            assertEquals(View.GONE, retry.getVisibility());
+            assertFalse(status.getText().toString().contains("Official referral observed"));
+            client.onPageStarted(web, STORE, null);
+            client.onReceivedError(web, request(STORE, true), new WebResourceError() {
+                public int getErrorCode() { return WebViewClient.ERROR_TIMEOUT; }
+                public CharSequence getDescription() { return "Timeout"; }
+            });
+            assertTrue(status.getText().toString().contains("Walmart.ca"));
+            assertTrue(status.getText().toString().contains("timed out"));
+            assertFalse(status.getText().toString().contains("sourceid"));
+            assertEquals(View.VISIBLE, retry.getVisibility());
             action.performClick();
             Intent browser = shadowOf(activity).getNextStartedActivity();
             assertNotNull(browser);
             assertEquals(Intent.ACTION_VIEW, browser.getAction());
             assertTrue(browser.hasCategory(Intent.CATEGORY_BROWSABLE));
             assertEquals(CLICK, browser.getDataString());
-            retry.performClick();
-            assertEquals(CLICK, shadowOf(web).getLastLoadedUrl());
-            assertEquals(View.GONE, retry.getVisibility());
-            assertFalse(status.getText().toString().contains("Official referral observed"));
-            String httpStore = STORE.replaceFirst("https:", "http:");
-            assertTrue(client.shouldOverrideUrlLoading(web, request(httpStore, true)));
-            assertEquals(STORE, shadowOf(web).getLastLoadedUrl());
-            client.onPageStarted(web, STORE, null);
-            client.onPageFinished(web, STORE);
-            assertTrue(status.getText().toString().contains("Official referral observed"));
+            assertTrue(activity.isFinishing());
         } finally { controller.pause().stop().destroy(); }
     }
     @Test public void hangingClickTimesOutEvenWithRepeatedCallbacksAndCanRetryAgain() {
@@ -95,14 +99,61 @@ public class WalmartHandoffTest {
         String outer = relay(CLICK, OFFER);
         h.observe(notice(outer), 1); h.observe(outer, 2);
         h.observe(CLICK, 3); h.observe(CLICK, 7900);
-        assertNull(h.clickProblem(8002));
-        assertNotNull(h.clickProblem(8003));
-        assertEquals(CLICK, h.retryClick(9000));
-        assertNull(h.clickProblem(9500));
-        assertNotNull(h.clickProblem(17000));
+        assertNull(h.problem(8002));
+        assertNotNull(h.problem(8003));
+        assertEquals(CLICK, h.retry(9000));
+        assertNull(h.problem(9500));
+        assertNotNull(h.problem(17000));
         h.observe(STORE, 18000);
-        assertNull(h.currentClick()); assertNull(h.retryClick(19000));
+        assertNull(h.currentClick()); assertEquals(CLICK, h.retry(19000));
     }
+    @Test public void incompleteNoticeCanReceiveItsDestinationAfterTimeout() {
+        WalmartHandoff h = new WalmartHandoff();
+        h.observe(REDIRECT, 10);
+        assertNull(h.autoContinue(REDIRECT, 9010));
+        assertNull(h.recoveryLink());
+        h.observe(notice(CLICK), 9020);
+        assertEquals(CLICK, h.autoContinue(notice(CLICK), 9021));
+        assertNull(h.autoContinue(notice(CLICK), 19000));
+        assertEquals(CLICK, h.recoveryLink());
+        h.observe(notice(STORE), 20000);
+        assertEquals(CLICK, h.recoveryLink());
+    }
+
+    @Test public void offerFailureAndHiddenRedirectGetActionableRecovery() {
+        ActivityController<ReviewActivity> controller = Robolectric.buildActivity(ReviewActivity.class).setup();
+        try {
+            ReviewActivity a = controller.get();
+            ReflectionHelpers.setField(a, "walmart", true);
+            ReflectionHelpers.callInstanceMethod(a, "startOffer");
+            WebView web = ReflectionHelpers.callInstanceMethod(a, "current");
+            WebViewClient client = web.getWebViewClient();
+            client.onPageStarted(web, OFFER, null);
+            client.onReceivedError(web, request(OFFER, true), new WebResourceError() {
+                public int getErrorCode() { return WebViewClient.ERROR_TIMEOUT; }
+                public CharSequence getDescription() { return "Timeout"; }
+            });
+            Button retry = ReflectionHelpers.getField(a, "retry");
+            assertEquals(View.VISIBLE, retry.getVisibility());
+            assertEquals("Retry eStore", retry.getText());
+            retry.performClick();
+            web = ReflectionHelpers.callInstanceMethod(a, "current");
+            client = web.getWebViewClient();
+            client.onPageStarted(web, OFFER, null);
+            // Android can coalesce page-start callbacks across redirects.
+            assertFalse(client.shouldOverrideUrlLoading(web, request(notice(CLICK), true)));
+            client.onPageStarted(web, CLICK, null);
+            String tagged = "https://www.walmart.ca/en?wmlspartner=" + Uri.encode("sample+pub");
+            web.loadUrl(tagged);
+            client.onPageStarted(web, tagged, null);
+            client.onPageFinished(web, tagged);
+            TextView banner = ReflectionHelpers.getField(a, "banner");
+            assertTrue(banner.getText().toString().contains("publisher matches"));
+            assertFalse(banner.getText().toString().contains("sample"));
+            assertEquals(View.GONE, retry.getVisibility());
+        } finally { controller.pause().stop().destroy(); }
+    }
+
     @Test public void externalHandoffRequiresTheOfficialRouteAndExactRakutenHost() {
         WalmartHandoff h = new WalmartHandoff();
         h.observe(CLICK, 1);
