@@ -11,8 +11,8 @@ java = str(jdk / 'java') if jdk else 'java'
 javac = str(jdk / 'javac') if jdk else 'javac'
 source = root / 'extensions/amazon/src/main/java/ca/mlkem/amazon'
 subprocess.run([javac, '--release', '8', '-encoding', 'UTF-8', '-d', str(out),
-                str(source / 'SessionRules.java'), str(source / 'AutofillScript.java'),
+                str(source / 'SessionRules.java'), str(source / 'AutofillScript.java'), str(source / 'OfferTerms.java'),
                 str(root / 'tests/amazon/RulesTest.java')], check=True)
 subprocess.run([java, '-cp', str(out), 'ca.mlkem.amazon.RulesTest', str(out)], check=True)
 subprocess.run(['node', str(root / 'tests/amazon/autofill.test.cjs'), str(out)], check=True)
-subprocess.run(['node', str(root / 'tests/amazon/cart-review.test.cjs')], cwd=root, check=True)
+subprocess.run(['node', str(root / 'tests/amazon/cart-review.test.cjs'), str(out)], cwd=root, check=True)

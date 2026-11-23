@@ -1,6 +1,6 @@
 # Amazon Shopping: Aeroplan eStore
 
-The native Amazon screen has a tappable **Aeroplan** badge. It shows whether this Amazon session has seen a referral and when a link was successfully handed to the native app. You can start a referral or open **Review and shop** from the badge. Aeroplan confirms order credit in its own history.
+The native Amazon screen has a tappable **Aeroplan** badge. It shows whether this Amazon session has seen a referral and when a link was successfully handed to the native app. Tap the badge to see the time and publisher evidence for the link, start another referral, or open **Web cart review**. Aeroplan confirms order credit in its own history.
 
 
 [Use Aeroplan cart review and local order history](aeroplan-review.md).
@@ -26,16 +26,10 @@ a normal installation may require removing the Amazon-signed app first, which
 erases its local app data and sign-in. No installation is performed by the source
 or build process.
 
-1. Open patched Amazon. The startup offer includes **Settings**, **Start referral**,
-   and **Continue in Amazon**.
-2. In Settings, enter your own Aeroplan number and last name. Both fields start
-   blank. The optional automatic setting opens the portal when Amazon starts.
-3. Start the referral, review the official Amazon.ca offer, and tap **Sign in to earn**.
-   The helper fills the blank form. Review the account, tap **Continue**, then
-   follow **Shop & earn**. If already signed in, check the account on the eStore.
-4. When the referral reaches Amazon.ca, the helper passes the complete destination
-   URL to Amazon's native link handler and closes. Shop and complete checkout in
-   the **Amazon app**.
+1. Open patched Amazon and tap **Activate for Amazon**.
+2. Sign in on the official eStore and review its Amazon.ca offer. You can sign in manually on a fresh install. To autofill the official English sign-in form on later visits, save your Aeroplan number and last name under **Settings**.
+3. Tap **Shop & earn**. When the eStore supplies an Amazon link, the helper hands the full destination to Amazon and closes. Continue shopping and checking out in the Amazon app.
+4. Tap **Aeroplan** on the native shopping screen to check when the link was sent and whether it contained the recognized publisher tag. For product categories, cart timing and local order summaries, choose **Web cart review** and complete that separate eStore visit in its shopping window.
 
 The helper is now an eStore sign-in/referral window. Amazon shopping and checkout
 open in the native app. The automatic setting opens the portal and still leaves

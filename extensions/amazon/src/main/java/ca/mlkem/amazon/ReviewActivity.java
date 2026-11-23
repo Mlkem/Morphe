@@ -35,7 +35,7 @@ public final class ReviewActivity extends Activity {
     private final List<WebView> tabs = new ArrayList<>();
     private final Handler handler = new Handler(Looper.getMainLooper());
     private String script, summary = "";
-    private JSONObject snapshot, liveRules, lastCart;
+    private JSONObject snapshot, liveRules, lastCart, lastAmazonReview;
     private WebView committedView;
     private String failedUrl;
     private String rate = "";
@@ -133,7 +133,7 @@ public final class ReviewActivity extends Activity {
     }
     private int dp(int value) { return Math.round(getResources().getDisplayMetrics().density*value); }
     private void startOffer() {
-        destroyTabs(); visit = new ReferralVisit(walmart); handoff = walmart ? new WalmartHandoff() : null; liveRules=null; lastCart=null; rate="";
+        destroyTabs(); visit = new ReferralVisit(walmart); handoff = walmart ? new WalmartHandoff() : null; liveRules=null; lastCart=null; lastAmazonReview=null; rate="";
         nativeTarget = webFallback = null;
         nativeShopping.setVisibility(walmart ? View.VISIBLE : View.GONE);
         failedUrl = null; committedView = null;
@@ -328,8 +328,9 @@ public final class ReviewActivity extends Activity {
         if (script==null) { summary="Cart review unavailable · check the official offer"; draw(); return; }
         if (inspecting) return;
         inspecting=true; final int turn=generation;
+        final long referralAt = visit.amazonReferralTime(System.currentTimeMillis());
         String query = offer ? OfferTerms.SCRIPT :
-            script+"("+JSONObject.quote(visit.slug)+","+(liveRules==null?"null":liveRules.toString())+")";
+            script+"("+JSONObject.quote(visit.slug)+","+(liveRules==null?"null":liveRules.toString())+","+referralAt+")";
         v.evaluateJavascript(query, result -> {
             if (turn!=generation || v!=current()) return;
             inspecting=false;
@@ -342,10 +343,11 @@ public final class ReviewActivity extends Activity {
                     return;
                 }
                 snapshot=new JSONObject(result);
+                if (!walmart) snapshot.put("referralAt",referralAt);
                 switch(snapshot.optString("kind")) {
                     case "order":
                         String id=snapshot.optString("id");
-                        if (orders.valid(id)) { orders.save(id,false); summary="Order saved on this device"; }
+                        if (orders.valid(id)) { orders.save(id,false,walmart ? null : amazonOrderEvidence()); summary="Order saved on this device"; }
                         else summary="Order number unavailable · save it in Orders";
                         break;
                     case "product": summary=label(snapshot)+" · "+snapshot.optString("group"); break;
@@ -358,21 +360,37 @@ public final class ReviewActivity extends Activity {
                             snapshot.put("kind","checkout"); snapshot.put("previousCart",true); snapshot.put("whole",false);
                             rows=snapshot.getJSONArray("rows");
                         }
-                        int flags=0,unknown=0;
+                        int flags=0,unknown=0,before=0,unknownTiming=0;
                         for (int i=0;i<rows.length();i++) {
-                            String state=rows.getJSONObject(i).optString("state");
+                            JSONObject row=rows.getJSONObject(i);
+                            String state=row.optString("state");
+                            if (!walmart) {
+                                String timing=cartTiming(snapshot,row);
+                                if ("before".equals(timing)) before++;
+                                if ("unknown".equals(timing)) unknownTiming++;
+                            }
                             if ("flag".equals(state)) flags++;
                             if ("unknown".equals(state)) unknown++;
                         }
+                        if (!walmart) {
+                            lastAmazonReview = rows.length()==0 ? null : new JSONObject()
+                                .put("lines",rows.length()).put("flags",flags).put("unknown",unknown)
+                                .put("whole",snapshot.optBoolean("whole")).put("previousCart",snapshot.optBoolean("previousCart"));
+                        }
                         summary=rows.length()==0 ? "Cart contents unavailable · tap Review" :
                             (snapshot.optBoolean("previousCart")?"Last cart review · ":"")+flags+" flagged · "+unknown+" unknown · "+rows.length()+" lines reviewed"+
-                                (snapshot.optBoolean("whole")?"":" · coverage unverified");
+                                (snapshot.optBoolean("whole")?"":" · coverage unverified")
+                                + (walmart ? "" : " · "+before+" added before referral · "+unknownTiming+" timing unknown");
                         break;
                     default: summary="";
                 }
             } catch (Exception e) { snapshot=null; summary="Review unavailable · check the current offer"; }
             draw();
         });
+    }
+    private String cartTiming(JSONObject cart, JSONObject row) {
+        long current = visit.amazonReferralTime(System.currentTimeMillis());
+        return current > 0 && current == cart.optLong("referralAt") ? row.optString("timing","unknown") : "unknown";
     }
     private String label(JSONObject row) {
         switch(row.optString("state")) {
@@ -392,7 +410,13 @@ public final class ReviewActivity extends Activity {
                 JSONObject row=rows.optJSONObject(i); if(row==null) continue;
                 String key=label(row)+" · "+row.optString("group");
                 if (!groups.containsKey(key)) groups.put(key,new ArrayList<>());
-                groups.get(key).add(row.optString("title"));
+                String title = row.optString("title");
+                if (!walmart) {
+                    String timing = cartTiming(snapshot,row);
+                    title += " · " + ("before".equals(timing) ? "Added before referral" :
+                        "after".equals(timing) ? "Added after referral" : "Timing unknown");
+                }
+                groups.get(key).add(title);
             }
             for (Map.Entry<String,List<String>> g:groups.entrySet()) {
                 message.append("\n\n").append(g.getKey()).append(" (").append(g.getValue().size()).append(")");
@@ -445,10 +469,50 @@ public final class ReviewActivity extends Activity {
                 .setNegativeButton("eStore history",(d,w)->external(ReferralVisit.PORTAL+"/en-CA/order-history")).show();
         } catch(Exception e){ notice("Could not read the local order history."); }
     }
+    private JSONObject amazonOrderEvidence() throws org.json.JSONException {
+        JSONObject evidence = new JSONObject().put("referral",visit.status(System.currentTimeMillis()));
+        if (lastAmazonReview != null) evidence.put("cart",lastAmazonReview);
+        lastAmazonReview=null;
+        lastCart=null;
+        return evidence;
+    }
+    private String amazonOrderSummary(JSONObject row) {
+        StringBuilder result = new StringBuilder("Amazon.ca · ").append(row.optString("id"))
+            .append("\nSaved on this device · ").append(DateFormat.getDateTimeInstance().format(new Date(row.optLong("time"))))
+            .append(row.optBoolean("matched") ? "\nHistory match marked by you" : "\nPoints unconfirmed");
+        JSONObject evidence = row.optJSONObject("review");
+        if (evidence == null) return result.append("\nReferral details unavailable").toString();
+        result.append("\nAt confirmation · ").append(evidence.optString("referral"));
+        JSONObject cart = evidence.optJSONObject("cart");
+        if (cart == null) return result.append("\nCart review unavailable").toString();
+        return result.append("\nLast reviewed basket · ").append(cart.optInt("lines")).append(" lines · ")
+            .append(cart.optInt("flags")).append(" flagged · ").append(cart.optInt("unknown")).append(" unknown · ")
+            .append(cart.optBoolean("whole") ? "all displayed quantities accounted for" : "coverage unverified").toString();
+    }
     private void orderDetail(JSONObject row) {
         String id=row.optString("id");
-        new AlertDialog.Builder(this).setTitle(id)
-            .setMessage("Compare this reference with your official eStore history. Mark a match only if the same order appears there.")
+        String hint="Compare this reference with your official eStore history. Mark a match only if the same order appears there.";
+        AlertDialog.Builder detail = new AlertDialog.Builder(this).setTitle(id);
+        if (walmart) detail.setMessage(hint);
+        else {
+            String report=amazonOrderSummary(row);
+            LinearLayout body=new LinearLayout(this);
+            body.setOrientation(LinearLayout.VERTICAL);
+            int pad=(int)(20*getResources().getDisplayMetrics().density);
+            body.setPadding(pad,0,pad,0);
+            TextView text=new TextView(this);
+            text.setText(report+"\n\n"+hint);
+            body.addView(text);
+            Button copy=new Button(this);
+            copy.setText("Copy this order summary");
+            copy.setOnClickListener(v->{
+                android.content.ClipboardManager clipboard=getSystemService(android.content.ClipboardManager.class);
+                if (clipboard!=null) clipboard.setPrimaryClip(android.content.ClipData.newPlainText("Amazon order summary",report));
+            });
+            body.addView(copy);
+            detail.setView(body);
+        }
+        detail
             .setPositiveButton("I found this order",(d,w)->save(id,true))
             .setNeutralButton("eStore history",(d,w)->external(ReferralVisit.PORTAL+"/en-CA/order-history"))
             .setNegativeButton("Clear all…",(d,w)->new AlertDialog.Builder(this).setTitle("Clear all saved orders?")

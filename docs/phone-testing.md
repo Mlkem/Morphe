@@ -9,7 +9,7 @@ without **Automatic app folders**. The earlier auto-folder emulator acceptance
 does not cover Pro. Online-service authorization and quotas remain separate;
 record their results without exposing account data. [Pro scope](apps/niagara-pro.md).
 
-Amazon Shopping 32.20.0.100 (1243260206) and 32.19.0.100 (1243250306) have an
+Amazon Shopping 32.20.2.100 (1243262206), 32.20.0.100 (1243260206) and 32.19.0.100 (1243250306) have an
 opt-in **Aeroplan shopping** patch. Test each version separately.
 Desktop patching and offline tests do not establish its phone behavior or points
 attribution. Test launch/skip, blank profile settings, save/edit/clear, secure
