@@ -17,7 +17,7 @@
     },
     "ca.walmart.ecommerceapp": {
       "name": "Walmart Canada",
-      "revision": "a4798e211c53077ad8eb663c23589d52ab4506de42546610d4757baea24ae692",
+      "revision": "1e07323613ff4cb1115ea4632466b114ac057ed87a9524ed13478639d54cb0a8",
       "supportedVersions": [
         "26.41.2",
         "26.31"
@@ -32,7 +32,7 @@
     },
     "com.amazon.mShop.android.shopping": {
       "name": "Amazon Shopping",
-      "revision": "3ce93e8827ad6b7819ff86a412383da31f1fc446d57515cd9c78942631517b13",
+      "revision": "e0fd47fb2b24bbc833feadb1e635b8cbfbddb756dc9fd7fdc7407e71c45fa65d",
       "supportedVersions": [
         "32.20.2.100",
         "32.20.0.100",
@@ -211,9 +211,8 @@
       }
     }
   },
-  "generatedAt": "2026-11-21T23:38:05.152456+00:00",
-  "releaseUrl": "https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.51",
-  "releaseVersion": "1.0.0-dev.51",
-  "schema": 1,
-  "upstreamCheckedAt": "2026-11-23T07:52:54.480863+00:00"
+  "generatedAt": "2026-11-23T10:12:36.267719+00:00",
+  "releaseUrl": "https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.52",
+  "releaseVersion": "1.0.0-dev.52",
+  "schema": 1
 }

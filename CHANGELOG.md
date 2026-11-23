@@ -1,3 +1,9 @@
+## [1.0.0-dev.52](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.51...v1.0.0-dev.52) (2026-11-23)
+
+### 🐛 Bug Fixes
+
+* **Walmart Canada:** recover stalled Aeroplan referrals and verify the retailer publisher ([e1f8120](https://github.com/Mlkem/Morphe/commit/e1f8120772fdcd298381ba370f646e56cd151745))
+
 ## [1.0.0-dev.51](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.50...v1.0.0-dev.51) (2026-11-21)
 
 ### 🐛 Bug Fixes
