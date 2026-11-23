@@ -1,3 +1,9 @@
+## [1.0.0-dev.54](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.53...v1.0.0-dev.54) (2026-11-23)
+
+### ✨ New Features
+
+* **Amazon Shopping:** activate native shopping and review cart timing ([204f658](https://github.com/Mlkem/Morphe/commit/204f6584185c6e1689927b8656c87be2a89782f9))
+
 ## [1.0.0-dev.53](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.52...v1.0.0-dev.53) (2026-11-23)
 
 ### 🐛 Bug Fixes
