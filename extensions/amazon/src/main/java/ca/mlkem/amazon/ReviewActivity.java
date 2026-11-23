@@ -23,7 +23,10 @@ public final class ReviewActivity extends Activity {
     private ReferralVisit visit;
     private boolean walmart, resumed, inspecting;
     private TextView banner;
-    private Button activation, retry;
+    private Button activation, retry, browser;
+    private boolean loadingWalmartOffer;
+    private long offerStarted;
+    private String offerError;
     private WalmartHandoff handoff;
     private FrameLayout frame;
     private final List<WebView> tabs = new ArrayList<>();
@@ -43,6 +46,7 @@ public final class ReviewActivity extends Activity {
                 if (next != null) view.loadUrl(next);
                 draw();
             }
+            if (loadingWalmartOffer) draw();
             inspect();
             if (resumed) handler.postDelayed(this, 2200);
         }
@@ -65,15 +69,20 @@ public final class ReviewActivity extends Activity {
         LinearLayout bar = new LinearLayout(this); root.addView(bar);
         activation = action(bar, "Activate", v -> {
             if (pendingHandoff()) {
-                if (handoff.currentClick() != null) {
-                    openReferralInBrowser(handoff.currentClick());
+                String recovery = handoff.recoveryLink();
+                if (recovery != null && (handoff.currentClick() != null || !handoff.canContinue())) {
+                    openReferralInBrowser(recovery);
                     return;
                 }
                 String next = handoff.continueVisit();
                 if (next != null) { current().loadUrl(next); draw(); }
                 else new AlertDialog.Builder(this).setTitle("Open the eStore in your browser?")
                     .setMessage("Start a new Walmart referral there and finish shopping in that browser.")
-                    .setNegativeButton("Stay here", null).setPositiveButton("Open eStore", (d,w) -> external(visit.offer)).show();
+                    .setNegativeButton("Stay here", null).setPositiveButton("Open eStore", (d,w) -> openReferralInBrowser(visit.offer)).show();
+                return;
+            }
+            if (offerStalled(SystemClock.elapsedRealtime())) {
+                openReferralInBrowser(visit.offer);
                 return;
             }
             if (current() == null || visit.arrived == 0) startOffer();
@@ -87,11 +96,17 @@ public final class ReviewActivity extends Activity {
         retry = new Button(this);
         retry.setAllCaps(false); retry.setText("Retry referral in Walmart");
         retry.setOnClickListener(v -> {
+            if (offerStalled(SystemClock.elapsedRealtime())) { startOffer(); return; }
             if (!pendingHandoff() || current() == null) return;
-            String target = handoff.retryClick(SystemClock.elapsedRealtime());
+            String target = handoff.retry(SystemClock.elapsedRealtime());
             if (target != null) { failedUrl = null; summary = ""; current().loadUrl(target); draw(); }
         });
         root.addView(retry);
+        browser = new Button(this); browser.setText("Continue referral in browser"); browser.setAllCaps(false);
+        browser.setOnClickListener(v -> {
+            if (pendingHandoff() && handoff.recoveryLink() != null) openReferralInBrowser(handoff.recoveryLink());
+        });
+        root.addView(browser);
         frame = new FrameLayout(this); root.addView(frame,new LinearLayout.LayoutParams(-1,0,1)); setContentView(root);
         startOffer();
     }
@@ -102,7 +117,12 @@ public final class ReviewActivity extends Activity {
     private int dp(int value) { return Math.round(getResources().getDisplayMetrics().density*value); }
     private void startOffer() {
         destroyTabs(); visit = new ReferralVisit(walmart); handoff = walmart ? new WalmartHandoff() : null; liveRules=null; lastCart=null; rate="";
+        failedUrl = null; committedView = null;
+        loadingWalmartOffer = walmart; offerStarted = SystemClock.elapsedRealtime(); offerError = null;
         WebView view = newTab(); view.loadUrl(visit.offer); draw();
+    }
+    private boolean offerStalled(long now) {
+        return loadingWalmartOffer && (offerError != null || now - offerStarted >= WalmartHandoff.GRACE_MS);
     }
     private boolean pendingHandoff() { return handoff != null && visit.sawRedirect && visit.arrived == 0; }
     private void observe(String url) {
@@ -110,6 +130,8 @@ public final class ReviewActivity extends Activity {
             visit.sawRedirect = false;
             handoff = new WalmartHandoff();
         }
+        if (loadingWalmartOffer && SessionRules.isHttps(url) && !visit.offerPage(url)) loadingWalmartOffer = false;
+        if (pendingHandoff() && visit.store(url)) visit.expectWalmartPublisher(handoff.publisher());
         visit.observe(url,System.currentTimeMillis());
         if (pendingHandoff()) handoff.observe(url, SystemClock.elapsedRealtime());
         if (visit.arrived != 0) handoff = null;
@@ -130,7 +152,10 @@ public final class ReviewActivity extends Activity {
                 if (!r.isForMainFrame()) return false;
                 String url = r.getUrl().toString();
                 if (SessionRules.isHttps(url)) {
-                    if (v == current() && pendingHandoff() && WalmartHandoff.rakuten(url)) {
+                    if (v == current() && walmart && visit.sawOffer && visit.arrived == 0 && WalmartHandoff.portalRoute(url, true)) {
+                        observe(url);
+                        draw();
+                    } else if (v == current() && pendingHandoff() && WalmartHandoff.rakuten(url)) {
                         handoff.observe(url, SystemClock.elapsedRealtime());
                         draw();
                     }
@@ -140,7 +165,7 @@ public final class ReviewActivity extends Activity {
                     String next = WalmartHandoff.browserDestination(url);
                     if (next != null) v.loadUrl(next);
                     else if (handoff.currentClick() != null && (url.startsWith("intent:") || url.startsWith("walmart:"))) {
-                        handoff.recordClickError(handoff.currentClick(), "Rakuten tried to open an app without a Walmart web address.");
+                        handoff.recordFailure("Rakuten tried to open an app without a Walmart web address.");
                         draw();
                     }
                 }
@@ -157,7 +182,10 @@ public final class ReviewActivity extends Activity {
                 if (v==current()) { invalidatePage(); if (!visit.store(url) || committedView==v) observe(url); draw(); }
             }
             @Override public void onPageFinished(WebView v,String url) {
-                if (v==current() && url.equals(v.getUrl()) && !url.equals(failedUrl)) { committedView=v; observe(url); draw(); inspect(); }
+                if (v==current() && url.equals(v.getUrl()) && !url.equals(failedUrl)) {
+                    if (visit.offerPage(url)) loadingWalmartOffer = false;
+                    committedView=v; observe(url); draw(); inspect();
+                }
             }
             private void fail(WebView v,String url) {
                 if (v!=current()) return;
@@ -169,14 +197,13 @@ public final class ReviewActivity extends Activity {
                 if (!r.isForMainFrame() || v != current()) return;
                 String url = r.getUrl().toString();
                 int code = error.getErrorCode();
-                if (pendingHandoff() && WalmartHandoff.rakuten(url)) {
-                    handoff.observe(url, SystemClock.elapsedRealtime());
+                if (pendingHandoff() || (loadingWalmartOffer && visit.offerPage(url))) {
                     String reason;
-                    if (code == ERROR_HOST_LOOKUP) reason = "The phone couldn’t resolve the Rakuten domain.";
-                    else if (code == ERROR_TIMEOUT) reason = "The connection to Rakuten timed out.";
-                    else if (String.valueOf(error.getDescription()).contains("ERR_BLOCKED_BY_CLIENT")) reason = "The Rakuten request was blocked.";
-                    else reason = "The connection to Rakuten failed.";
-                    handoff.recordClickError(url, reason);
+                    if (code == ERROR_HOST_LOOKUP) reason = "Android couldn’t resolve the host.";
+                    else if (code == ERROR_TIMEOUT) reason = "The connection timed out.";
+                    else if (String.valueOf(error.getDescription()).contains("ERR_BLOCKED_BY_CLIENT")) reason = "The request was blocked.";
+                    else reason = "Android reported a connection error (" + code + ").";
+                    rememberFailure(url, reason);
                 }
                 fail(v,url);
                 if (pendingHandoff() && (code == ERROR_HOST_LOOKUP || code == ERROR_CONNECT || code == ERROR_TIMEOUT)) {
@@ -187,18 +214,18 @@ public final class ReviewActivity extends Activity {
             @Override public void onReceivedHttpError(WebView v,WebResourceRequest r,WebResourceResponse response) {
                 if (!r.isForMainFrame() || v != current()) return;
                 String url = r.getUrl().toString();
-                if (pendingHandoff() && WalmartHandoff.rakuten(url)) {
-                    handoff.observe(url, SystemClock.elapsedRealtime());
-                    handoff.recordClickError(url, "Rakuten returned HTTP " + response.getStatusCode() + ".");
-                }
+                rememberFailure(url, "HTTP " + response.getStatusCode() + ".");
                 fail(v,url);
             }
             @Override public void onReceivedSslError(WebView v,SslErrorHandler h,SslError e) {
                 h.cancel();
-                if (v == current() && pendingHandoff() && e.getUrl().equals(handoff.currentClick())) {
-                    handoff.recordClickError(e.getUrl(), "Android couldn’t verify the secure connection to Rakuten.");
+                if (v == current() && pendingHandoff() && (e.getUrl().equals(handoff.currentClick()) || e.getUrl().equals(v.getUrl()))) {
+                    handoff.recordFailure("Android couldn’t verify the secure connection.");
                     fail(v,e.getUrl());
-                } else if (e.getUrl().equals(v.getUrl())) fail(v,e.getUrl());
+                } else if (e.getUrl().equals(v.getUrl())) {
+                    if (v == current()) rememberFailure(e.getUrl(), "Android couldn’t verify the secure connection.");
+                    fail(v,e.getUrl());
+                }
             }
         });
         view.setWebChromeClient(new WebChromeClient(){
@@ -211,20 +238,36 @@ public final class ReviewActivity extends Activity {
         });
         tabs.add(view); frame.removeAllViews(); frame.addView(view); return view;
     }
+    private void rememberFailure(String url, String reason) {
+        if (pendingHandoff()) {
+            handoff.observe(url, SystemClock.elapsedRealtime());
+            handoff.recordFailure(reason);
+        } else if (loadingWalmartOffer && visit.offerPage(url)) offerError = reason;
+    }
     private void draw() {
         long now = SystemClock.elapsedRealtime();
-        String click = pendingHandoff() ? handoff.currentClick() : null;
-        String problem = pendingHandoff() ? handoff.clickProblem(now) : null;
-        activation.setText(pendingHandoff() ? (click == null && handoff.canContinue() ? "Continue" : "Browser") : "Activate");
-        retry.setVisibility(problem == null ? View.GONE : View.VISIBLE);
-        banner.setBackgroundColor(visit.replaced || visit.interrupted ? 0xff883b2b : visit.arrived>0 && visit.sawRedirect ? 0xff165544 : 0xff38475a);
+        boolean pending = pendingHandoff();
+        String problem = pending ? handoff.problem(now) : null;
+        String recovery = pending ? handoff.recoveryLink() : null;
+        boolean canContinue = pending && handoff.canContinue() && handoff.currentClick() == null;
+        activation.setText(!pending ? (offerStalled(now) ? "Restart in browser" : "Activate") : canContinue ? "Continue" : recovery != null ? "Browser" : "Restart in browser");
+        retry.setText(loadingWalmartOffer ? "Retry eStore" : "Retry referral in Walmart");
+        retry.setVisibility(offerStalled(now) || (problem != null && recovery != null) ? View.VISIBLE : View.GONE);
+        browser.setVisibility(canContinue && recovery != null && problem != null ? View.VISIBLE : View.GONE);
+        banner.setBackgroundColor(visit.replaced || visit.interrupted || visit.publisherUnclear() || problem != null || offerStalled(now) ? 0xff883b2b : visit.arrived>0 && visit.sawRedirect ? 0xff165544 : 0xff38475a);
         String host=current()==null ? "" : SessionRules.host(current().getUrl());
-        String hint = pendingHandoff() ? (handoff.canContinue() ? "\nIf Walmart doesn’t open, tap Continue." :
-            "\nIf Walmart doesn’t open, tap Browser to restart at the eStore.") : "";
-        if (click != null) {
-            host = SessionRules.host(click);
-            hint = problem == null ? "\nOpening Walmart through Rakuten…" :
-                "\n" + problem + " If you use AdGuard or filtered DNS, check this host in its log. Retry here or tap Browser for the same referral.";
+        String hint = "";
+        if (offerStalled(now)) {
+            hint = "\neStore offer · " + (now - offerStarted) / 1000 + " s · "
+                    + (offerError == null ? "Still loading." : offerError);
+        }
+        if (pending) {
+            host = ""; // Diagnostics show stages, never referral URLs or query values.
+            hint = "\n" + handoff.progress(now);
+            if (problem != null) hint += "\n" + problem;
+            if (canContinue) hint += " Tap Continue to follow the supplied link.";
+            else if (recovery != null) hint += " Browser continues the same referral outside this window.";
+            else hint += " Restart in browser starts a fresh eStore visit.";
         }
         banner.setText(visit.status(System.currentTimeMillis()) + hint + (rate.isEmpty()?"":" · "+rate) + (host.isEmpty()?"":"\n"+host) + (summary.isEmpty()?"":"\n"+summary));
     }
@@ -326,9 +369,10 @@ public final class ReviewActivity extends Activity {
             if (browser != null && browser.activityInfo != null && !"android".equals(browser.activityInfo.packageName))
                 open.setPackage(browser.activityInfo.packageName);
             startActivity(open);
+            finish();
         } catch (ActivityNotFoundException | SecurityException e) {
             if (open.getPackage() != null) {
-                try { open.setPackage(null); startActivity(open); return; }
+                try { open.setPackage(null); startActivity(open); finish(); return; }
                 catch (ActivityNotFoundException | SecurityException ignored) { }
             }
             notice("Couldn’t open a browser. You can retry the referral here.");
