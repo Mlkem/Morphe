@@ -200,15 +200,31 @@ public class NativeAmazonTest {
         assertTrue(chip.getText().toString().contains("Waiting for link"));
         assertTrue(NativeAmazon.open(activity, DESTINATION));
         AeroplanBridge.onResume(activity);
-        assertTrue(chip.getText().toString().contains("Link sent"));
+        assertTrue(chip.getText().toString().contains("Sent to Amazon · just now"));
         chip.performClick();
         android.app.AlertDialog dialog = org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
         assertTrue(shadowOf(dialog).getMessage().toString().contains("has not confirmed"));
+        assertTrue(shadowOf(dialog).getMessage().toString().contains("Different publisher tag"));
         dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
         shadowOf(android.os.Looper.getMainLooper()).idle();
         assertEquals(ReviewActivity.class.getName(), activity.launched.getComponent().getClassName());
     }
 
+    @Test public void badgeAppearsOnCatalogSearchAndEmbeddedShoppingScreens() {
+        assertTrue(NativeReferralStatus.shoppingScreen("com.amazon.mShop.navigation.MainActivity"));
+        assertTrue(NativeReferralStatus.shoppingScreen("com.amazon.mShop.share.ingress.SearchActivity"));
+        assertTrue(NativeReferralStatus.shoppingScreen("com.amazon.mobile.mash.embeddedbrowser.EmbeddedBrowserActivity"));
+        assertFalse(NativeReferralStatus.shoppingScreen(NativeAmazon.DEEP_LINK_ACTIVITY));
+        assertFalse(NativeReferralStatus.shoppingScreen(AeroplanActivity.class.getName()));
+    }
+    @Test public void startupOffersNativeActivationAndSeparateWebCartReview() {
+        AeroplanBridge.onResume(activity);
+        android.app.AlertDialog dialog=org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
+        assertEquals("Web cart review",dialog.getButton(android.app.AlertDialog.BUTTON_NEUTRAL).getText());
+        dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).performClick();
+        shadowOf(android.os.Looper.getMainLooper()).idle();
+        assertEquals(AeroplanActivity.ACTION_START,activity.launched.getAction());
+    }
     @Test public void failedHandoffDoesNotDisplayLinkSent() {
         activity.launchFailure = new ActivityNotFoundException();
         assertFalse(NativeAmazon.open(activity, DESTINATION));

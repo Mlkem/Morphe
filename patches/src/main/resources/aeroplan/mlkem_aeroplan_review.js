@@ -1,5 +1,5 @@
 // Executed only in the visible retailer document. Returns a read-only page snapshot.
-(function reviewPage(store, liveRules) {
+(function reviewPage(store, liveRules, referralAt) {
     "use strict";
     const amazon = store === "amazon";
     const domain = amazon ? "amazon.ca" : "walmart.ca";
@@ -119,6 +119,13 @@
         : '[data-automation-id="cart-item"], [data-automation-id="cart-item-tile"], [data-testid="cart-item"], [data-testid="checkout-item"], [data-automation-id="checkout-item"], [data-automation-id="cart-list"] [data-automation-id="product-tile"]';
     const nodes = matches(document, selector).filter(el => !el.closest('[hidden], [aria-hidden="true"], #sc-saved-cart, [data-testid="saved-for-later"], [data-automation-id="recommendations"], [id*="recommendation" i]') &&
         !el.parentElement?.closest(selector));
+    function cartTiming(el) {
+        const added = el.getAttribute("data-addedtime");
+        if (!Number.isSafeInteger(referralAt) || referralAt <= 0 || !/^\d{13}$/.test(added || "")) return "unknown";
+        const time = Number(added);
+        if (time > Date.now() || referralAt > Date.now() || time === referralAt) return "unknown";
+        return time < referralAt ? "before" : "after";
+    }
     const rows = nodes.slice(0,100).map((el, index) => {
         const name = first(el,'.sc-product-title .a-truncate-full, .sc-product-title, [data-automation-id="product-title"], [data-testid="product-title"], [itemprop="name"]');
         const link = matches(el,'a[href]').find(a => productUrl(a.href));
@@ -128,7 +135,7 @@
         const qty = el.getAttribute("data-quantity") || first(el,'[data-automation-id="quantity"], .sc-product-quantity, [data-testid="quantity"]');
         const picked = clean(qty).match(/^(?:(?:qty|quantity|quantité)[: ]+)?(\d+)$/i);
         const quantity = picked && Number(picked[1]) > 0 ? Number(picked[1]) : null;
-        return {title: name || text(link) || "Cart line " + (index+1), quantity, ...assess(categories)};
+        return {title: name || text(link) || "Cart line " + (index+1), quantity, ...(amazon ? {timing:cartTiming(el)} : {}), ...assess(categories)};
     });
     const countText = first(document, '#sc-subtotal-label-activecart, #sc-subtotal-label-buybox, [data-testid="cart-item-count"], [data-automation-id="cart-item-count"], main h1');
     const declared = countText.match(/\b(\d+)\s*(?:items?|articles?)\b/i);

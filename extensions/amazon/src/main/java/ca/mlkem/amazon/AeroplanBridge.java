@@ -34,9 +34,9 @@ public final class AeroplanBridge {
                 }
                 new AlertDialog.Builder(activity)
                         .setTitle("Shop with Aeroplan")
-                        .setMessage("Review your cart and referral in one shopping window, or use the existing Amazon app referral.")
-                        .setPositiveButton("Review and shop", (dialog, which) -> ReviewActivity.open(activity))
-                        .setNeutralButton("Native referral", (dialog, which) -> open(activity, true))
+                        .setMessage("Activate Aeroplan to shop in the Amazon app, or open a separate web cart review.")
+                        .setPositiveButton("Activate for Amazon", (dialog, which) -> open(activity, true))
+                        .setNeutralButton("Web cart review", (dialog, which) -> ReviewActivity.open(activity))
                         .setNegativeButton("Continue in Amazon", null)
                         .show();
             } catch (RuntimeException ignored) {

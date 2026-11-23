@@ -45,9 +45,7 @@ public class AeroplanHandoffTest {
         shadowOf(RuntimeEnvironment.getApplication()).checkActivities(false);
         controller = Robolectric.buildActivity(AeroplanActivity.class).setup();
         activity = controller.get();
-        Field profile = AeroplanActivity.class.getDeclaredField("profile");
-        profile.setAccessible(true);
-        profile.set(activity, new ProfileStore.Profile("999000111", "Synthetic", false));
+        // Exercise manual sign-in from a fresh installation with no saved profile.
         ReflectionHelpers.callInstanceMethod(activity, "startSession");
         Field windows = AeroplanActivity.class.getDeclaredField("windows");
         windows.setAccessible(true);

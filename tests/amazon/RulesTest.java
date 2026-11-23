@@ -48,6 +48,7 @@ public final class RulesTest {
                 AutofillScript.create("000000000", hostileName).getBytes(StandardCharsets.UTF_8));
         Files.write(Paths.get(args[0], "autofill-manual-fixture.js"),
                 AutofillScript.create("000000000", hostileName, true).getBytes(StandardCharsets.UTF_8));
+        Files.write(Paths.get(args[0], "offer-terms.js"), OfferTerms.SCRIPT.getBytes(StandardCharsets.UTF_8));
         Files.write(Paths.get(args[0], "expected-name.txt"), hostileName.getBytes(StandardCharsets.UTF_8));
         System.out.println("PASS: " + checks + " account-validation and origin checks");
     }

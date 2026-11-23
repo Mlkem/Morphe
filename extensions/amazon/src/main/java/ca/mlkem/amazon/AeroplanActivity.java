@@ -69,7 +69,7 @@ public final class AeroplanActivity extends Activity {
         buildChrome();
         if (state != null) {
             showHome("The previous referral window was closed. Start a new eStore visit before shopping.");
-        } else if (ACTION_START.equals(getIntent().getAction()) && profile.configured()) {
+        } else if (ACTION_START.equals(getIntent().getAction())) {
             startSession();
         } else {
             showSettings();
@@ -206,7 +206,7 @@ public final class AeroplanActivity extends Activity {
             }
         }));
         if (current() != null && !handoffAttempted) body.addView(button("Return to eStore", v -> showWindow(current())));
-        if (profile.configured()) body.addView(button("Start a new eStore session", v -> confirmNewSession()));
+        body.addView(button(profile.configured() ? "Start a new eStore session" : "Sign in on the eStore", v -> confirmNewSession()));
         body.addView(button("Clear saved details", v -> new AlertDialog.Builder(this)
                 .setTitle("Clear saved Aeroplan details?")
                 .setMessage("This removes the helper's saved profile and closes its eStore window. Website sign-ins are managed separately by the eStore and Amazon.")
@@ -231,7 +231,6 @@ public final class AeroplanActivity extends Activity {
 
     private void startSession() {
         NativeReferralStatus.beginVisit();
-        if (!profile.configured()) { showSettings(); return; }
         destroyWindows();
         handoffAttempted = false;
         pendingAmazonUrl = null;

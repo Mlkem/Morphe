@@ -168,7 +168,7 @@ provide privacy.
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [Aeroplan shopping](#aeroplan-shopping) | Reviews the official Amazon.ca referral, cart categories and local order references in a shopping window. Shows referral status in native Amazon and retains the encrypted profile. |  |
+| [Aeroplan shopping](#aeroplan-shopping) | Opens the official Aeroplan referral in Amazon Shopping and shows when the link was sent. Optional web review checks cart timing, categories and local order summaries. |  |
 
 </details>
 

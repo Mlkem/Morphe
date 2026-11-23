@@ -20,6 +20,9 @@ final class OrderLog {
         catch (FileNotFoundException absent) { return new JSONArray(); }
     }
     void save(String id, boolean matched) throws IOException, JSONException {
+        save(id, matched, null);
+    }
+    void save(String id, boolean matched, JSONObject review) throws IOException, JSONException {
         if (!valid(id)) throw new IllegalArgumentException("Unexpected order reference");
         JSONArray old = read(), next = new JSONArray();
         JSONObject item = null;
@@ -28,7 +31,10 @@ final class OrderLog {
             if (id.equals(record.getString("id"))) item = record;
         }
         if (item != null && (!matched || item.optBoolean("matched"))) return;
-        if (item == null) item = new JSONObject().put("id", id).put("time", System.currentTimeMillis());
+        if (item == null) {
+            item = new JSONObject().put("id", id).put("time", System.currentTimeMillis());
+            if (review != null && !walmart) item.put("review", review);
+        }
         next.put(item.put("matched", matched));
         for (int i=0; i<old.length() && next.length()<100; i++)
             if (!id.equals(old.getJSONObject(i).getString("id"))) next.put(old.getJSONObject(i));

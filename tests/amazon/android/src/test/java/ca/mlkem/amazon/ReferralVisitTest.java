@@ -54,6 +54,50 @@ public class ReferralVisitTest {
         assertTrue(conflict.publisherUnclear());
         assertFalse(conflict.status(3).contains("matches"));
     }
+    @Test public void amazonRequiresOfficialRouteAndTagAndPreservesOrInvalidatesEvidence() {
+        String store="https://www.amazon.ca/?tag=";
+        ReferralVisit v=new ReferralVisit(false);
+        v.observe(ReferralVisit.PORTAL+"/fr-CA/d%C3%A9tails-sur-les-marques-affili%C3%A9es/Amazon",1);
+        v.observe(ReferralVisit.PORTAL+"/fr-CA/r%C3%A9orienter-sur-les-marques-affili%C3%A9es/Amazon",2);
+        v.observe("https://www.amazon.ca/",3);
+        assertEquals(0,v.amazonReferralTime(3));
+        v.observe(store+"aeropestor02-20",4);
+        v.observe("https://www.amazon.ca/cart",5);
+        assertEquals(4,v.amazonReferralTime(5));
+        assertEquals(0,v.amazonReferralTime(4+86400000L));
+        v.observe(store+"other",6);
+        v.observe(store+"aeropestor02-20",7);
+        assertEquals(0,v.amazonReferralTime(7));
+        assertTrue(v.status(7).contains("Different publisher"));
+        ReferralVisit conflict=new ReferralVisit(false);
+        conflict.observe(conflict.offer,1);
+        conflict.observe(ReferralVisit.PORTAL+conflict.redirect,2);
+        conflict.observe(store+"aeropestor02-20&tag=unknown",3);
+        conflict.observe(store+"aeropestor02-20",4);
+        assertEquals(0,conflict.amazonReferralTime(4));
+        assertTrue(conflict.status(4).contains("unclear"));
+        assertFalse(conflict.offerPage(ReferralVisit.PORTAL+"/en-CA/affiliate-details/walmart"));
+    }
+    @Test public void amazonRevisitsKeepOriginalEvidenceAndLegacyMatches() throws Exception {
+        OrderLog log=new OrderLog(RuntimeEnvironment.getApplication(),false);
+        log.clear();
+        String legacy="123-1234567-1234567", recent="234-1234567-1234567";
+        log.save(legacy,true);
+        long original=log.read().getJSONObject(0).getLong("time");
+        org.json.JSONObject evidence=new org.json.JSONObject().put("referral","original observation");
+        log.save(recent,false,evidence);
+        log.save(recent,true);
+        log.save(recent,false,new org.json.JSONObject().put("referral","later visit"));
+        log.save(legacy,false,evidence);
+        org.json.JSONArray rows=log.read();
+        assertEquals(2,rows.length());
+        assertEquals("original observation",rows.getJSONObject(0).getJSONObject("review").getString("referral"));
+        assertTrue(rows.getJSONObject(0).getBoolean("matched"));
+        assertEquals(original,rows.getJSONObject(1).getLong("time"));
+        assertTrue(rows.getJSONObject(1).getBoolean("matched"));
+        assertFalse(rows.getJSONObject(1).has("review"));
+        log.clear();
+    }
     @Test public void recordedOrderRequiresManualMatchAndSurvivesReopen() throws Exception {
         Context ctx=RuntimeEnvironment.getApplication();
         OrderLog log=new OrderLog(ctx,true);

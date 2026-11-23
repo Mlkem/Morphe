@@ -42,7 +42,7 @@ final class NativeAmazon {
         try {
             NativeReferralStatus.register(activity);
             activity.startActivity(intent);
-            NativeReferralStatus.linkSent();
+            NativeReferralStatus.linkSent(intent.getData());
             return true;
         } catch (ActivityNotFoundException | SecurityException unavailable) {
             NativeReferralStatus.launchFailed();
