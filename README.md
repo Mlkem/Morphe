@@ -76,7 +76,7 @@ sorting existing apps, and restoring icons. See [Niagara details](docs/apps/niag
 
 | App / utility | Target | Included source | Status |
 | --- | --- | --- | --- |
-| Niagara Launcher | `bitpit.launcher` 1.16.38, 1.16.37 | Automatic folders on both versions, local Pro on 1.16.37 | Opt-in experimental; [Pro](docs/apps/niagara-pro.md) / [folders](docs/apps/niagara.md) |
+| Niagara Launcher | `bitpit.launcher` 1.16.38, 1.16.37 | Automatic folders on both versions, membership restoration on 1.16.38, local Pro on 1.16.37 | Opt-in experimental; [Pro](docs/apps/niagara-pro.md) / [folders](docs/apps/niagara.md) |
 | Amazon Shopping | `com.amazon.mShop.android.shopping` 32.20.2.100 (1243262206), 32.20.0.100 (1243260206), 32.19.0.100 (1243250306) | Aeroplan cart review, local order history and optional native referral | Opt-in experimental; [setup and limits](docs/apps/amazon-aeroplan.md) |
 | Gmail | `com.google.android.gm` 2026.10.26.1012468012.Release | Account visibility setting; separate GmsCore copy | Experimental; [setup and limits](docs/apps/gmail.md) |
 | Anker eufy | `com.oceanwing.battery.cam` 6.1.40 (32-bit), 6.1.32 (ARM64), 6.1.30, 6.1.20 | Camera-focused tabs and native promotion cleanup | Experimental; [scope and phone checks](docs/apps/eufy.md) |

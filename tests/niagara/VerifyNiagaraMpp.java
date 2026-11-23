@@ -216,9 +216,12 @@ public final class VerifyNiagaraMpp {
         Path input = Path.of(args[0]), mpp = Path.of(args[1]), root = Path.of(args[2]);
         Files.createDirectories(root);
         String mode=args.length>3?args[3]:"auto";
-        check(Set.of("auto","pro","both").contains(mode),"Known patch selection");
-        boolean auto=!mode.equals("pro"),pro=!mode.equals("auto");
+        check(Set.of("auto","pro","both","restore","folders-restore").contains(mode),"Known patch selection");
+        boolean auto=Set.of("auto", "both", "folders-restore").contains(mode);
+        boolean pro=Set.of("pro", "both").contains(mode);
+        boolean restore=Set.of("restore", "folders-restore").contains(mode);
         Set<String> selectedNames=new HashSet<>();
+        if(restore)selectedNames.add("Restore Niagara Pro membership");
         if(auto)selectedNames.add("Automatic app folders");
         if(pro)selectedNames.add("Enable Niagara Pro");
         PatchLoader.Jar loader = PatchKt.loadPatchesFromJar(Set.of(mpp.toFile()));
@@ -251,6 +254,8 @@ public final class VerifyNiagaraMpp {
             ApkUtils.INSTANCE.applyTo(result, output.toFile());
         }
         Map<String, Method> before = methods(input), after = methods(output);
+        check(after.containsKey(EXTENSION+"restore/RestoreMembershipActivity;->onCreate(Landroid/os/Bundle;)V")==restore,
+            "Membership share activity included only when selected");
         int hooks = verifyHooks(before, after, auto, pro), resources = verifyResources(input, output);
         String hash = HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(Files.readAllBytes(input)));
         String report = "{\n  \"input\": \"" + input.getFileName() + "\",\n  \"input_sha256\": \"" + hash + "\",\n"

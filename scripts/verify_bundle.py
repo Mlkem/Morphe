@@ -35,6 +35,11 @@ niagara_pro_target=niagara_pro['compatiblePackages'][0]
 assert niagara_pro_target['packageName']=='bitpit.launcher' and niagara_pro_target['apkFileType']=='APK'
 assert [t['version'] for t in niagara_pro_target['targets']]==['1.16.37']
 assert all(t['isExperimental'] and t['minSdk']==26 for t in niagara_pro_target['targets'])
+restore = next(p for p in patches if p['name'] == 'Restore Niagara Pro membership')
+assert not restore['default'] and len(restore['compatiblePackages']) == 1
+restore_target = restore['compatiblePackages'][0]
+assert restore_target['packageName'] == 'bitpit.launcher'
+assert [(t['version'], t['isExperimental']) for t in restore_target['targets']] == [('1.16.38', True)]
 legacy_zoom=next(p for p in patches if p['name']=='Remove LiteAPKS nag')
 assert legacy_zoom['default'] is False, 'Legacy 6.1 popup patch must be opt-in'
 assert len(legacy_zoom['compatiblePackages']) == 1
@@ -147,6 +152,7 @@ for p in bundles:
             assert ('Lca/mlkem/amazon/'+name+';').encode() in amazon_extension
         assert 'aeroplan/mlkem_aeroplan_review.js' in files
         assert b'Lkotlin/' not in amazon_extension
+        assert b'Lca/mlkem/niagara/restore/RestoreMembershipActivity;' in z.read('extensions/niagara-restore.mpe')
         assert 'ca/mlkem/niagara/AutoFoldersPatchKt.class' in files
         assert 'ca/mlkem/niagara/ProPatchKt.class' in files
         assert b'Lca/mlkem/niagara/ProPatchKt;' in z.read('classes.dex')
