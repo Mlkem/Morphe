@@ -1,3 +1,9 @@
+## [1.0.0-dev.56](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.55...v1.0.0-dev.56) (2026-11-27)
+
+### 🚀 Updated App Support
+
+* support Niagara 1.16.39, Gboard 18.6.10 and PushPress 3.47.0 ([#15](https://github.com/Mlkem/Morphe/issues/15)) ([a000854](https://github.com/Mlkem/Morphe/commit/a000854b7cab9670fbe4902db05daeb070735840))
+
 ## [1.0.0-dev.55](https://github.com/Mlkem/Morphe/compare/v1.0.0-dev.54...v1.0.0-dev.55) (2026-11-23)
 
 ### ✨ New Features

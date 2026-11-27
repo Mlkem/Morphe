@@ -131,7 +131,7 @@ provide privacy.
 ## Patch catalog
 
 <!-- PATCHES_START -->
-> **[v1.0.0-dev.55](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.55)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;49 patches total
+> **[v1.0.0-dev.56](https://github.com/Mlkem/Morphe/releases/tag/v1.0.0-dev.56)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;49 patches total
 <details>
 <summary>📦 Zoom Earth&nbsp;&nbsp;•&nbsp;&nbsp;7 patches</summary>
 <br>
@@ -249,14 +249,14 @@ provide privacy.
 
 **🎯 Supported versions:**
 
-| 🧪&nbsp;1.16.38 | 🧪&nbsp;1.16.37 |
-| :---: | :---: |
+| 🧪&nbsp;1.16.39 | 🧪&nbsp;1.16.38 | 🧪&nbsp;1.16.37 |
+| :---: | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
-| [Automatic app folders](#automatic-app-folders) | Automatically sorts newly installed apps into native Niagara folders in Favorites, then hides their separate app-list icons after saving. Ten local categories with live switches in Settings > Productivity > Auto folders. Includes sort-existing and restore controls. Unknown apps go to Other Apps. Preserves pinned favorites, manually hidden apps and other profiles. Niagara 1.16.37 and 1.16.38; phone testing pending. |  |
+| [Automatic app folders](#automatic-app-folders) | Automatically sorts newly installed apps into native Niagara folders in Favorites, then hides their separate app-list icons after saving. Ten local categories with live switches in Settings > Productivity > Auto folders. Includes sort-existing and restore controls. Unknown apps go to Other Apps. Preserves pinned favorites, manually hidden apps and other profiles. Niagara 1.16.37 through 1.16.39; phone testing pending. |  |
 | [Enable Niagara Pro](#enable-niagara-pro) | Enables local Pro features in Niagara Launcher 1.16.37. Works independently of Automatic app folders. Online services still require their normal account authorization. Phone testing pending. |  |
-| [Restore Niagara Pro membership](#restore-niagara-pro-membership) | Adds Restore Niagara Pro to Android’s Share menu for membership email links. Niagara verifies the original purchase. Supports Niagara 1.16.38 (1644). |  |
+| [Restore Niagara Pro membership](#restore-niagara-pro-membership) | Adds Restore Niagara Pro to Android’s Share menu for membership email links. Niagara verifies the original purchase. Supports Niagara 1.16.39 (1645) or 1.16.38 (1644). |  |
 
 </details>
 
@@ -292,8 +292,8 @@ provide privacy.
 
 **🎯 Supported versions:**
 
-| 🧪&nbsp;18.6.7.1002251336-release-arm64-v8a | 🧪&nbsp;18.8.0.1022711984-beta-arm64-v8a | 🧪&nbsp;18.5.4.993608717-release-arm64-v8a |
-| :---: | :---: | :---: |
+| 🧪&nbsp;18.6.10.1002251336-release-arm64-v8a | 🧪&nbsp;18.6.7.1002251336-release-arm64-v8a | 🧪&nbsp;18.8.0.1022711984-beta-arm64-v8a | 🧪&nbsp;18.5.4.993608717-release-arm64-v8a |
+| :---: | :---: | :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
@@ -396,9 +396,9 @@ provide privacy.
 
 **🎯 Supported versions:**
 
-| 🧪&nbsp;3.46.0 | 🧪&nbsp;3.45.0 | 🧪&nbsp;3.44.0 | 🧪&nbsp;3.42.0 |
-| :---: | :---: | :---: | :---: |
-| Google Play release. Patching the original 3.46.0 XAPK and selecting CrossFit on a phone still need verification. |  |  |  |
+| 🧪&nbsp;3.47.0 | 🧪&nbsp;3.46.0 | 🧪&nbsp;3.45.0 | 🧪&nbsp;3.44.0 | 🧪&nbsp;3.42.0 |
+| :---: | :---: | :---: | :---: | :---: |
+|  | Google Play release. Patching the original 3.46.0 XAPK and selecting CrossFit on a phone still need verification. |  |  |  |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
