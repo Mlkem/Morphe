@@ -51,6 +51,13 @@ def onboard():
         root=snapshot('onboarding-%02d'%i)
         texts=[n.get('text','') for n in root.iter('node') if n.get('text')]
         print('UI:',texts,flush=True)
+        # A supported older APK can receive the live source's update notice
+        # during setup. Dismiss it in this disposable emulator for this run.
+        ignore_update = find(root, 'Ignore this update')
+        if ignore_update is not None and find(root, 'Open Morphe') is not None:
+            tap_node(ignore_update)
+            time.sleep(2)
+            continue
         prefs=adb('shell','cat','/data/user/0/bitpit.launcher/shared_prefs/*.xml',check=False)
         if re.search(r'<int name="bitpit.launcher.key.BOOT_STATE" value="1"',prefs): return
         if not list(root.iter('node')):

@@ -23,8 +23,12 @@ jobs:
   niagara:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        version: ['1.16.38', '1.16.39']
     env:
-      NIAGARA_VERSION: '1.16.39'
+      NIAGARA_VERSION: ${{ matrix.version }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-java@v6
@@ -53,7 +57,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: niagara-acceptance
+          name: niagara-acceptance-${{ matrix.version }}
           path: |
             build/niagara-apk-validation/${{ env.NIAGARA_VERSION }}/auto/validation.json
             build/niagara-device/*.xml
