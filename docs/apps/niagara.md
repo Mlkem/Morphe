@@ -1,9 +1,11 @@
 # Niagara Launcher: Automatic app folders
 
 For the separate **Enable Niagara Pro** option, see [local Pro features](niagara-pro.md).
-On **1.16.38 (1644)** you can select **Restore Niagara Pro membership** by itself or together with **Automatic app folders**. In Niagara Settings → Niagara Pro, choose **Restore membership** and enter the email linked to your purchase. In the resulting email, long-press **Sign In**, choose **Share link → Restore Niagara Pro → Continue in Niagara**. Niagara completes its normal membership check. If the email service wraps the link, use Niagara search’s `/applink` command and paste the link. [Niagara’s purchase recovery guide](https://help.niagaralauncher.app/article/138-restore-purchase).
+On **1.16.39 (1645)** and **1.16.38 (1644)** you can select **Restore Niagara Pro membership** by itself or together with **Automatic app folders**. In Niagara Settings → Niagara Pro, choose **Restore membership** and enter the email linked to your purchase. In the resulting email, long-press **Sign In**, choose **Share link → Restore Niagara Pro → Continue in Niagara**. Niagara completes its normal membership check. If the email service wraps the link, use Niagara search’s `/applink` command and paste the link. [Niagara’s purchase recovery guide](https://help.niagaralauncher.app/article/138-restore-purchase).
 
-Experimental Morphe patch for the **official Niagara Launcher 1.16.38 (1644) and 1.16.37 (1643) APKs**.
+Experimental Morphe patch for the **official Niagara Launcher 1.16.39 (1645), 1.16.38 (1644) and 1.16.37 (1643) APKs**.
+[Official 1.16.39 APK](https://github.com/NiagaraLauncher/Niagara-Issues/releases/download/v1.16.39/Niagara_Launcher_v1.16.39-release.apk) · SHA-256 `917d65b2dc0cd8ac7c911b948f8e2b20548fdf40fde3478f3b44a24a9ba30032`. Desktop checks passed for folders and membership restoration, individually and together. Phone behavior is unverified.
+
 [Download the official 1.16.38 APK](https://github.com/NiagaraLauncher/Niagara-Issues/releases/download/v1.16.38/Niagara_Launcher_v1.16.38-release.apk)
 1.16.38 APK SHA-256: `5418283952b13848eb1891b0f01e3acba98e29d017b933b2e034c99a5df5f0df`.
 

@@ -97,16 +97,25 @@ public final class VerifyNiagaraMpp {
         int count = 0;
         int proOverrides = 0;
         boolean build38 = before.containsKey("Lb/P7sI5PMvmtbovH;->Idx11cNZ15(Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;)V");
-        String controller = build38 ? "Lb/P7sI5PMvmtbovH;" : "Lb/uXEn98dBZyHFNcs4SNt;";
-        String changed = build38 ? "Idx11cNZ15" : "QkO0iYBXnHfGs";
-        String feedChanged = build38 ? "dAqlsNOBOcwBdqab2iL3pe" : "i31xkztVRqgXM6VmkhJG3j1ad1OM";
-        String settings = build38 ? "Lb/Il9nLZSTco0tqHmWDubcE1UH7VJH;" : "Lb/rkhpNkl4D1;";
-        String readyField = build38 ? "VJE51uPIoecJiKg0wuKHpmyliYfu:Lb/Qqn68ODSFrckn;"
-                                    : "uP3MjWikAhbpaogvi8rIfV8OZg4pk:Lb/naks8ZxpaWirE;";
+        boolean build39 = before.containsKey("Lb/w4WGCoktdFYv3;->uVRhIfvQNmY(Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;)V");
+        record Host(String controller, String changed, String feedChanged, String settings, String readyField, String query) {}
+        Host host;
+        if (build39) {
+            host = new Host("Lb/w4WGCoktdFYv3;", "uVRhIfvQNmY", "hNAqVksS9ZOZ3L5wJi5pcqXB504JD",
+                "Lb/U7jH06DMrqjf561W7O;", "zPhBZvc6VO2PXx:Lb/pjQisL2N2t;", "Lb/JCqii6JDK9yGAkw;");
+        } else if (build38) {
+            host = new Host("Lb/P7sI5PMvmtbovH;", "Idx11cNZ15", "dAqlsNOBOcwBdqab2iL3pe",
+                "Lb/Il9nLZSTco0tqHmWDubcE1UH7VJH;", "VJE51uPIoecJiKg0wuKHpmyliYfu:Lb/Qqn68ODSFrckn;", "Lb/B9ZYK85o3JvPks7of8tnbXtcon3IV;");
+        } else {
+            host = new Host("Lb/uXEn98dBZyHFNcs4SNt;", "QkO0iYBXnHfGs", "i31xkztVRqgXM6VmkhJG3j1ad1OM",
+                "Lb/rkhpNkl4D1;", "uP3MjWikAhbpaogvi8rIfV8OZg4pk:Lb/naks8ZxpaWirE;", "Lb/qBlsmBnzmgtZe0gU3u2b;");
+        }
+        String controller = host.controller(), changed = host.changed(), feedChanged = host.feedChanged();
+        String settings = host.settings(), readyField = host.readyField();
         Set<String> expected = Set.of(controller+"-><init>", controller+"->"+changed, controller+"->"+feedChanged,
             "Lbitpit/launcher/ui/HomeActivity;->onResume", settings+"->"+changed);
         if (auto) {
-            String query = build38 ? "Lb/B9ZYK85o3JvPks7of8tnbXtcon3IV;" : "Lb/qBlsmBnzmgtZe0gU3u2b;";
+            String query = host.query();
             check(before.values().stream().anyMatch(m -> m.getDefiningClass().equals(query) &&
                 m.getImplementation() != null && readsSavedFeed(m)), "Folder persistence check reads the saved feed");
         }
@@ -156,11 +165,13 @@ public final class VerifyNiagaraMpp {
             check(added.startsWith(EXTENSION)||added.startsWith(UPDATES), "Unexpected class/stub packaged: "+added);
         String bridge="Lca/mlkem/niagara/NativeContinuation;-><init>(Lca/mlkem/niagara/NativeBridge$Done;)V";
         check(after.containsKey(bridge)==auto, "Auto-folder extension only included when selected");
-        if (auto && build38) {
-            String callback = "Mp48tfHH45TRNN7q3taBNtTIbX(Ljava/lang/Object;)Ljava/lang/Object;";
+        if (auto && (build38 || build39)) {
+            String callback = build39 ? "XOSX1MBUj1ZIzW(Ljava/lang/Object;)Ljava/lang/Object;" : "Mp48tfHH45TRNN7q3taBNtTIbX(Ljava/lang/Object;)Ljava/lang/Object;";
             check(after.containsKey(EXTENSION+"NativeContinuation;->"+callback), "Host continuation override");
-            String read = "Lb/FdG6xMzPSaymcSpktNphRSSpiuQd;->jWvXewWdTvbuXsq9m9mUy(Lb/oF4VPGelezQL5RhSUQALi0;ZZLb/Gt2e7OqBn9CvfhW;)Ljava/lang/Object;";
-            String context = "Lb/T3aZigmfOFNniS;->tmvaFiZ3YIQF7MAEfYHiQR52ffC()Lb/IdZUlMXZV6Pp17XJ;";
+            String read = build39 ? "Lb/SXY0ZyEdzqENh;->aYPVRbn04J9qv(Lb/VwJRhBfgfGcviUyGVBjIDw9V7eJ;ZZLb/fiZMauRwmR6;)Ljava/lang/Object;"
+                                  : "Lb/FdG6xMzPSaymcSpktNphRSSpiuQd;->jWvXewWdTvbuXsq9m9mUy(Lb/oF4VPGelezQL5RhSUQALi0;ZZLb/Gt2e7OqBn9CvfhW;)Ljava/lang/Object;";
+            String context = build39 ? "Lb/IFLD1qeGGFwZx5YNqHIFKRallE;->GY6UUxPTegIYX()Lb/OzzD4kHTZ3GQW9q5krL;"
+                                     : "Lb/T3aZigmfOFNniS;->tmvaFiZ3YIQF7MAEfYHiQR52ffC()Lb/IdZUlMXZV6Pp17XJ;";
             check(before.containsKey(read) && before.containsKey(context), "Native database and coroutine contracts");
             Set<String> extensionStrings = new HashSet<>();
             for (Method m : after.values()) {
@@ -170,7 +181,7 @@ public final class VerifyNiagaraMpp {
                         extensionStrings.add(str.getString());
                 }
             }
-            check(extensionStrings.contains("jWvXewWdTvbuXsq9m9mUy") && extensionStrings.contains("tmvaFiZ3YIQF7MAEfYHiQR52ffC"), "Injected folder bindings");
+            check(extensionStrings.contains(before.get(read).getName()) && extensionStrings.contains(before.get(context).getName()), "Injected folder bindings");
             for (Instruction i : instructions(after.get(bridge))) {
                 if (!(i instanceof ReferenceInstruction ref)) continue;
                 String target = ref.getReference().toString();
