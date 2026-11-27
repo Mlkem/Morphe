@@ -39,7 +39,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ./gradlew :patches:buildAndroid :patches:generatePatchesList --no-daemon
+          ./gradlew :patches:buildAndroid :patches:generatePatchesList --no-daemon -Pkotlin.compiler.execution.strategy=in-process
           python3 scripts/test_niagara_logic.py
           python3 scripts/test_niagara_apk.py --version "$NIAGARA_VERSION"
       - name: Enable KVM
@@ -53,7 +53,7 @@ jobs:
           arch: x86_64
           target: google_apis
           disable-animations: true
-          emulator-options: -no-window -gpu swiftshader -feature -Vulkan -no-snapshot -noaudio -no-boot-anim
+          emulator-options: -no-window -gpu lavapipe -no-snapshot -noaudio -no-boot-anim
           script: python3 tests/niagara/device/run.py build/niagara-apk-validation/${{ env.NIAGARA_VERSION }}/auto/niagara-patched-unsigned.apk
       - uses: actions/upload-artifact@v4
         if: always()
