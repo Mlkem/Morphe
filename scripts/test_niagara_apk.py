@@ -12,6 +12,7 @@ classes=out/'harness';classes.mkdir(exist_ok=True)
 subprocess.run(['javac','-cp',str(desktop),'-d',str(classes),str(root/'tests/niagara/VerifyNiagaraMpp.java')],check=True)
 releases = {
     '1.16.37': ('974d3e82aaa82bc4de4ef76834aade5e2888464929b6b208730a5d88bd6a4b76', ('auto', 'pro', 'both')),
+    '1.16.39': ('917d65b2dc0cd8ac7c911b948f8e2b20548fdf40fde3478f3b44a24a9ba30032', ('auto', 'restore', 'folders-restore')),
     '1.16.38': ('5418283952b13848eb1891b0f01e3acba98e29d017b933b2e034c99a5df5f0df', ('auto', 'restore', 'folders-restore')),
 }
 parser = argparse.ArgumentParser(description=__doc__)

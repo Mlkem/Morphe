@@ -8,13 +8,17 @@ SDK=Path(os.environ.get('ANDROID_HOME') or os.environ['ANDROID_SDK_ROOT'])
 BT=sorted((SDK/'build-tools').iterdir(),key=lambda p:tuple(int(x) if x.isdigit() else 0 for x in p.name.split('.')))[-1]
 AJ=SDK/'platforms/android-35/android.jar'
 if not AJ.is_file(): raise RuntimeError('The acceptance test requires Android SDK platform 35')
-def run(*args,check=True):
-    x=subprocess.run([str(v) for v in args],capture_output=True)
+def run(*args,check=True,timeout=None):
+    try:
+        x=subprocess.run([str(v) for v in args],capture_output=True,timeout=timeout)
+    except subprocess.TimeoutExpired:
+        if check: raise
+        return ''
     if check and x.returncode:
         print(x.stdout.decode(errors='replace'),x.stderr.decode(errors='replace'),flush=True)
         x.check_returncode()
     return x.stdout.decode(errors='replace').strip()
-def adb(*args,**kw): return run('adb',*args,**kw)
+def adb(*args,timeout=60,**kw): return run('adb',*args,timeout=timeout,**kw)
 def snapshot(name):
     adb('shell','uiautomator','dump','/sdcard/window.xml',check=False)
     xml=adb('shell','cat','/sdcard/window.xml',check=False)
@@ -51,6 +55,13 @@ def onboard():
         root=snapshot('onboarding-%02d'%i)
         texts=[n.get('text','') for n in root.iter('node') if n.get('text')]
         print('UI:',texts,flush=True)
+        # A supported older APK can receive the live source's update notice
+        # during setup. Dismiss it in this disposable emulator for this run.
+        ignore_update = find(root, 'Ignore this update')
+        if ignore_update is not None and find(root, 'Open Morphe') is not None:
+            tap_node(ignore_update)
+            time.sleep(2)
+            continue
         prefs=adb('shell','cat','/data/user/0/bitpit.launcher/shared_prefs/*.xml',check=False)
         if re.search(r'<int name="bitpit.launcher.key.BOOT_STATE" value="1"',prefs): return
         if not list(root.iter('node')):
@@ -142,7 +153,14 @@ def home():
 def main():
     run('keytool','-genkeypair','-keystore',OUT/'test.jks','-storepass','android','-keypass','android','-alias','test','-dname','CN=Disposable Niagara Test','-keyalg','RSA','-validity','2')
     sign(Path(sys.argv[1]),OUT/'launcher.apk')
-    adb('root');adb('wait-for-device')
+    for _ in range(3):
+        adb('wait-for-device',timeout=20,check=False)
+        adb('root',timeout=10,check=False)
+        adb('wait-for-device',timeout=20,check=False)
+        if adb('shell','id','-u',check=False).strip()=='0': break
+        time.sleep(2)
+    else:
+        raise RuntimeError('The test emulator did not reconnect with root access')
     adb('shell','settings','put','secure','immersive_mode_confirmations','confirmed')
     adb('install',OUT/'launcher.apk')
     adb('shell','cmd','role','add-role-holder','--user','0','android.app.role.HOME','bitpit.launcher')
@@ -164,5 +182,5 @@ def main():
 try:
     main()
 finally:
-    (OUT/'logcat.txt').write_text(adb('logcat','-d','-s','NiagaraAutoFolders:E','AndroidRuntime:E',check=False))
+    (OUT/'logcat.txt').write_text(adb('logcat','-d','-s','NiagaraAutoFolders:E','AndroidRuntime:E',timeout=10,check=False))
     snapshot('final')

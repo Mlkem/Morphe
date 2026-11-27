@@ -26,7 +26,7 @@ assert wa['packageName']=='ca.walmart.ecommerceapp' and [t['version'] for t in w
 niagara=next(p for p in patches if p['name']=='Automatic app folders')
 assert not niagara['default']
 assert niagara['compatiblePackages'][0]['packageName']=='bitpit.launcher'
-assert [t['version'] for t in niagara['compatiblePackages'][0]['targets']]==['1.16.38', '1.16.37']
+assert [t['version'] for t in niagara['compatiblePackages'][0]['targets']]==['1.16.39', '1.16.38', '1.16.37']
 assert niagara['compatiblePackages'][0]['targets'][0]['isExperimental']
 niagara_pro=next(p for p in patches if p['name']=='Enable Niagara Pro')
 assert niagara_pro['default'] is False and niagara_pro['options']==[]
@@ -39,7 +39,7 @@ restore = next(p for p in patches if p['name'] == 'Restore Niagara Pro membershi
 assert not restore['default'] and len(restore['compatiblePackages']) == 1
 restore_target = restore['compatiblePackages'][0]
 assert restore_target['packageName'] == 'bitpit.launcher'
-assert [(t['version'], t['isExperimental']) for t in restore_target['targets']] == [('1.16.38', True)]
+assert [(t['version'], t['isExperimental']) for t in restore_target['targets']] == [('1.16.39', True), ('1.16.38', True)]
 legacy_zoom=next(p for p in patches if p['name']=='Remove LiteAPKS nag')
 assert legacy_zoom['default'] is False, 'Legacy 6.1 popup patch must be opt-in'
 assert len(legacy_zoom['compatiblePackages']) == 1
@@ -74,7 +74,7 @@ assert not gboard['default'] and len(gboard['compatiblePackages'])==1
 assert gboard['description'].find('original Gboard APK') >= 0
 gboard_target=gboard['compatiblePackages'][0]
 assert gboard_target['packageName']=='com.google.android.inputmethod.latin'
-assert [t['version'] for t in gboard_target['targets']]==['18.6.7.1002251336-release-arm64-v8a', '18.8.0.1022711984-beta-arm64-v8a', '18.5.4.993608717-release-arm64-v8a']
+assert [t['version'] for t in gboard_target['targets']]==['18.6.10.1002251336-release-arm64-v8a', '18.6.7.1002251336-release-arm64-v8a', '18.8.0.1022711984-beta-arm64-v8a', '18.5.4.993608717-release-arm64-v8a']
 assert all(t['isExperimental'] for t in gboard_target['targets'])
 wongnai=next(p for p in patches if p['name']=='Disable Wongnai Google ads')
 assert wongnai['default'] is False, 'Untested Wongnai patch must remain opt-in'
@@ -89,7 +89,7 @@ assert len(pushpress['compatiblePackages']) == 1
 pushpress_target=pushpress['compatiblePackages'][0]
 assert pushpress_target['packageName'] == 'com.pushpress.memberportal'
 assert pushpress_target['apkFileType'] == 'XAPK'
-assert [t['version'] for t in pushpress_target['targets']] == ['3.46.0', '3.45.0', '3.44.0', '3.42.0']
+assert [t['version'] for t in pushpress_target['targets']] == ['3.47.0', '3.46.0', '3.45.0', '3.44.0', '3.42.0']
 assert all(t['isExperimental'] for t in pushpress_target['targets'])
 songsterr=next(p for p in patches if p['name']=='Enable Songsterr premium features')
 assert not songsterr['default'] and len(songsterr['compatiblePackages'])==1

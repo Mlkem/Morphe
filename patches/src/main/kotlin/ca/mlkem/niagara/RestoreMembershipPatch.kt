@@ -7,10 +7,12 @@ private const val ANDROID = "http://schemas.android.com/apk/res/android"
 private const val HOME = "bitpit.launcher.ui.HomeActivity"
 private const val RESTORE = "ca.mlkem.niagara.restore.RestoreMembershipActivity"
 
+private val restoreVersions = mapOf("1.16.39" to "1645", "1.16.38" to "1644")
+
 private val restoreManifest = resourcePatch {
     execute {
-        check(packageMetadata.packageName == "bitpit.launcher" && packageMetadata.versionName == "1.16.38" &&
-            packageMetadata.versionCode == "1644") { "Restore Niagara Pro membership requires Niagara Launcher 1.16.38 (1644)." }
+        check(packageMetadata.packageName == "bitpit.launcher" && packageMetadata.versionName in restoreVersions &&
+            packageMetadata.versionCode == restoreVersions[packageMetadata.versionName]) { "Restore Niagara Pro membership requires Niagara Launcher 1.16.39 (1645) or 1.16.38 (1644)." }
         document("AndroidManifest.xml").use { manifest ->
             val app = manifest.getElementsByTagName("application").item(0) as Element
             val activities = app.getElementsByTagName("activity")
@@ -40,11 +42,11 @@ private val restoreManifest = resourcePatch {
 
 val restoreNiagaraMembership = bytecodePatch(
     name = "Restore Niagara Pro membership",
-    description = "Adds Restore Niagara Pro to Android’s Share menu for membership email links. Niagara verifies the original purchase. Supports Niagara 1.16.38 (1644).",
+    description = "Adds Restore Niagara Pro to Android’s Share menu for membership email links. Niagara verifies the original purchase. Supports Niagara 1.16.39 (1645) or 1.16.38 (1644).",
     default = false
 ) {
     compatibleWith(Compatibility(name = "Niagara Launcher", packageName = "bitpit.launcher", apkFileType = ApkFileType.APK,
-        targets = listOf(AppTarget(version = "1.16.38", minSdk = 26, isExperimental = true))))
+        targets = restoreVersions.keys.map { AppTarget(version = it, minSdk = 26, isExperimental = true) }))
     dependsOn(restoreManifest, ca.mlkem.updates.startupUpdates)
     extendWith("extensions/niagara-restore.mpe")
 }

@@ -1,13 +1,14 @@
 # PushPress Members — Force CrossFit class
 
-Use the original PushPress Members XAPK. Morphe lists the Google Play release 3.46.0 as experimental. Patching that version and selecting CrossFit on a phone still need verification.
+Use the original PushPress Members XAPK. Morphe Desktop rebuilt the 3.47.0 XAPK (1850442830) and the resulting activity constructor calls the CrossFit selector. Selecting a class on a phone still needs verification.
 
 ## Target
 
 - App: PushPress Members
 - Package: `com.pushpress.memberportal`
-- Versions targeted: `3.46.0`, `3.45.0`, `3.44.0`, `3.42.0` (all experimental)
-- Original inputs inspected: 3.42.0 (`1780597459`, arm64-v8a) and 3.45.0 (`1850257266`, armeabi-v7a)
+- Versions targeted: `3.47.0`, `3.46.0`, `3.45.0`, `3.44.0`, `3.42.0` (all experimental)
+- 3.47.0 XAPK SHA-256: `39141f5d19e7242b852ef9452ecb3d87d0b55e4f6398235e12cc8beb744e955f`
+- Earlier inputs inspected: 3.42.0 (`1780597459`, arm64-v8a) and 3.45.0 (`1850257266`, armeabi-v7a)
 - Patch name in Morphe: **Workouts: force CrossFit class**
 
 ## What it does

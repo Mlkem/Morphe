@@ -17,23 +17,24 @@ val autoFolders = bytecodePatch(
     name = "Automatic app folders",
     description = "Automatically sorts newly installed apps into native Niagara folders in Favorites, then hides their separate app-list icons after saving. " +
         "Ten local categories with live switches in Settings > Productivity > Auto folders. Includes sort-existing and restore controls. " +
-        "Unknown apps go to Other Apps. Preserves pinned favorites, manually hidden apps and other profiles. Niagara 1.16.37 and 1.16.38; phone testing pending.",
+        "Unknown apps go to Other Apps. Preserves pinned favorites, manually hidden apps and other profiles. Niagara 1.16.37 through 1.16.39; phone testing pending.",
     default = false
 ) {
     dependsOn(ca.mlkem.updates.startupUpdates)
     compatibleWith(Compatibility(
         name = "Niagara Launcher", packageName = "bitpit.launcher", apkFileType = ApkFileType.APK,
-        description = "Use official Niagara Launcher 1.16.37 or 1.16.38 from NiagaraLauncher/Niagara-Issues on GitHub. Experimental until phone tested.",
-        targets = listOf("1.16.38", "1.16.37").map { AppTarget(version = it, minSdk = 26, isExperimental = true) }
+        description = "Use official Niagara Launcher 1.16.37 through 1.16.39 from NiagaraLauncher/Niagara-Issues on GitHub. Experimental until phone tested.",
+        targets = listOf("1.16.39", "1.16.38", "1.16.37").map { AppTarget(version = it, minSdk = 26, isExperimental = true) }
     ))
     extendWith("extensions/niagara-auto-folders.mpe")
     execute {
         val version = packageMetadata.versionName
-        val expectedCode = mapOf("1.16.37" to "1643", "1.16.38" to "1644")[version]
+        val expectedCode = mapOf("1.16.37" to "1643", "1.16.38" to "1644", "1.16.39" to "1645")[version]
         check(packageMetadata.packageName == "bitpit.launcher" && expectedCode != null && packageMetadata.versionCode == expectedCode) {
-            "Automatic app folders requires an original Niagara 1.16.37 or 1.16.38 APK."
+            "Automatic app folders requires an original Niagara 1.16.37 through 1.16.39 APK."
         }
-        fun host(value: String) = if (version == "1.16.38") name38(value) else value
+        val bindings = folderBindings[version]
+        fun host(value: String) = bindings?.name(value) ?: value
         val controllerType = host(CONTROLLER)
         val builderType = host(BUILDER)
         val controller = mutableClassDefBy(controllerType)
@@ -77,7 +78,7 @@ val autoFolders = bytecodePatch(
                 host("$controllerType->uP3MjWikAhbpaogvi8rIfV8OZg4pk:Lb/naks8ZxpaWirE;")
         }
         val ownerRegister = (initialized.value as TwoRegisterInstruction).registerB
-        if (version == "1.16.38") bindFolderExtension38()
+        if (bindings != null) bindFolderExtension(bindings)
         init.addInstruction(initialized.index + 1, "invoke-static/range {v$ownerRegister .. v$ownerRegister}, $HOOK->attach(Ljava/lang/Object;)V")
         feedChanged.addInstruction(0, "invoke-static {}, $HOOK->changed()V")
         changed.addInstruction(0, "invoke-static {}, $HOOK->changed()V")

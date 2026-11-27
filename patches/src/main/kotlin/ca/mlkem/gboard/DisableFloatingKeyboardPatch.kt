@@ -45,6 +45,13 @@ private data class KeyboardBindings(
 )
 
 private val bindings = mapOf(
+    "18.6.10.1002251336-release-arm64-v8a" to KeyboardBindings(
+        manager = "Lsxu;", resolver = "Lsxy;", support = "ar", auto = "af", oneHanded = "au",
+        shortcut = "in", shortcutArg = "Lslr;", setter = "ah", modeGetter = "H", contextGetter = "I",
+        flagHolder = "Lszk;", flagType = "Lrqg;", settings = "Lszo;", options = "Layl;",
+        eligibility = "Lsxm;->d(Landroid/content/Context;Lucq;)Z",
+        popup = PopupBindings(actionType = "Lthd;", listType = "Lzty;", entry = "Ltib;")
+    ),
     CURRENT to KeyboardBindings(
         manager = "Lpks;", resolver = "Lpkw;", support = "ar", auto = "af", oneHanded = "au",
         shortcut = "fY", shortcutArg = "Loyq;", setter = "ah", modeGetter = "H", contextGetter = "I",
